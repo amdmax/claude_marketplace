@@ -13,18 +13,44 @@ This marketplace contains 30+ production-ready skills abstracted from multiple p
 
 ## Quick Start
 
-### 1. Browse the Catalog
+### Option 1: Install from Marketplace (Recommended)
+
+Install all bundles or choose specific ones:
+
+```bash
+# Add the marketplace
+/plugin marketplace add aigensa/claude_marketplace
+
+# Install all bundles
+/plugin install core-workflow@claude-skills-marketplace
+/plugin install development-tools@claude-skills-marketplace
+/plugin install architecture-quality@claude-skills-marketplace
+/plugin install content-specialized@claude-skills-marketplace
+
+# Or install just what you need
+/plugin install core-workflow@claude-skills-marketplace
+```
+
+**Available Bundles:**
+- **core-workflow** (5 skills) - commit, mr, create-story, fetch-story, play-story
+- **development-tools** (5 skills) - bug-fix, skill-creator, refactor-skill, sync-skills, gather-context
+- **architecture-quality** (6 skills) - aws-architect, cdk-scripting, security-review, performance-review, overall-review, fitness-function-architect
+- **content-specialized** (12 skills) - css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, and more
+
+### Option 2: Manual Copy (For Customization)
+
+#### 1. Browse the Catalog
 
 See [SKILL_CATALOG.md](SKILL_CATALOG.md) for the complete list of available skills.
 
-### 2. Copy a Skill to Your Project
+#### 2. Copy a Skill to Your Project
 
 ```bash
 # Example: Copy the commit skill to your project
 cp -r skills/commit/ /path/to/your/project/.claude/skills/
 ```
 
-### 3. Configure the Skill
+#### 3. Configure the Skill
 
 ```bash
 cd /path/to/your/project/.claude/skills/commit/
@@ -36,7 +62,7 @@ cp config.example.yaml config.yaml
 vim config.yaml
 ```
 
-### 4. Use the Skill
+#### 4. Use the Skill
 
 The skill is now available in your project. Invoke it via Claude Code:
 
@@ -165,4 +191,4 @@ When adding skills, ensure:
 
 ## License
 
-Skills are provided as-is for use in Claude Code projects.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

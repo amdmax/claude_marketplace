@@ -1,0 +1,13 @@
+{
+  "name": "architecture-quality",
+  "description": "Architecture guidance and code quality reviews: AWS, CDK, security, performance, and fitness functions",
+  "version": "1.0.0",
+  "author": {
+    "name": "AIGENSA",
+    "email": "thesolutionarchitect@aigensa.com"
+  },
+  "homepage": "https://github.com/aigensa/claude_marketplace",
+  "repository": "https://github.com/aigensa/claude_marketplace",
+  "license": "MIT",
+  "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality"]
+}
