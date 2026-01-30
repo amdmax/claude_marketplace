@@ -1,0 +1,56 @@
+# Claude Code Hooks Configuration Template
+# This is a TEMPLATE - replace {{VARIABLES}} with your values
+
+# Notification hooks - desktop alerts when Claude needs attention
+notification:
+  enabled: true
+  types:
+    - permission_prompt
+    - idle_prompt
+
+# Stop hooks - validation before Claude stops
+stop_hooks:
+  enabled: {{STOP_HOOKS_ENABLED}}
+  run_tests: {{RUN_TESTS_ON_STOP}}
+  run_validation: {{RUN_VALIDATION_ON_STOP}}
+  test_command: "{{TEST_CMD}}"
+  validation_command: "{{VALIDATION_CMD}}"
+  fail_on_test_error: false
+  fail_on_validation_error: true
+
+# PostToolUse hooks - auto-format files after edits
+post_tool_use:
+  enabled: {{POST_TOOL_USE_ENABLED}}
+  formatters:
+    prettier:
+      enabled: {{PRETTIER_ENABLED}}
+      extensions: [js, ts, jsx, tsx, css, html, json, md]
+    black:
+      enabled: {{BLACK_ENABLED}}
+      extensions: [py]
+    postcss:
+      enabled: {{POSTCSS_ENABLED}}
+      files: [styles.css]
+      command: "{{POSTCSS_CMD}}"
+
+# PreToolUse hooks - safety checks before dangerous operations
+pre_tool_use:
+  enabled: true
+  safety_checks:
+    bash_safety:
+      enabled: true
+      blocked_patterns:
+        - "rm -rf /"
+        - "rm -rf ."
+        - "rm -rf ~"
+        - "dd if="
+        - "> /dev/sd"
+        - "mkfs."
+        - "fdisk"
+        - ":(){ :|:& };:"
+
+# Session loading - auto-load context
+session_load:
+  enabled: {{SESSION_LOAD_ENABLED}}
+  auto_load_active_story: {{AUTO_LOAD_STORY}}
+  auto_load_project_context: {{AUTO_LOAD_CONTEXT}}
