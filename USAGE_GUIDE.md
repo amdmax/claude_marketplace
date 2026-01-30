@@ -13,7 +13,60 @@ Complete guide to using skills from the Claude Code Skills Marketplace in your p
 
 ## Installation
 
-### Method 1: Copy Individual Skills
+### Method 1: Install from Marketplace (Recommended)
+
+The Skills Marketplace is available as a Claude Code plugin marketplace with 4 focused bundles.
+
+#### Step 1: Add the Marketplace
+
+```bash
+/plugin marketplace add aigensa/claude_marketplace
+```
+
+#### Step 2: Install Plugin Bundles
+
+Install all bundles or just the ones you need:
+
+```bash
+# Option A: Install everything
+/plugin install core-workflow@claude-skills-marketplace
+/plugin install development-tools@claude-skills-marketplace
+/plugin install architecture-quality@claude-skills-marketplace
+/plugin install content-specialized@claude-skills-marketplace
+
+# Option B: Install only what you need
+/plugin install core-workflow@claude-skills-marketplace  # Just git workflow skills
+```
+
+#### Step 3: Use the Skills
+
+All installed skills are immediately available:
+
+```bash
+/commit              # From core-workflow bundle
+/aws-architect       # From architecture-quality bundle
+/mermaid-diagram     # From content-specialized bundle
+```
+
+#### Bundle Details
+
+- **core-workflow** - Essential git workflow automation
+  - Skills: commit, mr, create-story, fetch-story, play-story
+  - Use when: Managing git commits, PRs, and GitHub issues
+
+- **development-tools** - Development utilities
+  - Skills: bug-fix, skill-creator, refactor-skill, sync-skills, gather-context
+  - Use when: Developing, debugging, or extending Claude Code
+
+- **architecture-quality** - Architecture and code reviews
+  - Skills: aws-architect, cdk-scripting, security-review, performance-review, overall-review, fitness-function-architect
+  - Use when: Designing systems or reviewing code quality
+
+- **content-specialized** - Content and specialized tools
+  - Skills: css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, add-content-image, regenerate-course-content, create-adr, gather-nfr, hooks, cuda-remote-manager, github-runner-setup
+  - Use when: Creating content, documentation, or specialized configurations
+
+### Method 2: Copy Individual Skills
 
 Copy specific skills you need to your project:
 
@@ -28,7 +81,7 @@ mkdir -p .claude/skills
 cp -r /path/to/claude_marketplace/skills/commit/ .claude/skills/
 ```
 
-### Method 2: Clone Entire Marketplace
+### Method 3: Clone Entire Marketplace
 
 Clone the marketplace and symlink skills:
 
@@ -44,7 +97,7 @@ ln -s ~/claude-marketplace/skills/mr mr
 
 Benefits: Easy updates when marketplace skills improve.
 
-### Method 3: Git Submodule
+### Method 4: Git Submodule
 
 Add marketplace as a submodule (advanced):
 

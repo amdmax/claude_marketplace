@@ -1,0 +1,74 @@
+{
+  "name": "claude-skills-marketplace",
+  "owner": {
+    "name": "AIGENSA",
+    "email": "thesolutionarchitect@aigensa.com"
+  },
+  "metadata": {
+    "description": "A centralized marketplace of 28+ production-ready Claude Code skills organized into focused bundles. Includes workflow automation, architecture guidance, code quality tools, and specialized content creation skills.",
+    "version": "1.0.0",
+    "pluginRoot": "./bundles"
+  },
+  "plugins": [
+    {
+      "name": "core-workflow",
+      "source": "./bundles/core-workflow",
+      "description": "Essential git and workflow automation (5 skills): commit, PR creation, GitHub issue management",
+      "version": "1.0.0",
+      "category": "workflow",
+      "keywords": ["workflow", "git", "commit", "pull-request", "github", "issues"],
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      },
+      "homepage": "https://github.com/aigensa/claude_marketplace",
+      "repository": "https://github.com/aigensa/claude_marketplace",
+      "license": "MIT"
+    },
+    {
+      "name": "development-tools",
+      "source": "./bundles/development-tools",
+      "description": "Development utilities (5 skills): bug fixes, skill creation, refactoring, code exploration",
+      "version": "1.0.0",
+      "category": "development",
+      "keywords": ["development", "debugging", "skill-creation", "refactoring", "code-exploration"],
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      },
+      "homepage": "https://github.com/aigensa/claude_marketplace",
+      "repository": "https://github.com/aigensa/claude_marketplace",
+      "license": "MIT"
+    },
+    {
+      "name": "architecture-quality",
+      "source": "./bundles/architecture-quality",
+      "description": "Architecture and quality reviews (6 skills): AWS, CDK, security, performance, fitness functions",
+      "version": "1.0.0",
+      "category": "architecture",
+      "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality"],
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      },
+      "homepage": "https://github.com/aigensa/claude_marketplace",
+      "repository": "https://github.com/aigensa/claude_marketplace",
+      "license": "MIT"
+    },
+    {
+      "name": "content-specialized",
+      "source": "./bundles/content-specialized",
+      "description": "Content and specialized tools (12 skills): CSS, UX, writing, diagrams, documentation, CUDA, GitHub runners",
+      "version": "1.0.0",
+      "category": "content",
+      "keywords": ["content", "css", "ux", "writing", "diagrams", "documentation", "mermaid", "adr"],
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      },
+      "homepage": "https://github.com/aigensa/claude_marketplace",
+      "repository": "https://github.com/aigensa/claude_marketplace",
+      "license": "MIT"
+    }
+  ]
+}
