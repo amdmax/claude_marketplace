@@ -1,0 +1,56 @@
+# Configuration for /sync-skills skill
+# Syncs local skills to a central GitHub repository
+# This is a TEMPLATE - replace {{VARIABLES}} with your values
+
+# Target repository for skills
+repository:
+  # GitHub owner (user or org)
+  owner: "{{SKILLS_REPO_OWNER}}"
+
+  # Repository name
+  name: "{{SKILLS_REPO_NAME}}"
+
+  # Branch to sync to
+  branch: "{{SKILLS_REPO_BRANCH}}"
+
+  # Full GitHub URL (auto-constructed from above)
+  url: "https://github.com/{{SKILLS_REPO_OWNER}}/{{SKILLS_REPO_NAME}}"
+
+# Local paths
+paths:
+  # Local skills directory (relative to project root)
+  skills_dir: ".claude/skills/"
+
+  # Temporary directory for cloning
+  temp_dir: "/tmp/skill-sync"
+
+# Sync behavior
+sync:
+  # Auto-generate README.md index
+  generate_index: true
+
+  # Commit message template
+  # Available variables: {skill_count}, {skill_names}, {timestamp}
+  commit_message: "Sync {skill_count} skill(s): {skill_names}"
+
+  # Git commit author (leave empty to use git config)
+  author_name: ""
+  author_email: ""
+
+# Filtering
+filters:
+  # Exclude these skills from sync
+  exclude:
+    - "_templates"
+    - "example-*"
+
+  # Only sync skills matching these patterns (empty = all)
+  include: []
+
+# Advanced
+advanced:
+  # Verbose output
+  verbose: false
+
+  # Dry run (don't actually push)
+  dry_run: false

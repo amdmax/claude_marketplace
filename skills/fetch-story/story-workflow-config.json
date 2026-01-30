@@ -1,0 +1,27 @@
+{
+  "_comment": "GitHub Projects v2 Configuration - TEMPLATE",
+  "_setup_instructions": "See story-workflow-config.example.json for how to discover your project's IDs",
+
+  "projectId": "{{GITHUB_PROJECT_ID}}",
+
+  "fieldIds": {
+    "status": "{{FIELD_ID_STATUS}}",
+    "priority": "{{FIELD_ID_PRIORITY}}",
+    "size": "{{FIELD_ID_SIZE}}",
+    "itemType": "{{FIELD_ID_ITEM_TYPE}}",
+    "techSpecStatus": "{{FIELD_ID_TECH_SPEC_STATUS}}"
+  },
+
+  "optionIds": {
+    "status": {
+      "ready": "{{OPTION_ID_STATUS_READY}}",
+      "inProgress": "{{OPTION_ID_STATUS_IN_PROGRESS}}",
+      "backlog": "{{OPTION_ID_STATUS_BACKLOG}}"
+    },
+    "priority": {
+      "p0": "{{OPTION_ID_PRIORITY_P0}}",
+      "p1": "{{OPTION_ID_PRIORITY_P1}}",
+      "p2": "{{OPTION_ID_PRIORITY_P2}}"
+    }
+  }
+}

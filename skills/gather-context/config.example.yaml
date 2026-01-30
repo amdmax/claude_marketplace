@@ -1,0 +1,24 @@
+# Configuration for /gather-context skill - Example
+# Copy this to config.yaml and customize
+
+# Project paths
+paths:
+  architecture_docs: "_bmad-output/"    # Or docs/architecture/
+  active_story: ".claude/active-story.json"
+  skills_dir: ".claude/skills/"
+  adr_dir: "docs/adr/"
+  nfr_dir: "docs/nfr/"
+
+# Context sources
+sources:
+  include_architecture: true
+  include_story: true
+  include_adrs: true
+  include_nfrs: true
+  include_code: true
+
+# Output
+output:
+  format: "markdown"
+  save_to: ""        # Empty = stdout only
+  verbose: false

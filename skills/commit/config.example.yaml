@@ -1,0 +1,84 @@
+# Commit Skill Configuration Example
+# Copy this file to config.yaml and customize for your project
+
+# Commit numbering convention
+numbering:
+  # Numbering mode: "issue-based" uses GitHub issue numbers, "sequential" uses incremental counter
+  mode: "issue-based"  # Options: "issue-based" | "sequential"
+
+  # Prefix for all commits (e.g., MYAPP, PROJ, ACME)
+  # This will be used in all commit messages: MYAPP-123: description
+  prefix: MYAPP
+
+  # Issue-based settings (use GitHub issue numbers from active story)
+  issue:
+    # Path to active story file (relative to project root)
+    source: ".claude/active-story.json"
+    # JSON field containing issue number
+    field: "issueNumber"
+    # Format string for issue-based commits (e.g., MYAPP-157)
+    format: "%s-%d"
+    # Auto-create issue if no active story exists
+    create_if_missing: true
+
+  # Sequential settings (fallback when issue creation fails or mode=sequential)
+  sequential:
+    # Number of digits for zero-padding
+    digits: 3
+    # Format string for sequential commits (e.g., MYAPP-001)
+    format: "%s-%03d"
+
+# Grouping detection settings
+grouping:
+  # Enable grouping detection (suggests suffixes like MYAPP-157a, MYAPP-157b)
+  enabled: true
+  # Look back this far for related commits
+  time_window: "4 hours ago"
+  # Maximum commits to analyze
+  max_recent_commits: 10
+  # % file overlap for HIGH confidence grouping suggestion
+  min_overlap_high: 50
+  # % file overlap for MEDIUM confidence grouping suggestion
+  min_overlap_medium: 30
+  # Hours since commit for HIGH confidence
+  time_threshold_high: 1
+  # Hours since commit for MEDIUM confidence
+  time_threshold_medium: 4
+  # Minimum confidence % to prompt user
+  confidence_threshold: 60
+
+# Commit message format
+message:
+  # Maximum length of commit summary (first line)
+  max_summary_length: 72
+  # Maximum length of any line in commit body
+  max_line_length: 100
+  # Include Claude co-author attribution
+  include_co_author: true
+  # Co-author line to add to commit message
+  co_author: "Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+# Git settings
+git:
+  # Check all branches when finding highest commit number
+  check_all_branches: true
+  # Verify staged changes exist before committing
+  verify_staged: true
+
+# Behavior
+behavior:
+  # Don't auto-stage files (require explicit git add)
+  auto_stage: false
+  # Commit immediately without extra prompting
+  prompt_before_commit: false
+  # Show diff summary before committing
+  show_diff_summary: true
+
+# Validation hook (optional)
+validation:
+  # Enable post-commit validation hook
+  enabled: true
+  # Skip validation for merge commits
+  skip_merge_commits: true
+  # Timeout for validation script (seconds)
+  timeout: 10

@@ -1,0 +1,46 @@
+{
+  "_comment": "GitHub Projects v2 Configuration - Example with Discovery Instructions",
+  "_setup": "Follow these steps to configure fetch-story for your GitHub Project",
+
+  "projectId": "PVT_kwDODvZ3Zc4BM9rk",
+
+  "fieldIds": {
+    "status": "PVTSSF_lADODvZ3Zc4BM9rkzg8GG4A",
+    "priority": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB4",
+    "size": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB8",
+    "itemType": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOqE",
+    "techSpecStatus": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOtI"
+  },
+
+  "optionIds": {
+    "status": {
+      "ready": "61e4505c",
+      "inProgress": "47fc9ee4",
+      "backlog": "f75ad846"
+    },
+    "priority": {
+      "p0": "79628723",
+      "p1": "0a877460",
+      "p2": "da944a9c"
+    }
+  },
+
+  "_discovery_instructions": {
+    "step1": "Get your GitHub Project ID",
+    "command1": "gh api graphql -f query='query { organization(login: \"YOUR_ORG\") { projectsV2(first: 10) { nodes { id title } } } }'",
+    "note1": "Or for user projects: query { viewer { projectsV2(first: 10) { nodes { id title } } } }",
+
+    "step2": "Get field IDs for your project",
+    "command2": "gh api graphql -f query='query { node(id: \"YOUR_PROJECT_ID\") { ... on ProjectV2 { fields(first: 20) { nodes { ... on ProjectV2SingleSelectField { id name options { id name } } } } } } }'",
+    "note2": "Replace YOUR_PROJECT_ID with projectId from step 1",
+
+    "step3": "Match field names to IDs",
+    "example": {
+      "Status_field": "Find 'Status' field -> copy its 'id' to fieldIds.status",
+      "Priority_field": "Find 'Priority' field -> copy its 'id' to fieldIds.priority",
+      "Status_options": "Find 'Ready' option under Status -> copy its 'id' to optionIds.status.ready"
+    },
+
+    "step4": "Copy story-workflow-config.example.json to .claude/story-workflow-config.json and update with your IDs"
+  }
+}

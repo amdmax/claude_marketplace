@@ -1,0 +1,118 @@
+# /mr Skill Configuration Example
+# Copy this file to config.yaml and customize for your project
+
+# PR Detection Settings
+pr_detection:
+  check_merged: true
+  check_closed: true
+  fallback_on_error: "create_new"
+
+# Theme Detection Settings
+theme_detection:
+  # Enable automatic commit clustering by theme
+  enabled: true
+
+  # Minimum commits to trigger theme detection
+  min_commits: 2
+
+  # Similarity threshold (0.0-1.0) - 0.40 = 40% similarity required
+  similarity_threshold: 0.40
+
+  # Weights for similarity calculation (must sum to 1.0)
+  weights:
+    title_keywords: 0.5   # 50% - Keywords from commit titles
+    directories: 0.3      # 30% - File path directories
+    categories: 0.2       # 20% - Commit body categories
+
+  # Words to ignore when extracting keywords
+  stopwords:
+    - "the"
+    - "a"
+    - "an"
+    - "and"
+    - "or"
+    - "for"
+    - "to"
+    - "in"
+    - "on"
+    - "with"
+    - "add"
+    - "update"
+    - "fix"
+    - "remove"
+
+# Theme Comparison Thresholds
+theme_comparison:
+  high_match_threshold: 0.60   # Auto-update existing PR
+  low_match_threshold: 0.40    # Auto-create new PR
+  # Between 0.40-0.60: Ask user
+
+# Branch Naming Configuration
+branch_naming:
+  max_length: 25                # Maximum branch name length
+  story_prefix: "story"         # Prefix for story branches
+  story_slug_length: 30         # Max length for story title slug
+
+  # Common abbreviations for branch names
+  abbreviations:
+    dependencies: "deps"
+    infrastructure: "infra"
+    configuration: "config"
+    permissions: "perms"
+    documentation: "docs"
+    development: "dev"
+    production: "prod"
+
+# Conflict Resolution Settings
+conflicts:
+  default_strategy: "auto_resolve_simple"
+  strategies:
+    - "auto_resolve_simple"
+    - "always_ask"
+    - "abort_on_conflict"
+
+# Repository Settings
+repository:
+  default_remote: "origin"      # Git remote name
+  default_branch: "main"        # Target branch for PRs (main/master)
+  slug: "myorg/myrepo"          # GitHub repository (owner/repo)
+
+# PR Creation Settings
+pr_creation:
+  auto_generate_body: true
+  include_story_context: true
+  include_test_plan: true
+  include_impact: true
+  include_categories: true
+  footer: "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
+
+# Story Integration Settings
+story_integration:
+  active_story_file: ".claude/active-story.json"
+  include_story_in_title: true
+  include_story_progress: true
+  branch_format: "story-{issue_number}-{slug}"
+
+# Issue Management Settings
+issue_management:
+  auto_prompt_closure: true
+  closure_comment: "Completed in PR #{pr_number}"
+  closure_reason: "completed"
+  check_multiple_prs: true
+  cleanup_story_file: false
+
+# Cherry-Pick Workflow Settings
+cherry_pick:
+  checkout_master_first: true
+  pull_master_before_branch: true
+  sort_by_prefix: true
+  track_skipped: true
+  prompt_cleanup_original: true
+
+# Advanced Settings
+advanced:
+  verbose: false
+  dry_run: false
+  skip_theme_for_single_commit: true
+  skip_theme_for_similar_commits: true
+  similar_commits_threshold: 0.70

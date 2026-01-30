@@ -1,0 +1,44 @@
+# Configuration for /create-story skill - Example
+# Copy this to config.yaml and customize
+
+# GitHub repository settings
+repository:
+  # Repository slug (owner/repo)
+  slug: "myorg/myrepo"
+
+  # Default labels to apply to created issues (optional)
+  # Uncomment if your repository has these labels
+  # default_labels:
+  #   - "story"
+  #   - "enhancement"
+  default_labels: []
+
+# Issue creation settings
+issue:
+  # Auto-generate body from git diff
+  auto_generate_body: true
+
+  # Lines from git diff to include
+  diff_analysis_lines: 50
+
+  # Default body when no diff available
+  default_body: "Auto-created during commit workflow"
+
+# Active story file settings
+active_story:
+  # Path to active story file (relative to project root)
+  path: ".claude/active-story.json"
+
+  # Minimal fields stored (for fast commit workflow)
+  minimal_fields:
+    - "issueNumber"
+    - "title"
+    - "body"
+    - "url"
+
+# Error handling
+errors:
+  # Show login instructions if not authenticated
+  no_auth: "prompt"
+  # Fail immediately on network errors
+  network_failure: "fail"

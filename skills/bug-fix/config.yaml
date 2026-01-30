@@ -1,0 +1,33 @@
+bug_selection:
+  label: "bug"
+  auto_assign_to_self: true
+  max_bugs_to_show: 20
+  sort_by: "createdAt"  # or "priority", "severity"
+
+investigation:
+  explore_depth: "thorough"  # quick, medium, thorough
+  include_git_history: true
+  analyze_stack_traces: true
+  max_search_results: 50
+
+fix:
+  require_explanation: true
+  require_edge_case_analysis: true
+  prefer_minimal_changes: true
+
+tests:
+  required: true  # CANNOT be false - regression tests are mandatory
+  separate_commit: true
+  test_before_and_after: true
+  require_edge_cases: true
+  min_coverage: 100  # % coverage of bug scenario
+
+commit:
+  link_to_issue: true  # Add "Fixes #123" to commit message
+  use_aigcode_prefix: true
+  co_author: "Claude Sonnet 4.5 <noreply@anthropic.com>"
+
+pr:
+  auto_create: true
+  request_review: false  # Set to true to auto-request reviews
+  include_test_plan: true

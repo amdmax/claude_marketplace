@@ -1,0 +1,48 @@
+# Configuration for /gather-context skill
+# Multi-source context gathering for comprehensive understanding
+# This is a TEMPLATE - replace {{VARIABLES}} with your values
+
+# Project paths
+paths:
+  # Architecture documentation directory
+  architecture_docs: "{{ARCHITECTURE_DOCS_DIR}}"
+
+  # Active story file
+  active_story: "{{ACTIVE_STORY_FILE}}"
+
+  # Skills directory
+  skills_dir: "{{SKILLS_DIR}}"
+
+  # Architecture Decision Records directory
+  adr_dir: "{{ADR_DIR}}"
+
+  # Non-functional requirements directory
+  nfr_dir: "{{NFR_DIR}}"
+
+# Context sources
+sources:
+  # Include architecture docs
+  include_architecture: true
+
+  # Include active story context
+  include_story: true
+
+  # Include ADRs
+  include_adrs: true
+
+  # Include NFRs
+  include_nfrs: true
+
+  # Include code analysis
+  include_code: true
+
+# Output
+output:
+  # Format: "markdown", "json"
+  format: "markdown"
+
+  # Save to file (empty = stdout only)
+  save_to: ""
+
+  # Verbose output
+  verbose: false
