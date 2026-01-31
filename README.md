@@ -165,6 +165,7 @@ This allows one skill to support multiple workflows.
 
 - **[USAGE_GUIDE.md](USAGE_GUIDE.md)** - Comprehensive usage instructions
 - **[SKILL_CATALOG.md](SKILL_CATALOG.md)** - Complete skill index
+- **[docs/statusline-guide.md](docs/statusline-guide.md)** - Claude Code statusline features and configuration
 - **[docs/abstraction-guide.md](docs/abstraction-guide.md)** - Understanding template variables
 - **[docs/configuration-reference.md](docs/configuration-reference.md)** - Config options reference
 - **[docs/migration-notes.md](docs/migration-notes.md)** - Source project analysis
