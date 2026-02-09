@@ -1,0 +1,47 @@
+#!/bin/bash
+# Desktop notification hook for Claude Code
+# Receives JSON input with notification_type and message
+
+set -euo pipefail
+
+# Get the hooks directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Detect OS
+OS=$("$SCRIPT_DIR/scripts/detect-os.sh")
+
+# Read JSON from stdin
+INPUT=$(cat)
+
+# Parse JSON using jq
+NOTIFICATION_TYPE=$(echo "$INPUT" | jq -r '.notification_type // "unknown"')
+MESSAGE=$(echo "$INPUT" | jq -r '.message // "Claude needs attention"')
+
+# Escape quotes for AppleScript (double quotes become two double quotes)
+MESSAGE_ESCAPED="${MESSAGE//\"/\\\"}"
+NOTIFICATION_TYPE_ESCAPED="${NOTIFICATION_TYPE//\"/\\\"}"
+
+# Show notification based on OS
+case "$OS" in
+  macos)
+    # Use heredoc with escaped variables to prevent command injection
+    osascript <<EOF
+display notification "$MESSAGE_ESCAPED" with title "Claude Code" subtitle "$NOTIFICATION_TYPE_ESCAPED"
+EOF
+    ;;
+  linux)
+    if command -v notify-send &> /dev/null; then
+      # notify-send handles arguments safely, but use -- to prevent flag injection
+      notify-send "Claude Code" "$MESSAGE" -- -i dialog-information
+    else
+      echo "Warning: notify-send not found. Install via: sudo apt-get install libnotify-bin" >&2
+      exit 1
+    fi
+    ;;
+  *)
+    echo "Warning: Desktop notifications not supported on $OS" >&2
+    exit 1
+    ;;
+esac
+
+exit 0

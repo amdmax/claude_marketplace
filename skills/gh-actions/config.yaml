@@ -1,0 +1,43 @@
+# GitHub Actions Composite Action Configuration
+
+# Default Node.js version for setup actions
+default_node_version: "20"
+
+# Directory where composite actions are stored
+action_directory: ".github/actions"
+
+# Validation settings
+validation:
+  # Check YAML syntax with yq
+  syntax_check: true
+
+  # Require shell specification in all run steps
+  require_shell: true
+
+  # Require descriptions for all inputs
+  require_descriptions: true
+
+  # Warn about checkout in composite actions
+  warn_checkout: true
+
+# Artifact settings
+artifact_retention_days: 7
+
+# Common patterns for this project
+patterns:
+  # Modules that have separate test commands
+  test_modules:
+    - src
+    - infrastructure
+    - lambda/auth-edge
+    - lambda/custom-message
+    - lambda/referral
+
+  # Common input parameters
+  common_inputs:
+    node-version:
+      description: "Node.js version to install"
+      default: "20"
+    working-directory:
+      description: "Working directory for the action"
+      default: "."
