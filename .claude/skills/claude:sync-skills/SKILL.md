@@ -1,5 +1,5 @@
 ---
-name: sync-skills
+name: claude:sync-skills
 description: Push local skills to https://github.com/{{SKILLS_REPO_OWNER}}/{{SKILLS_REPO_NAME}} for reuse across projects. Discovers skills, syncs to remote repository, generates index, and reports results. Use when you want to share skills across projects or when user says "sync skills", "push skills to GitHub", or "share skills".
 ---
 
