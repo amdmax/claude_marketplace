@@ -1,42 +1,30 @@
 ---
-name: commit
+name: git:commit
 description: Create git commits with configurable numbering (issue-based or sequential). Analyzes staged changes and generates commit messages following project conventions. Optionally creates GitHub issues if no active story exists.
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
 hooks:
   Stop:
-    - hooks:
-        - type: command
-          command: |
-            #!/bin/bash
-            # Read configuration
-            CONFIG_FILE="$(dirname "$0")/config.yaml"
-
-            # Check if validation is enabled
-            VALIDATION_ENABLED=$(yq e '.validation.enabled' "$CONFIG_FILE" 2>/dev/null || echo "false")
-
-            if [ "$VALIDATION_ENABLED" != "true" ]; then
-              echo "✓ Validation disabled - skipping"
-              exit 0
-            fi
-
-            # Skip validation for merge commits
-            if git log -1 --pretty=%B | grep -q "^Merge"; then
-              echo "✓ Merge commit - skipping validation"
-              exit 0
-            fi
-
-            # Read prefix from config
-            PREFIX=$(yq e '.numbering.prefix' "$CONFIG_FILE" 2>/dev/null || echo "PROJ")
-
-            # Verify commit format - accept both issue-based and sequential
-            if ! git log -1 --pretty=%B | grep -E "^${PREFIX}-[0-9]+[a-z]?:"; then
-              echo "Error: Commit must follow '${PREFIX}-###:' format" >&2
-              echo "  Valid: ${PREFIX}-157: description (issue-based)" >&2
-              echo "  Valid: ${PREFIX}-001: description (sequential)" >&2
-              echo "  Valid: ${PREFIX}-157a: description (with suffix)" >&2
-              exit 2
-            fi
-            echo "✓ Commit format validated (${PREFIX})"
-          timeout: 10
+    command: |
+      #!/bin/bash
+      CONFIG_FILE="$(dirname "$0")/config.yaml"
+      VALIDATION_ENABLED=$(yq e '.validation.enabled' "$CONFIG_FILE" 2>/dev/null || echo "false")
+      if [ "$VALIDATION_ENABLED" != "true" ]; then
+        echo "Validation disabled - skipping"
+        exit 0
+      fi
+      if git log -1 --pretty=%B | grep -q "^Merge"; then
+        echo "Merge commit - skipping validation"
+        exit 0
+      fi
+      PREFIX=$(yq e '.numbering.prefix' "$CONFIG_FILE" 2>/dev/null || echo "PROJ")
+      if ! git log -1 --pretty=%B | grep -E "^${PREFIX}-[0-9]+[a-z]?:"; then
+        echo "Error: Commit must follow '${PREFIX}-###:' format" >&2
+        exit 2
+      fi
+      echo "Commit format validated (${PREFIX})"
+    description: Validate commit format follows project conventions
+    timeout: 10000
 ---
 
 # Commit Automation
