@@ -1,0 +1,155 @@
+name: Validate Skills
+
+on:
+  pull_request:
+    paths:
+      - '.claude/skills/**/SKILL.md'
+  push:
+    branches: [main]
+    paths:
+      - '.claude/skills/**/SKILL.md'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-changed-skills:
+    name: Validate changed skills
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install yq
+        uses: mikefarah/yq@v4
+
+      - name: Detect changed SKILL.md files
+        id: changed
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+          else
+            BASE="${{ github.event.before }}"
+            HEAD="${{ github.sha }}"
+          fi
+
+          CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE" "$HEAD" -- '.claude/skills/**/SKILL.md' || true)
+
+          if [[ -z "$CHANGED" ]]; then
+            echo "No SKILL.md files changed"
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "Changed files:"
+            echo "$CHANGED"
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            # Write to file to preserve newlines
+            echo "$CHANGED" > /tmp/changed-skills.txt
+          fi
+
+      - name: Validate changed skills
+        if: steps.changed.outputs.has_changes == 'true'
+        run: |
+          ERRORS=0
+          VALID=0
+          TOTAL=0
+
+          while IFS= read -r SKILL_FILE; do
+            [[ -z "$SKILL_FILE" ]] && continue
+            TOTAL=$((TOTAL + 1))
+
+            echo "::group::Validating $SKILL_FILE"
+
+            # Extract frontmatter
+            FRONTMATTER=$(awk 'NR==1 && /^---$/{flag=1; next} flag && /^---$/{exit} flag' "$SKILL_FILE")
+
+            # Check frontmatter exists
+            if [[ -z "$FRONTMATTER" ]]; then
+              echo "::error file=$SKILL_FILE::Missing frontmatter delimiters (---)"
+              ERRORS=$((ERRORS + 1))
+              echo "::endgroup::"
+              continue
+            fi
+
+            # Validate YAML syntax
+            if ! echo "$FRONTMATTER" | yq eval '.' - >/dev/null 2>&1; then
+              echo "::error file=$SKILL_FILE::Invalid YAML syntax in frontmatter"
+              ERRORS=$((ERRORS + 1))
+              echo "::endgroup::"
+              continue
+            fi
+
+            FILE_ERRORS=0
+
+            # Check required fields
+            NAME=$(echo "$FRONTMATTER" | yq eval '.name' -)
+            if [[ "$NAME" == "null" || -z "$NAME" ]]; then
+              echo "::error file=$SKILL_FILE::Required field 'name' not found"
+              FILE_ERRORS=$((FILE_ERRORS + 1))
+            fi
+
+            DESCRIPTION=$(echo "$FRONTMATTER" | yq eval '.description' -)
+            if [[ "$DESCRIPTION" == "null" || -z "$DESCRIPTION" ]]; then
+              echo "::error file=$SKILL_FILE::Required field 'description' not found"
+              FILE_ERRORS=$((FILE_ERRORS + 1))
+            fi
+
+            # Validate name format
+            if [[ "$NAME" != "null" && ! "$NAME" =~ ^[a-zA-Z0-9:_-]+$ ]]; then
+              echo "::error file=$SKILL_FILE::Invalid skill name format: $NAME (use alphanumeric, hyphens, colons, underscores)"
+              FILE_ERRORS=$((FILE_ERRORS + 1))
+            fi
+
+            # Validate hooks if present
+            HOOKS=$(echo "$FRONTMATTER" | yq eval '.hooks' -)
+            if [[ "$HOOKS" != "null" ]]; then
+              VALID_EVENTS="Start Stop PreToolUse PostToolUse Notification SessionStart"
+
+              HOOK_EVENTS=$(echo "$FRONTMATTER" | yq eval '.hooks | keys | .[]' -)
+              while IFS= read -r EVENT; do
+                [[ -z "$EVENT" ]] && continue
+
+                if [[ ! " $VALID_EVENTS " =~ " $EVENT " ]]; then
+                  echo "::error file=$SKILL_FILE::Invalid hook event type: '$EVENT' (valid: $VALID_EVENTS)"
+                  FILE_ERRORS=$((FILE_ERRORS + 1))
+                fi
+
+                COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
+                if [[ "$COMMAND" == "null" ]]; then
+                  echo "::error file=$SKILL_FILE::Hook '$EVENT' missing required field 'command'"
+                  FILE_ERRORS=$((FILE_ERRORS + 1))
+                fi
+
+                TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
+                if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
+                  echo "::error file=$SKILL_FILE::Hook '$EVENT' timeout must be a number (milliseconds)"
+                  FILE_ERRORS=$((FILE_ERRORS + 1))
+                fi
+              done <<< "$HOOK_EVENTS"
+            fi
+
+            if [[ $FILE_ERRORS -eq 0 ]]; then
+              echo "✓ Valid"
+              VALID=$((VALID + 1))
+            else
+              ERRORS=$((ERRORS + 1))
+            fi
+
+            echo "::endgroup::"
+          done < /tmp/changed-skills.txt
+
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Validation Summary"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "Total:   $TOTAL"
+          echo "Valid:   $VALID"
+          echo "Invalid: $ERRORS"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+          if [[ $ERRORS -gt 0 ]]; then
+            echo "::error::$ERRORS skill(s) failed validation"
+            exit 1
+          fi
