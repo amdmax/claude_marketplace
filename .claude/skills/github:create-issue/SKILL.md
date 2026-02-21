@@ -1,6 +1,8 @@
 ---
-description: Create high-quality, comprehensive GitHub issues with templates, validation, and best practices. For detailed, well-structured issues requiring planning and documentation. Use /create-story for minimal issues during commits.
-invocation: gh:create-issue
+name: github:create-issue
+description: "Create high-quality, comprehensive GitHub issues with templates, validation, and best practices. For detailed, well-structured issues requiring planning and documentation. Use /create-story for minimal issues during commits."
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
 ---
 
 # GitHub Issue Creation Skill
