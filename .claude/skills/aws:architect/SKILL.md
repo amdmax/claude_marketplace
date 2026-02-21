@@ -1,3 +1,10 @@
+---
+name: aws:architect
+description: Provide expert guidance on AWS deployments following the AWS Well-Architected Framework. Help design, review, and optimize cloud architectures across all six pillars.
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
+---
+
 # AWS Well-Architected Framework Architect
 
 ## Purpose
