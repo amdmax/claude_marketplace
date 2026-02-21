@@ -1,6 +1,8 @@
 ---
-description: Quick GitHub issue creation for commit workflow. Creates minimal issues with {{PROJECT_PREFIX}} prefix and stores in .claude/active-story.json. Different from /fetch-story (planned work from Projects).
-invocation: create-story
+name: github:story-create
+description: "Quick GitHub issue creation for commit workflow. Creates minimal issues with project prefix and stores in .claude/active-story.json. Different from /fetch-story (planned work from Projects)."
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
 ---
 
 # Create Story Skill
