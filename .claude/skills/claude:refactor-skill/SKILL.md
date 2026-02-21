@@ -1,5 +1,5 @@
 ---
-name: refactor-skill
+name: claude:refactor-skill
 description: Convert monolithic SKILL.md files to modular structure with references/, config.yaml for parameters, and optional validation hooks in frontmatter. Use when skills exceed 500 lines, contain hardcoded project-specific values, or would benefit from progressive disclosure patterns.
 ---
 
