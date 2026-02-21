@@ -160,8 +160,8 @@ custom-skill/SKILL.md:
 ## Integration
 
 Works with:
-- **/refactor-skill** - Validates after refactoring
-- **/skill-creator** - Validates newly created skills
+- **/claude:refactor-skill** - Validates after refactoring
+- **/claude:skill-creator** - Validates newly created skills
 - **Stop hook** - Auto-validates before session ends
 
 ## Configuration
