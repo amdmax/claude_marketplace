@@ -27,11 +27,11 @@ Each skill has its own `config.yaml` file that users customize for their project
 your-project/
 └── .claude/
     └── skills/
-        ├── commit/
+        ├── git:commit/
         │   └── config.yaml          # User's values
-        ├── mr/
+        ├── github:pull-request/
         │   └── config.yaml
-        └── story-workflow-config.json  # Shared by fetch-story/play-story
+        └── story-workflow-config.json  # Shared by github:story-fetch/github:story-play
 ```
 
 ## Global Patterns
@@ -73,9 +73,9 @@ features:
 
 ## Skill-Specific Configs
 
-### commit
+### git:commit
 
-**File:** `skills/commit/config.yaml`
+**File:** `.claude/skills/git:commit/config.yaml`
 
 ```yaml
 # Commit numbering convention
@@ -137,114 +137,9 @@ validation:
 
 ---
 
-### mr
+### github:story-create
 
-**File:** `skills/mr/config.yaml`
-
-```yaml
-# PR Detection
-pr_detection:
-  check_merged: true
-  check_closed: true
-  fallback_on_error: "create_new"
-
-# Theme Detection
-theme_detection:
-  enabled: true
-  min_commits: 2
-  similarity_threshold: 0.40
-
-  weights:
-    title_keywords: 0.5
-    directories: 0.3
-    categories: 0.2
-
-  stopwords:
-    - "the"
-    - "add"
-    - "update"
-
-# Theme Comparison
-theme_comparison:
-  high_match_threshold: 0.60
-  low_match_threshold: 0.40
-
-# Branch Naming
-branch_naming:
-  max_length: 25
-  story_prefix: "story"
-  story_slug_length: 30
-
-  abbreviations:
-    dependencies: "deps"
-    infrastructure: "infra"
-
-# Conflict Resolution
-conflicts:
-  default_strategy: "auto_resolve_simple"
-  strategies:
-    - "auto_resolve_simple"
-    - "always_ask"
-    - "abort_on_conflict"
-
-# Repository
-repository:
-  default_remote: "origin"
-  default_branch: "main"
-  slug: "myorg/myrepo"
-
-# PR Creation
-pr_creation:
-  auto_generate_body: true
-  include_story_context: true
-  include_test_plan: true
-  include_impact: true
-  include_categories: true
-  footer: "🤖 Generated with [Claude Code](https://claude.com/claude-code)"
-
-# Story Integration
-story_integration:
-  active_story_file: ".claude/active-story.json"
-  include_story_in_title: true
-  include_story_progress: true
-  branch_format: "story-{issue_number}-{slug}"
-
-# Issue Management
-issue_management:
-  auto_prompt_closure: true
-  closure_comment: "Completed in PR #{pr_number}"
-  closure_reason: "completed"
-  check_multiple_prs: true
-  cleanup_story_file: false
-
-# Cherry-Pick
-cherry_pick:
-  checkout_master_first: true
-  pull_master_before_branch: true
-  sort_by_prefix: true
-  track_skipped: true
-  prompt_cleanup_original: true
-
-# Advanced
-advanced:
-  verbose: false
-  dry_run: false
-  skip_theme_for_single_commit: true
-  skip_theme_for_similar_commits: true
-  similar_commits_threshold: 0.70
-```
-
-**Key Options:**
-- `theme_detection.enabled` - Group commits by theme for focused PRs
-- `similarity_threshold` - How similar commits must be to group (0.0-1.0)
-- `conflicts.default_strategy` - How to handle cherry-pick conflicts
-- `branch_format` - Template for story branch names
-
----
-
-### create-story
-
-**File:** `skills/create-story/config.yaml`
+**File:** `.claude/skills/github:story-create/config.yaml`
 
 ```yaml
 # Repository
@@ -281,9 +176,9 @@ errors:
 
 ---
 
-### fetch-story
+### github:story-fetch
 
-**File:** `skills/fetch-story/story-workflow-config.json`
+**File:** `.claude/skills/github:story-fetch/story-workflow-config.json`
 
 ```json
 {
@@ -332,7 +227,8 @@ See `story-workflow-config.example.json` for discovery instructions.
 
 ### bug-fix
 
-**File:** `skills/bug-fix/config.yaml`
+**File:** `.claude/skills/bug-fix/config.yaml`
+
 
 ```yaml
 # Investigation
@@ -368,9 +264,9 @@ labels:
 
 ---
 
-### sync-skills
+### claude:sync-skills
 
-**File:** `skills/sync-skills/config.yaml`
+**File:** `.claude/skills/claude:sync-skills/config.yaml`
 
 ```yaml
 # Target repository
@@ -414,7 +310,8 @@ advanced:
 
 ### gather-context
 
-**File:** `skills/gather-context/config.yaml`
+**File:** `.claude/skills/gather-context/config.yaml`
+
 
 ```yaml
 # Project paths
@@ -455,7 +352,7 @@ project:
   name: "My Application" # Full project name (optional)
 ```
 
-Used by: commit, bug-fix
+Used by: git:commit, bug-fix
 
 ### Repository
 
@@ -468,7 +365,7 @@ repository:
   default_remote: "origin"  # Git remote name
 ```
 
-Used by: commit, mr, create-story, sync-skills
+Used by: git:commit, github:pull-request, github:story-create, claude:sync-skills
 
 ### Paths
 
@@ -494,7 +391,7 @@ commands:
   format: "prettier --write ."
 ```
 
-Used by: commit, bug-fix
+Used by: git:commit, bug-fix
 
 ## Variable Reference
 
@@ -504,9 +401,9 @@ These must be set for skills to work:
 
 | Variable | Skills | Purpose | Example |
 |----------|--------|---------|---------|
-| `PROJECT_PREFIX` | commit, bug-fix | Commit prefix | MYAPP |
+| `PROJECT_PREFIX` | git:commit, bug-fix | Commit prefix | MYAPP |
 | `REPO_SLUG` | Most | GitHub repository | owner/repo |
-| `DEFAULT_BRANCH` | mr, commit | Target branch | main |
+| `DEFAULT_BRANCH` | github:pull-request, git:commit | Target branch | main |
 
 ### Optional Variables
 
@@ -514,10 +411,10 @@ These have sensible defaults or are feature-specific:
 
 | Variable | Skills | Purpose | Default |
 |----------|--------|---------|---------|
-| `STORY_PREFIX` | mr, play-story | Story branch prefix | story |
-| `MAX_BRANCH_LENGTH` | mr | Branch name limit | 25 |
-| `SIMILARITY_THRESHOLD` | mr | Theme grouping | 0.40 |
-| `TEST_CMD` | commit, bug-fix | Test command | npm test |
+| `STORY_PREFIX` | github:pull-request, github:story-play | Story branch prefix | story |
+| `MAX_BRANCH_LENGTH` | github:pull-request | Branch name limit | 25 |
+| `SIMILARITY_THRESHOLD` | github:pull-request | Theme grouping | 0.40 |
+| `TEST_CMD` | git:commit, bug-fix | Test command | npm test |
 
 ### Conditional Variables
 
@@ -525,8 +422,8 @@ Required only when using specific features:
 
 | Variable | When Required | Purpose |
 |----------|--------------|---------|
-| `GITHUB_PROJECT_ID` | Using fetch-story | GitHub Project V2 ID |
-| `FIELD_ID_*` | Using fetch-story | Project field IDs |
+| `GITHUB_PROJECT_ID` | Using github:story-fetch | GitHub Project V2 ID |
+| `FIELD_ID_*` | Using github:story-fetch | Project field IDs |
 | `ACTIVE_STORY_FILE` | Issue-based mode | Story tracking file |
 
 ## Examples by Stack
@@ -611,4 +508,4 @@ repository:
 
 - [Abstraction Guide](abstraction-guide.md) - Template variable system
 - [USAGE_GUIDE.md](../USAGE_GUIDE.md) - Using marketplace skills
-- [config-schema.md](../skills/_templates/config-schema.md) - Config structure
+- [config-schema.md](../.claude/skills/_templates/config-schema.md) - Config structure

@@ -6,22 +6,24 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 
 | Skill | Category | Description | Priority |
 |-------|----------|-------------|----------|
-| [commit](#commit) | Core Workflow | Automated commit creation with issue numbering | Tier 1 |
-| [mr](#mr) | Core Workflow | Pull request creation with theme grouping | Tier 1 |
-| [create-story](#create-story) | Core Workflow | GitHub issue creation | Tier 1 |
-| [fetch-story](#fetch-story) | Core Workflow | Issue fetching and management | Tier 1 |
-| [play-story](#play-story) | Core Workflow | Story workflow activation | Tier 1 |
+| [git:commit](#gitcommit) | Core Workflow | Automated commit creation with issue numbering | Tier 1 |
+| [github:story-create](#githubstory-create) | Core Workflow | GitHub issue creation | Tier 1 |
+| [github:story-fetch](#githubstory-fetch) | Core Workflow | Issue fetching and management | Tier 1 |
+| [github:story-play](#githubstory-play) | Core Workflow | Story workflow activation | Tier 1 |
+| [github:pull-request](#githubpull-request) | Core Workflow | Pull request creation | Tier 1 |
+| [team:agile-dev](#teamagile-dev) | Team Orchestration | 5-agent TDD team with story-driven workflow | Tier 1 |
 | [bug-fix](#bug-fix) | Development | Bug fix workflow | Tier 2 |
-| [skill-creator](#skill-creator) | Development | Create new skills | Tier 2 |
-| [refactor-skill](#refactor-skill) | Development | Refactor existing skills | Tier 2 |
-| [sync-skills](#sync-skills) | Development | Synchronize skills across projects | Tier 2 |
+| [claude:skill-creator](#claudeskill-creator) | Development | Create new skills | Tier 2 |
+| [claude:refactor-skill](#clauderefactor-skill) | Development | Refactor existing skills | Tier 2 |
+| [claude:sync-skills](#claudesync-skills) | Development | Synchronize skills across projects | Tier 2 |
 | [gather-context](#gather-context) | Development | Code exploration and context gathering | Tier 2 |
-| [aws-architect](#aws-architect) | Architecture | AWS architecture guidance | Tier 3 |
-| [cdk-scripting](#cdk-scripting) | Architecture | CDK infrastructure as code | Tier 3 |
-| [security-review](#security-review) | Quality | Security code reviews | Tier 3 |
-| [performance-review](#performance-review) | Quality | Performance analysis | Tier 3 |
-| [overall-review](#overall-review) | Quality | General code reviews | Tier 3 |
-| [fitness-function-architect](#fitness-function-architect) | Architecture | Architecture validation | Tier 3 |
+| [github:story-quality](#githubstory-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
+| [aws:architect](#awsarchitect) | Architecture | AWS architecture guidance | Tier 3 |
+| [aws:cdk](#awscdk) | Architecture | CDK infrastructure as code | Tier 3 |
+| [review:security](#reviewsecurity) | Quality | Security code reviews | Tier 3 |
+| [review:performance](#reviewperformance) | Quality | Performance analysis | Tier 3 |
+| [review:overall](#reviewoverall) | Quality | General code reviews | Tier 3 |
+| [arch:fitness-function](#archfitness-function) | Architecture | Architecture validation | Tier 3 |
 | [css-architecture](#css-architecture) | Specialized | CSS architecture patterns | Tier 4 |
 | [ux-professional](#ux-professional) | Specialized | UX guidance | Tier 4 |
 | [creative-writing](#creative-writing) | Content | Content creation | Tier 4 |
@@ -31,15 +33,13 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [regenerate-course-content](#regenerate-course-content) | Content | Course content generation | Tier 4 |
 | [create-adr](#create-adr) | Documentation | Architecture decision records | Tier 4 |
 | [gather-nfr](#gather-nfr) | Documentation | Non-functional requirements | Tier 4 |
-| [hooks](#hooks) | Configuration | Git hooks configuration | Tier 4 |
-| [agile-dev-team](#agile-dev-team) | Team Orchestration | 5-agent TDD team with story-driven workflow | Tier 1 |
-| [check-story-quality](#check-story-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
+| [claude:hooks](#claudehooks) | Configuration | Claude Code hooks configuration | Tier 4 |
 
 ---
 
 ## Team Orchestration Skills
 
-### agile-dev-team
+### team:agile-dev
 
 **Category:** Team Orchestration
 **Priority:** Tier 1
@@ -63,20 +63,20 @@ Spin up a coordinated 5-agent TDD team that fetches stories, designs implementat
 - Agent definition files in `.claude/agents/`
 
 **Dependencies:**
-- `/fetch-story`, `/check-story-quality`, `/gather-context`, `/create-adr`, `/commit`, `/pr`
+- `/fetch-story`, `/check-story-quality`, `/gather-context`, `/create-adr`, `/commit`, `/pr` (or `/github:pull-request`)
 
 **Use Cases:**
 - Fully automated story implementation
 - TDD-driven feature development
 - Multi-agent parallel implementation
 
-**Invoke:** `/agile-dev-team`
+**Invoke:** `/team:agile-dev`
 
 ---
 
 ## Core Workflow Skills
 
-### commit
+### git:commit
 
 **Category:** Core Workflow
 **Priority:** Tier 1 (Most Critical)
@@ -107,37 +107,7 @@ Automated commit creation with intelligent issue numbering, theme detection, and
 
 ---
 
-### mr
-
-**Category:** Core Workflow
-**Priority:** Tier 1
-
-**Purpose:**
-Create pull requests with intelligent commit grouping by theme and comprehensive PR descriptions.
-
-**Key Features:**
-- Automatic commit theme detection
-- Multi-theme PR grouping
-- Branch management
-- Merged/closed PR detection
-- PR description generation
-- Test plan creation
-
-**Configuration Required:**
-- Repository settings
-- Default branch
-- GitHub CLI configuration
-
-**Use Cases:**
-- Create focused, thematic PRs
-- Handle complex multi-commit branches
-- Generate comprehensive PR documentation
-
-**Invoke:** `/mr`
-
----
-
-### create-story
+### github:story-create
 
 **Category:** Core Workflow
 **Priority:** Tier 1
@@ -166,7 +136,7 @@ Create GitHub issues with standardized formatting and optional templates.
 
 ---
 
-### fetch-story
+### github:story-fetch
 
 **Category:** Core Workflow
 **Priority:** Tier 1
@@ -193,7 +163,7 @@ Fetch and display GitHub issues with filtering and sorting capabilities.
 
 ---
 
-### play-story
+### github:story-play
 
 **Category:** Core Workflow
 **Priority:** Tier 1
@@ -251,7 +221,7 @@ Structured bug fix workflow with root cause analysis and verification.
 
 ---
 
-### skill-creator
+### claude:skill-creator
 
 **Category:** Development
 **Priority:** Tier 2
@@ -275,11 +245,11 @@ Create new Claude Code skills with proper structure and documentation.
 - Extend Claude capabilities
 - Standardize skill structure
 
-**Invoke:** `/skill-creator`
+**Invoke:** `/claude:skill-creator`
 
 ---
 
-### refactor-skill
+### claude:refactor-skill
 
 **Category:** Development
 **Priority:** Tier 2
@@ -302,11 +272,11 @@ Refactor existing skills with abstraction and improvement suggestions.
 - Abstract project-specific logic
 - Update skill documentation
 
-**Invoke:** `/refactor-skill`
+**Invoke:** `/claude:refactor-skill`
 
 ---
 
-### sync-skills
+### claude:sync-skills
 
 **Category:** Development
 **Priority:** Tier 2
@@ -330,7 +300,7 @@ Synchronize skills across multiple projects with conflict resolution.
 - Maintain skill consistency
 - Update multiple projects
 
-**Invoke:** `/sync-skills`
+**Invoke:** `/claude:sync-skills`
 
 ---
 
@@ -364,7 +334,7 @@ Explore codebase and gather contextual information for tasks.
 
 ## Architecture & Quality Skills
 
-### aws-architect
+### aws:architect
 
 **Category:** Architecture
 **Priority:** Tier 3
@@ -392,7 +362,7 @@ AWS architecture guidance and best practices.
 
 ---
 
-### cdk-scripting
+### aws:cdk
 
 **Category:** Architecture
 **Priority:** Tier 3
@@ -421,7 +391,7 @@ AWS CDK infrastructure as code development.
 
 ---
 
-### security-review
+### review:security
 
 **Category:** Quality
 **Priority:** Tier 3
@@ -449,7 +419,7 @@ Security-focused code review with vulnerability detection.
 
 ---
 
-### performance-review
+### review:performance
 
 **Category:** Quality
 **Priority:** Tier 3
@@ -477,7 +447,7 @@ Performance analysis and optimization recommendations.
 
 ---
 
-### overall-review
+### review:overall
 
 **Category:** Quality
 **Priority:** Tier 3
@@ -505,7 +475,7 @@ Comprehensive code review covering quality, maintainability, and best practices.
 
 ---
 
-### fitness-function-architect
+### arch:fitness-function
 
 **Category:** Architecture
 **Priority:** Tier 3
@@ -529,7 +499,7 @@ Define and implement architecture fitness functions for governance.
 - Automated governance
 - Continuous architecture validation
 
-**Invoke:** `/fitness-function-architect`
+**Invoke:** `/arch:fitness-function`
 
 ---
 
@@ -787,13 +757,13 @@ Gather and document non-functional requirements.
 
 ---
 
-### hooks
+### claude:hooks
 
 **Category:** Configuration
 **Priority:** Tier 4
 
 **Purpose:**
-Configure and manage Git hooks for workflow automation.
+Configure and manage Claude Code hooks for workflow automation.
 
 **Key Features:**
 - Hook template generation
@@ -815,7 +785,7 @@ Configure and manage Git hooks for workflow automation.
 
 ---
 
-### check-story-quality
+### github:story-quality
 
 **Category:** Quality
 **Priority:** Tier 2
@@ -843,7 +813,7 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - Ensure NFR coverage across stories
 - Automated story refinement feedback
 
-**Invoke:** `/check-story-quality`
+**Invoke:** `/github:story-quality`
 
 ---
 
@@ -853,7 +823,7 @@ To use any skill:
 
 1. **Copy to your project:**
    ```bash
-   cp -r skills/<skill-name>/ /path/to/your/project/.claude/skills/
+   cp -r .claude/skills/<skill-name>/ /path/to/your/project/.claude/skills/
    ```
 
 2. **Configure:**

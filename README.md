@@ -32,9 +32,9 @@ Install all bundles or choose specific ones:
 ```
 
 **Available Bundles:**
-- **core-workflow** (5 skills) - commit, mr, create-story, fetch-story, play-story
-- **development-tools** (5 skills) - bug-fix, skill-creator, refactor-skill, sync-skills, gather-context
-- **architecture-quality** (6 skills) - aws-architect, cdk-scripting, security-review, performance-review, overall-review, fitness-function-architect
+- **core-workflow** (5 skills) - git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
+- **development-tools** (5 skills) - bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
+- **architecture-quality** (6 skills) - aws:architect, aws:cdk, review:security, review:performance, review:overall, arch:fitness-function
 - **content-specialized** (12 skills) - css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, and more
 
 ### Option 2: Manual Copy (For Customization)
@@ -47,13 +47,13 @@ See [SKILL_CATALOG.md](SKILL_CATALOG.md) for the complete list of available skil
 
 ```bash
 # Example: Copy the commit skill to your project
-cp -r skills/commit/ /path/to/your/project/.claude/skills/
+cp -r .claude/skills/git:commit/ /path/to/your/project/.claude/skills/
 ```
 
 #### 3. Configure the Skill
 
 ```bash
-cd /path/to/your/project/.claude/skills/commit/
+cd /path/to/your/project/.claude/skills/git:commit/
 
 # Copy the example config and customize it
 cp config.example.yaml config.yaml
@@ -74,42 +74,47 @@ The skill is now available in your project. Invoke it via Claude Code:
 
 ```
 claude_marketplace/
-├── skills/                    # All marketplace skills
-│   ├── commit/               # Git commit automation
-│   ├── mr/                   # Pull request creation
-│   ├── create-story/         # Issue creation
-│   └── [30+ more skills...]
+├── .claude/
+│   └── skills/                # All marketplace skills (auto-discovered)
+│       ├── _templates/        # Skill creation templates
+│       ├── git:commit/        # Git commit automation
+│       ├── github:pull-request/ # Pull request creation
+│       ├── github:story-create/ # Issue creation
+│       └── [30+ more skills...]
 ├── docs/                      # Detailed guides
 │   ├── abstraction-guide.md
 │   ├── configuration-reference.md
 │   └── migration-notes.md
-├── SKILL_CATALOG.md          # Complete skill index
-└── USAGE_GUIDE.md            # Detailed usage instructions
+├── SKILL_CATALOG.md           # Complete skill index
+└── USAGE_GUIDE.md             # Detailed usage instructions
 ```
 
 ## Skill Categories
 
 ### Core Workflow
-- **commit** - Automated commit creation with issue numbering
-- **mr** - Pull request creation with intelligent grouping
-- **create-story** - GitHub issue creation
-- **fetch-story** - Issue fetching and management
-- **play-story** - Story workflow activation
+- **git:commit** - Automated commit creation with issue numbering
+- **github:pull-request** - Pull request creation
+- **github:story-create** - GitHub issue creation
+- **github:story-fetch** - Issue fetching and management
+- **github:story-play** - Story workflow activation
 
 ### Development
 - **bug-fix** - Bug fix workflow
-- **skill-creator** - Create new skills
-- **refactor-skill** - Refactor existing skills
-- **sync-skills** - Synchronize skills across projects
+- **claude:skill-creator** - Create new skills
+- **claude:refactor-skill** - Refactor existing skills
+- **claude:sync-skills** - Synchronize skills across projects
 - **gather-context** - Code exploration and context gathering
 
 ### Architecture & Quality
-- **aws-architect** - AWS architecture guidance
-- **cdk-scripting** - CDK infrastructure as code
-- **security-review** - Security code reviews
-- **performance-review** - Performance analysis
-- **overall-review** - General code reviews
-- **fitness-function-architect** - Architecture validation
+- **aws:architect** - AWS architecture guidance
+- **aws:cdk** - CDK infrastructure as code
+- **review:security** - Security code reviews
+- **review:performance** - Performance analysis
+- **review:overall** - General code reviews
+- **arch:fitness-function** - Architecture validation
+
+### Team Orchestration
+- **team:agile-dev** - 5-agent TDD team with story-driven workflow
 
 ### Content & Specialized
 - **css-architecture** - CSS architecture patterns
@@ -119,7 +124,7 @@ claude_marketplace/
 - **mermaid-diagram** - Diagram generation
 - **create-adr** - Architecture decision records
 - **gather-nfr** - Non-functional requirements
-- **hooks** - Git hooks configuration
+- **claude:hooks** - Claude Code hooks configuration
 
 ## How It Works
 
@@ -172,23 +177,9 @@ This allows one skill to support multiple workflows.
 
 ## Creating New Skills
 
-See [skills/_templates/](skills/_templates/) for:
+See [.claude/skills/_templates/](.claude/skills/_templates/) for:
 - **SKILL_TEMPLATE.md** - Template for new skills
 - **config-schema.md** - Configuration file documentation
-
-## Contributing
-
-Skills are migrated from production projects:
-- Landing page project (AIGWS prefix)
-- Vibe coding course project (AIGCODE prefix)
-- News bot project (AIGNEWS prefix)
-
-When adding skills, ensure:
-1. All project-specific values are abstracted
-2. Complete config.yaml template with NO hardcoded values
-3. Realistic config.example.yaml
-4. Feature flags for variations
-5. Complete documentation
 
 ## License
 

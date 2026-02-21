@@ -51,19 +51,23 @@ All installed skills are immediately available:
 #### Bundle Details
 
 - **core-workflow** - Essential git workflow automation
-  - Skills: commit, mr, create-story, fetch-story, play-story
+  - Skills: git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
   - Use when: Managing git commits, PRs, and GitHub issues
 
 - **development-tools** - Development utilities
-  - Skills: bug-fix, skill-creator, refactor-skill, sync-skills, gather-context
+  - Skills: bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
   - Use when: Developing, debugging, or extending Claude Code
 
 - **architecture-quality** - Architecture and code reviews
-  - Skills: aws-architect, cdk-scripting, security-review, performance-review, overall-review, fitness-function-architect
+  - Skills: aws:architect, aws:cdk, review:security, review:performance, review:overall, arch:fitness-function
   - Use when: Designing systems or reviewing code quality
 
+- **team-orchestration** - Multi-agent workflows
+  - Skills: team:agile-dev
+  - Use when: Running coordinated multi-agent development workflows
+
 - **content-specialized** - Content and specialized tools
-  - Skills: css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, add-content-image, regenerate-course-content, create-adr, gather-nfr, hooks, cuda-remote-manager, github-runner-setup
+  - Skills: css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, add-content-image, regenerate-course-content, create-adr, gather-nfr, claude:hooks, cuda-remote-manager, github:runner-setup
   - Use when: Creating content, documentation, or specialized configurations
 
 ### Method 2: Copy Individual Skills
@@ -78,7 +82,7 @@ cd /path/to/your/project
 mkdir -p .claude/skills
 
 # Copy a skill from the marketplace
-cp -r /path/to/claude_marketplace/skills/commit/ .claude/skills/
+cp -r /path/to/claude_marketplace/.claude/skills/commit/ .claude/skills/
 ```
 
 ### Method 3: Clone Entire Marketplace
@@ -91,8 +95,8 @@ git clone <marketplace-repo> ~/claude-marketplace
 
 # Symlink skills you want to use
 cd /path/to/your/project/.claude/skills
-ln -s ~/claude-marketplace/skills/commit commit
-ln -s ~/claude-marketplace/skills/mr mr
+ln -s ~/claude-marketplace/.claude/skills/git:commit git:commit
+ln -s ~/claude-marketplace/.claude/skills/github:pull-request github:pull-request
 ```
 
 Benefits: Easy updates when marketplace skills improve.
@@ -106,7 +110,7 @@ cd /path/to/your/project
 git submodule add <marketplace-repo> .claude/marketplace
 
 # Symlink individual skills
-ln -s .claude/marketplace/skills/commit .claude/skills/commit
+ln -s .claude/marketplace/.claude/skills/commit .claude/skills/commit
 ```
 
 ## Configuration
@@ -214,7 +218,7 @@ Each skill's `SKILL.md` contains:
 - **Template Variables** - Variables it uses
 - **Feature Flags** - Optional features
 
-Example from `skills/commit/SKILL.md`:
+Example from `.claude/skills/commit/SKILL.md`:
 
 ```markdown
 ## Usage
@@ -395,7 +399,7 @@ Create a shared config template:
 
 ```bash
 # In marketplace
-skills/commit/config.shared.yaml
+.claude/skills/commit/config.shared.yaml
 
 # In each project, extend it
 # .claude/skills/commit/config.yaml
@@ -426,7 +430,7 @@ cd .claude/marketplace
 git checkout v1.2.3
 
 # Or copy specific version
-cp -r ~/claude-marketplace@v1.2.3/skills/commit .claude/skills/
+cp -r ~/claude-marketplace@v1.2.3/.claude/skills/commit .claude/skills/
 ```
 
 ### Integration with CI/CD
@@ -464,7 +468,7 @@ tail -f .claude/skill-debug.log
 - Browse [SKILL_CATALOG.md](SKILL_CATALOG.md) for available skills
 - Read [docs/abstraction-guide.md](docs/abstraction-guide.md) for deep dive on template system
 - Check [docs/configuration-reference.md](docs/configuration-reference.md) for all config options
-- See [skills/_templates/](skills/_templates/) to create your own skills
+- See [.claude/skills/_templates/](.claude/skills/_templates/) to create your own skills
 
 ## Getting Help
 
