@@ -32,6 +32,45 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [create-adr](#create-adr) | Documentation | Architecture decision records | Tier 4 |
 | [gather-nfr](#gather-nfr) | Documentation | Non-functional requirements | Tier 4 |
 | [hooks](#hooks) | Configuration | Git hooks configuration | Tier 4 |
+| [agile-dev-team](#agile-dev-team) | Team Orchestration | 5-agent TDD team with story-driven workflow | Tier 1 |
+| [check-story-quality](#check-story-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
+
+---
+
+## Team Orchestration Skills
+
+### agile-dev-team
+
+**Category:** Team Orchestration
+**Priority:** Tier 1
+
+**Purpose:**
+Spin up a coordinated 5-agent TDD team that fetches stories, designs implementation, writes failing tests, and implements both backend and frontend code.
+
+**Key Features:**
+- 5-agent team: PM, Architect, Test Architect, Backend Dev, Frontend Dev
+- TDD-first workflow (red-green cycle)
+- Automatic story enrichment with NFRs
+- Parallel backend + frontend implementation
+- Automatic PR creation after verification
+- Built-in negotiation and conflict resolution protocol
+
+**Configuration Required:**
+- Project prefix (for branch naming)
+- File paths (active story, NFR registry, test dir)
+- Test commands (unit, integration, e2e)
+- File boundary definitions per agent role
+- Agent definition files in `.claude/agents/`
+
+**Dependencies:**
+- `/fetch-story`, `/check-story-quality`, `/gather-context`, `/create-adr`, `/commit`, `/pr`
+
+**Use Cases:**
+- Fully automated story implementation
+- TDD-driven feature development
+- Multi-agent parallel implementation
+
+**Invoke:** `/agile-dev-team`
 
 ---
 
@@ -773,6 +812,38 @@ Configure and manage Git hooks for workflow automation.
 - Standardize team workflow
 
 **Invoke:** `/hooks`
+
+---
+
+### check-story-quality
+
+**Category:** Quality
+**Priority:** Tier 2
+
+**Purpose:**
+Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. Applies labels and posts structured feedback comments.
+
+**Key Features:**
+- SMART analysis (Specific, Measurable, Achievable, Relevant, Time-bound)
+- NFR cross-referencing against registry
+- Automated label management (needs-acs, needs-nfrs, needs-refinement, ready-for-development)
+- Structured feedback comments with actionable gaps
+- Scheduled and manual execution modes
+- NFR registry auto-update from detected patterns
+
+**Configuration Required:**
+- Repository slug
+- Active story file path
+- NFR registry file path
+- GitHub Project owner and number
+
+**Use Cases:**
+- Validate story readiness before development
+- Enforce acceptance criteria quality standards
+- Ensure NFR coverage across stories
+- Automated story refinement feedback
+
+**Invoke:** `/check-story-quality`
 
 ---
 

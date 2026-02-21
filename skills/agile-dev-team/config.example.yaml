@@ -1,0 +1,75 @@
+# Agile Dev Team Configuration
+# Copy this file to config.yaml and fill in your project values.
+
+project:
+  # Lowercase prefix used in branch names (e.g., "aigws" → feature/aigws-123-slug)
+  prefix_lower: "myapp"
+
+paths:
+  # Path to active story JSON file
+  active_story_file: ".claude/active-story.json"
+  # Path to NFR registry JSON file
+  nfr_registry_file: ".claude/nfr-registry.json"
+  # Path to story workflow config file
+  story_workflow_config: ".claude/story-workflow-config.json"
+  # Test directory
+  test_dir: "tests"
+  # ADR directory
+  adr_dir: "docs/adr"
+
+commands:
+  # Full test suite command
+  test: "npm test"
+  # Unit test command
+  test_unit: "npx jest --selectProjects unit --no-coverage"
+  # Integration test command
+  test_integration: "npx jest --selectProjects integration --no-coverage"
+  # E2E test command
+  test_e2e: "npx jest --selectProjects e2e --no-coverage"
+  # Build command (for e2e tests that need a built site)
+  build: "npm run build"
+
+agents:
+  # Agent definition directory (relative to project root)
+  dir: ".claude/agents"
+  # Agent files expected
+  files:
+    - "pm.md"
+    - "architect.md"
+    - "test-architect.md"
+    - "backend-dev.md"
+    - "frontend-dev.md"
+
+# File boundaries for each agent role
+# Customize these to match your project structure
+file_boundaries:
+  pm:
+    writable:
+      - ".claude/active-story.json"
+  architect:
+    writable:
+      - "docs/adr/*.md"
+      - ".claude/active-story.json"
+  test_architect:
+    writable:
+      - "tests/**"
+  backend_dev:
+    writable:
+      - "infrastructure/**"
+      - "config.ts"
+  frontend_dev:
+    writable:
+      - "src/**"
+      - "*.html"
+      - "styles.css"
+      - "scripts/**"
+
+# Skills invoked by this workflow
+# Ensure these are installed in your project
+required_skills:
+  - "/fetch-story"
+  - "/check-story-quality"
+  - "/gather-context"
+  - "/create-adr"
+  - "/commit"
+  - "/pr"
