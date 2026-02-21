@@ -1,5 +1,5 @@
 ---
-name: check-story-quality
+name: github:story-quality
 description: Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. Applies labels and posts structured feedback comments. Can run as a scheduled background assistant or manually via /check-story-quality.
 ---
 
