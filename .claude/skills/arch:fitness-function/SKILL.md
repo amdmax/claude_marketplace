@@ -1,5 +1,5 @@
 ---
-name: fitness-function-architect
+name: arch:fitness-function
 description: Define testable fitness functions from business priorities and NFRs. Use when defining non-functional requirements, SLAs, SLOs, quality metrics, performance targets, or when asked "how do we ensure quality" or "what are the acceptance criteria". Automatically engaged during /feature command Phase 3.5.
 allowed-tools: Read, Grep, Glob, Write, Edit
 ---
