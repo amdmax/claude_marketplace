@@ -6,7 +6,7 @@ on:
 
 jobs:
   triage:
-    runs-on: [self-hosted, node-24]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       issues: write

@@ -6,7 +6,7 @@ on:
 
 jobs:
   analyze:
-    runs-on: [self-hosted, node-24]
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write
