@@ -1,0 +1,53 @@
+name: Push Analysis (Claude)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  analyze:
+    runs-on: [self-hosted, node-24]
+    permissions:
+      contents: read
+      statuses: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 2
+
+      - name: Analyze push with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-sonnet-4-6
+          max_turns: "5"
+          timeout_minutes: "5"
+          claude_args: '--allowedTools "Bash(git diff:*),Bash(git log:*),Bash(gh api:*),Read,Glob"'
+          prompt: |
+            You are a commit classifier for the Claude Marketplace repository.
+
+            Analyze the latest push to main (commit ${{ github.sha }}).
+
+            ## Steps
+
+            1. Run `git diff HEAD~1 HEAD` to see what changed.
+            2. Classify the change:
+               - `skill` — touches `.claude/skills/`
+               - `hook` — touches `.claude/hooks/`
+               - `bundle` — touches `bundles/`
+               - `docs` — documentation only
+               - `config` — repo configuration, CI, scripts
+               - `mixed` — multiple categories
+            3. Create a commit status with your classification:
+               ```
+               gh api repos/${{ github.repository }}/statuses/${{ github.sha }} \
+                 -f state=success \
+                 -f context="claude/classification" \
+                 -f description="Type: <classification>. Affects: <list of affected items>"
+               ```
+
+            ## Important
+            - Keep the status description under 140 characters.
+            - If multiple skills/hooks changed, list up to 3 and add "and N more".

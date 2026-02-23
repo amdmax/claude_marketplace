@@ -1,0 +1,73 @@
+name: Issue Triage (Claude)
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  triage:
+    runs-on: [self-hosted, node-24]
+    permissions:
+      contents: read
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Triage issue with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-sonnet-4-6
+          max_turns: "10"
+          timeout_minutes: "10"
+          allowed_non_write_users: "*"
+          claude_args: '--allowedTools "Bash(gh issue:*),Bash(gh label:*),Read,Glob,Grep"'
+          prompt: |
+            You are an issue triager for the Claude Marketplace repository.
+
+            Analyze issue #${{ github.event.issue.number }}.
+
+            ## Steps
+
+            1. Read the issue title and body to understand the request.
+            2. Classify the issue type and apply labels:
+               - Skill request → `skill-request`
+               - Hook request → `hook-request`
+               - Bug report → `bug`
+               - Question → `question`
+               - Documentation improvement → `documentation`
+            3. Always add `claude-analyzed` label.
+            4. Check for duplicates or overlapping existing skills. The marketplace currently has these skills:
+               - **Core Workflow:** git:commit, github:pull-request, github:actions, github:create-issue, claude:validate-skills, claude:sync-skills
+               - **Team:** team:agile-dev, github:story-create, github:story-fetch, github:story-play, github:story-quality
+               - **Development:** bug-fix, css-architecture, claude:hooks, cuda-remote-manager
+               - **Quality & Review:** review:overall, review:performance, review:security
+               - **Architecture:** aws:architect, aws:cdk, arch:fitness-function, gather-nfr, create-adr
+               - **Content:** creative-writing, editor-in-chief, add-content-image, regenerate-course-content, mermaid-diagram
+               - **Specialized:** ux-professional, gather-context, github:runner-setup, claude:refactor-skill, claude:skill-creator
+               - **Templates:** _templates
+            5. Post a welcome comment that includes:
+               - Your classification of the issue
+               - If it's a skill/hook request, suggest the naming convention: `namespace:skill-name` (e.g., `git:commit`, `aws:cdk`)
+               - If you found overlapping existing skills, mention them
+               - For skill requests, suggest which category it might belong to
+
+            ## Naming Convention
+            Use namespace prefixes where appropriate:
+            - `git:` — Git operations
+            - `github:` — GitHub integrations
+            - `aws:` — AWS services
+            - `arch:` — Architecture patterns
+            - `claude:` — Claude Code internals
+            - `review:` — Code review tools
+            - `team:` — Team orchestration
+            - No prefix for standalone/specialized skills
+
+            ## Important
+            - Be welcoming and helpful — this is a public open-source repo.
+            - Keep comments concise but informative.
+            - If the issue is vague, ask clarifying questions in your comment.

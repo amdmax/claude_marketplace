@@ -1,0 +1,68 @@
+name: Skill Request
+description: Request a new skill or modification to an existing one
+title: "[Skill] "
+labels: ["skill-request", "needs-triage"]
+body:
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request Type
+      options:
+        - New Skill
+        - Modify Existing Skill
+    validations:
+      required: true
+
+  - type: input
+    id: skill-name
+    attributes:
+      label: Proposed Skill Name
+      description: "Use `namespace:name` convention where applicable (e.g., `git:commit`, `aws:cdk`). See catalog for existing namespaces."
+      placeholder: "e.g., docker:compose or code-formatter"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should this skill do? What problem does it solve?
+      placeholder: Describe the skill's purpose and expected behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: How should the skill work when invoked? What inputs/outputs are expected?
+      placeholder: |
+        When I run `/my-skill`, it should:
+        1. ...
+        2. ...
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      description: Which category best fits this skill?
+      options:
+        - Core Workflow
+        - Development
+        - Architecture
+        - Content & Documentation
+        - Team Orchestration
+        - Quality & Review
+        - Other
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have checked the [Skill Catalog](https://github.com/amdmax/claude_marketplace/blob/main/SKILL_CATALOG.md) and this skill does not already exist
+          required: true
+        - label: I have read the [Usage Guide](https://github.com/amdmax/claude_marketplace/blob/main/USAGE_GUIDE.md)
+          required: true

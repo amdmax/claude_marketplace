@@ -1,0 +1,32 @@
+name: General Issue
+description: Report a bug, ask a question, or suggest an improvement
+title: "[General] "
+labels: ["needs-triage"]
+body:
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: Issue Type
+      options:
+        - Bug Report
+        - Question
+        - Documentation Improvement
+        - Feature Request
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Provide details about the issue, question, or suggestion
+      placeholder: Describe your issue in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Any relevant context — error messages, screenshots, environment details, etc.
+      placeholder: Add any other context here...
