@@ -1,0 +1,79 @@
+name: Hook Request
+description: Request a new hook or modification to an existing one
+title: "[Hook] "
+labels: ["hook-request", "needs-triage"]
+body:
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request Type
+      options:
+        - New Hook
+        - Modify Existing Hook
+    validations:
+      required: true
+
+  - type: dropdown
+    id: hook-event
+    attributes:
+      label: Hook Event
+      description: Which Claude Code hook event should this trigger on?
+      options:
+        - PreToolUse
+        - PostToolUse
+        - Notification
+        - Start
+        - Stop
+        - SessionStart
+    validations:
+      required: true
+
+  - type: input
+    id: hook-name
+    attributes:
+      label: Proposed Hook Name
+      description: A short, descriptive name for this hook
+      placeholder: "e.g., pre-commit-lint or notify-slack"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What should this hook do? What problem does it solve?
+      placeholder: Describe the hook's purpose and expected behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected Behavior
+      description: How should the hook behave when triggered?
+      placeholder: |
+        When triggered, the hook should:
+        1. ...
+        2. ...
+
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Target Platform
+      description: Which platforms should this hook support?
+      options:
+        - Cross-platform (macOS + Linux)
+        - macOS only
+        - Linux only
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: verification
+    attributes:
+      label: Pre-submission Checklist
+      options:
+        - label: I have checked existing hooks and this does not duplicate an existing one
+          required: true
+        - label: I have read the [Usage Guide](https://github.com/amdmax/claude_marketplace/blob/main/USAGE_GUIDE.md)
+          required: true

@@ -1,0 +1,55 @@
+name: PR Analysis (Claude)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Analyze PR with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          model: claude-sonnet-4-6
+          max_turns: "10"
+          timeout_minutes: "10"
+          claude_args: '--allowedTools "Bash(gh pr:*),Bash(gh label:*),Bash(git diff:*),Bash(git log:*),Read,Glob"'
+          prompt: |
+            You are a PR classifier for the Claude Marketplace repository.
+
+            Analyze PR #${{ github.event.pull_request.number }} and classify what it changes.
+
+            ## Steps
+
+            1. Run `gh pr diff ${{ github.event.pull_request.number }}` to see the full diff.
+            2. Reason about the **intent** of the changes. Look at file paths and content:
+               - `.claude/skills/` changes → label `skill`
+               - `.claude/hooks/` changes → label `hook`
+               - `bundles/` changes → label `bundle`
+               - Documentation-only changes (README, docs/, etc.) → no type label needed
+            3. Apply the appropriate labels. Always include `claude-analyzed`. Examples:
+               - Skill change: `gh pr edit ${{ github.event.pull_request.number }} --add-label "skill,claude-analyzed"`
+               - Hook + skill: `gh pr edit ${{ github.event.pull_request.number }} --add-label "skill,hook,claude-analyzed"`
+               - Docs only: `gh pr edit ${{ github.event.pull_request.number }} --add-label "claude-analyzed"`
+            4. Post a brief summary comment on the PR listing:
+               - What type of change this is
+               - Which specific skills/hooks/bundles are affected (by name)
+               - Any notable observations
+
+            ## Important
+            - Use AI reasoning to classify, not just keyword matching on filenames.
+            - A file in `.claude/skills/git:commit/` is the `git:commit` skill.
+            - If the PR creates a new skill, mention its proposed name.
+            - Keep the comment concise — a few bullet points, not an essay.

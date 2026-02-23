@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Skill Catalog
+    url: https://github.com/amdmax/claude_marketplace/blob/main/SKILL_CATALOG.md
+    about: Browse the full catalog of available skills before requesting a new one
+  - name: Usage Guide
+    url: https://github.com/amdmax/claude_marketplace/blob/main/USAGE_GUIDE.md
+    about: Learn how to install and use marketplace skills and hooks
