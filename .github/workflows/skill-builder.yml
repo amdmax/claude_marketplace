@@ -1,0 +1,173 @@
+name: Skill Builder (Claude)
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  build-skill:
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.issue.labels.*.name, 'skill-request') &&
+      contains(github.event.issue.labels.*.name, 'needs-clarification') &&
+      !contains(github.event.comment.user.login, '[bot]')
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Build skill with Claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_non_write_users: "*"
+          claude_args: |
+            --model claude-sonnet-4-6
+            --max-turns 20
+            --allowedTools "Bash(gh issue:*),Bash(gh pr:*),Bash(gh label:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Read,Write,Edit,Glob,Grep"
+          prompt: |
+            You are the skill builder for the Claude Marketplace repository.
+
+            A comment was just posted on issue #${{ github.event.issue.number }}, which has both
+            `skill-request` and `needs-clarification` labels.
+
+            ## Your Task
+
+            ### Step 1 — Read the full issue thread
+
+            Run: `gh issue view ${{ github.event.issue.number }} --comments`
+
+            ### Step 2 — Find the ambiguity questions
+
+            Look for a comment posted by a bot (e.g., `github-actions[bot]`) that contains the header
+            `## Ambiguities & Clarifying Questions`. Extract every numbered question from that comment.
+
+            If no such comment exists, post a short comment explaining that no ambiguity questions were
+            found and stop.
+
+            ### Step 3 — Check which questions are answered
+
+            For each question, determine whether a subsequent **human** comment (not from a bot) answers it.
+            A question is considered answered if a human comment addresses it in any reasonable way — it
+            does not need to be perfect.
+
+            ### Step 4a — If unresolved questions remain
+
+            Post a short, friendly comment on the issue listing only the questions that are still unanswered.
+            Example format:
+            ```
+            Thanks for the update! To move forward, I still need answers to:
+
+            2. What tech stack or environment should this skill target?
+            5. Are there any edge cases or failure modes to be aware of?
+            ```
+            Then **stop** — do not create any files or branches.
+
+            ### Step 4b — If ALL questions are answered
+
+            Proceed with the following sub-steps in order:
+
+            #### 4b-i: Update labels
+
+            Ensure the `ready-to-implement` label exists:
+            `gh label create "ready-to-implement" --color "0e8a16" --description "Ready to be implemented" --force`
+
+            Then update the issue:
+            `gh issue edit ${{ github.event.issue.number }} --remove-label "needs-clarification" --add-label "ready-to-implement"`
+
+            #### 4b-ii: Read the skill-creator guidance
+
+            Read the file `.claude/skills/claude:skill-creator/SKILL.md` to understand the skill creation
+            guidelines before writing any files.
+
+            #### 4b-iii: Synthesise skill requirements
+
+            From the issue body and all comments, determine:
+            - The skill's purpose and what problems it solves
+            - Concrete invocation examples / trigger phrases
+            - Tech stack or environment assumptions
+            - Expected output or artefacts
+            - Tools or shell commands the skill may use
+            - Edge cases and configuration options
+            - Whether large reference content is needed (schemas, API docs, policies)
+
+            #### 4b-iv: Determine skill name
+
+            Use the `namespace:skill-name` convention (e.g., `git:commit`, `aws:cdk`). Derive this from
+            the issue's proposed skill name field and the discussion. The directory name on disk uses the
+            same string (colons are valid on Linux).
+
+            #### 4b-v: Create the skill files
+
+            Following the skill-creator guidance:
+
+            - Create `.claude/skills/{skill-name}/SKILL.md` with:
+              - YAML frontmatter containing only `name` and `description` fields
+              - `description` must be comprehensive — it is the primary trigger mechanism
+              - A concise markdown body using imperative/infinitive form
+            - Only create `references/` files if the skill has large content (schemas, API docs, etc.)
+              that would bloat SKILL.md. Reference them from SKILL.md.
+            - Do NOT create `README.md`, `CHANGELOG.md`, or any other auxiliary files.
+            - Do NOT create `scripts/` or `assets/` unless they are clearly warranted by the requirements.
+
+            #### 4b-vi: Create a branch, commit, and push
+
+            Derive a URL-safe slug from the skill name (replace `:` with `-` and lowercase everything).
+
+            ```
+            git checkout -b skill/issue-${{ github.event.issue.number }}-{skill-name-slug}
+            git add .claude/skills/{skill-name}/
+            git commit -m "Add {skill-name} skill (closes #${{ github.event.issue.number }})"
+            git push origin skill/issue-${{ github.event.issue.number }}-{skill-name-slug}
+            ```
+
+            #### 4b-vii: Open a pull request
+
+            ```
+            gh pr create \
+              --title "Add {skill-name} skill" \
+              --body "Implements #${{ github.event.issue.number }}.
+
+            ## Summary
+            - Adds \`.claude/skills/{skill-name}/SKILL.md\` with the skill definition
+            - Synthesised from the requirements discussed in the linked issue
+
+            ## Test plan
+            - [ ] Install the skill and verify it triggers on the expected invocation phrases
+            - [ ] Review SKILL.md for correctness and conciseness
+            - [ ] Check that no auxiliary files (README, CHANGELOG) were created
+
+            🤖 Generated by the skill-builder workflow" \
+              --base main
+            ```
+
+            #### 4b-viii: Post a confirmation comment
+
+            Post a comment on issue #${{ github.event.issue.number }} with a link to the newly created PR.
+            Example:
+            ```
+            All questions are answered! I've created the `{skill-name}` skill and opened a PR: {pr-url}
+
+            Please review the generated SKILL.md and request any changes directly on the PR.
+            ```
+
+            ## Important Rules
+
+            - Only create files inside `.claude/skills/{skill-name}/`. Do not modify any existing files.
+            - Keep SKILL.md concise — the `description` frontmatter field is the primary trigger; make it
+              comprehensive but not verbose.
+            - If you are uncertain about any detail, make a reasonable assumption and note it in the PR body.
+            - The skill directory name uses colons exactly as typed (e.g., `git:commit`) — do not sanitise
+              the directory name itself, only the git branch slug.
