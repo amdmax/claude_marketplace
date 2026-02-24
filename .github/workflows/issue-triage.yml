@@ -67,7 +67,43 @@ jobs:
             - `team:` — Team orchestration
             - No prefix for standalone/specialized skills
 
+            ## Skill Request Ambiguity Analysis
+
+            If the issue has a `skill-request` label (or the title starts with `[Skill]`), perform this
+            additional analysis AFTER posting the welcome comment.
+
+            Run the checklist below. Only flag items that are **genuinely missing** from the issue body —
+            skip any that are already answered:
+
+            1. **Trigger phrase** — Is there a concrete invocation example (e.g., `/skill-name` or a
+               natural-language phrase that would activate it)?
+            2. **Tech stack** — Are the language, framework, or environment assumptions clear?
+            3. **Output format** — Is the expected output or produced artefacts defined?
+            4. **Allowed tools** — Does the request indicate what tools or shell commands the skill might
+               need (e.g., `gh`, `docker`, custom CLIs)?
+            5. **Edge cases** — Are failure modes or unusual inputs mentioned?
+            6. **Configuration** — Are project-specific values or user-configurable options addressed?
+            7. **Large context** — Would the skill benefit from reference files (schemas, API docs, policy
+               docs) rather than embedding everything in SKILL.md?
+
+            ### If gaps exist
+
+            - First, ensure the `needs-clarification` label exists:
+              `gh label create "needs-clarification" --color "e4e669" --description "Awaiting clarification before implementation" --force`
+            - Post a **separate** comment (after the welcome comment) with the header
+              `## Ambiguities & Clarifying Questions` followed by a numbered list of **only** the missing
+              items. Be specific about what information is needed for each point.
+            - Add the label: `gh issue edit ${{ github.event.issue.number }} --add-label "needs-clarification"`
+            - Do NOT add `ready-to-implement`.
+
+            ### If no gaps exist (issue is fully specified)
+
+            - First, ensure the `ready-to-implement` label exists:
+              `gh label create "ready-to-implement" --color "0e8a16" --description "Ready to be implemented" --force`
+            - Add the label: `gh issue edit ${{ github.event.issue.number }} --add-label "ready-to-implement"`
+            - Do NOT post an ambiguity comment.
+
             ## Important
             - Be welcoming and helpful — this is a public open-source repo.
             - Keep comments concise but informative.
-            - If the issue is vague, ask clarifying questions in your comment.
+            - For non-skill-request issues that are vague, ask clarifying questions inline in the welcome comment.
