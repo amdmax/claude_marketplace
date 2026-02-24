@@ -516,4 +516,4 @@ grep -r "PVT_kwDO" .
 
 - [Configuration Reference](configuration-reference.md) - Complete config options
 - [USAGE_GUIDE.md](../USAGE_GUIDE.md) - How to use marketplace skills
-- [config-schema.md](../skills/_templates/config-schema.md) - Config file structure
+- [config-schema.md](../.claude/skills/_templates/config-schema.md) - Config file structure

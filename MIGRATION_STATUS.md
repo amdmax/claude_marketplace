@@ -10,30 +10,36 @@ All planned skills successfully migrated to the marketplace.
 - [x] README.md
 - [x] USAGE_GUIDE.md
 - [x] SKILL_CATALOG.md
-- [x] skills/_templates/SKILL_TEMPLATE.md
-- [x] skills/_templates/config-schema.md
+- [x] .claude/skills/_templates/SKILL_TEMPLATE.md
+- [x] .claude/skills/_templates/config-schema.md
 
 ### Tier 1 - Core Workflow (5/5) ✓
-- [x] commit
-- [x] mr
-- [x] create-story
-- [x] fetch-story
-- [x] play-story
+- [x] git:commit
+- [x] github:pull-request
+- [x] github:story-create
+- [x] github:story-fetch
+- [x] github:story-play
+
+### Tier 1 - Team Orchestration (1/1) ✓
+- [x] team:agile-dev
 
 ### Tier 2 - Development (5/5) ✓
 - [x] bug-fix
-- [x] skill-creator
-- [x] refactor-skill
-- [x] sync-skills
+- [x] claude:skill-creator
+- [x] claude:refactor-skill
+- [x] claude:sync-skills
 - [x] gather-context
 
+### Tier 2 - Quality (1/1) ✓
+- [x] github:story-quality
+
 ### Tier 3 - Architecture & Quality (6/6) ✓
-- [x] aws-architect
-- [x] cdk-scripting
-- [x] security-review
-- [x] performance-review
-- [x] overall-review
-- [x] fitness-function-architect
+- [x] aws:architect
+- [x] aws:cdk
+- [x] review:security
+- [x] review:performance
+- [x] review:overall
+- [x] arch:fitness-function
 
 ### Tier 4 - Content & Specialized (10/10) ✓
 - [x] css-architecture
@@ -45,7 +51,7 @@ All planned skills successfully migrated to the marketplace.
 - [x] regenerate-course-content
 - [x] create-adr
 - [x] gather-nfr
-- [x] hooks
+- [x] claude:hooks
 
 ### Documentation (3/3) ✓
 - [x] docs/abstraction-guide.md
@@ -108,38 +114,37 @@ claude_marketplace/
 ├── USAGE_GUIDE.md              # How to use skills
 ├── SKILL_CATALOG.md            # Complete skill index
 ├── MIGRATION_STATUS.md         # This file
+├── .claude/
+│   └── skills/                 # All skills (auto-discovered by Claude Code)
+│       ├── _templates/             # Skill creation templates
+│       ├── arch:fitness-function/  # Architecture fitness functions
+│       ├── aws:architect/          # AWS architecture guidance
+│       ├── aws:cdk/                # CDK infrastructure as code
+│       ├── bug-fix/                # Bug fix workflow
+│       ├── claude:hooks/           # Claude Code hooks
+│       ├── claude:refactor-skill/  # Skill refactoring
+│       ├── claude:skill-creator/   # Skill creation
+│       ├── claude:sync-skills/     # Skill synchronization
+│       ├── claude:validate-skills/ # Skill validation
+│       ├── gather-context/         # Context gathering
+│       ├── git:commit/             # Git commit automation
+│       ├── github:actions/         # GitHub Actions workflows
+│       ├── github:create-issue/    # Detailed issue creation
+│       ├── github:pull-request/    # Pull request creation
+│       ├── github:runner-setup/    # Self-hosted runners
+│       ├── github:story-create/    # Quick issue creation
+│       ├── github:story-fetch/     # Story fetching
+│       ├── github:story-play/      # Story activation
+│       ├── github:story-quality/   # Story quality checks
+│       ├── review:overall/         # General code review
+│       ├── review:performance/     # Performance review
+│       ├── review:security/        # Security review
+│       ├── team:agile-dev/         # 5-agent TDD team
+│       └── [content skills...]     # Remaining unprefixed skills
 ├── docs/
 │   ├── abstraction-guide.md    # Template variable system
 │   ├── configuration-reference.md  # All config options
 │   └── migration-notes.md      # Source project analysis
-└── skills/
-    ├── _templates/             # Skill creation templates
-    ├── commit/                 # 26 production skills...
-    ├── mr/
-    ├── create-story/
-    ├── fetch-story/
-    ├── play-story/
-    ├── bug-fix/
-    ├── skill-creator/
-    ├── refactor-skill/
-    ├── sync-skills/
-    ├── gather-context/
-    ├── aws-architect/
-    ├── cdk-scripting/
-    ├── security-review/
-    ├── performance-review/
-    ├── overall-review/
-    ├── fitness-function-architect/
-    ├── css-architecture/
-    ├── ux-professional/
-    ├── creative-writing/
-    ├── editor-in-chief/
-    ├── mermaid-diagram/
-    ├── add-content-image/
-    ├── regenerate-course-content/
-    ├── create-adr/
-    ├── gather-nfr/
-    └── hooks/
 ```
 
 ## Usage
@@ -147,7 +152,7 @@ claude_marketplace/
 Users can now:
 
 1. **Browse catalog:** `SKILL_CATALOG.md`
-2. **Copy skills:** `cp -r skills/commit/ /your/project/.claude/skills/`
+2. **Copy skills:** `cp -r .claude/skills/commit/ /your/project/.claude/skills/`
 3. **Configure:** Edit `config.yaml` with project values
 4. **Use:** `/commit` in Claude Code
 

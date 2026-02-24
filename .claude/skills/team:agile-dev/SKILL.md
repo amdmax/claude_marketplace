@@ -1,5 +1,5 @@
 ---
-name: agile-dev-team
+name: team:agile-dev
 description: Spin up a 5-agent TDD team (PM, Architect, Test Architect, Backend Dev, Frontend Dev) that fetches the next Ready story and delivers it through a TDD-first workflow. Invokable with /agile-dev-team.
 ---
 

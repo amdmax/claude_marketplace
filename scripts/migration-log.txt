@@ -1,0 +1,79 @@
+[16:44:31] --- Processing: _templates (branch: migrate/templates)
+[16:44:35] OK: Migrate _templates to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/7
+[16:44:35] --- Processing: add-content-image (branch: migrate/add-content-image)
+[16:44:39] OK: Migrate add-content-image to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/8
+[16:44:39] --- Processing: arch:fitness-function (branch: migrate/arch-fitness-function)
+[16:44:43] OK: Migrate fitness-function-architect to arch:fitness-function -> https://github.com/amdmax/claude_marketplace/pull/9
+[16:44:43] --- Processing: aws:architect (branch: migrate/aws-architect)
+[16:44:46] OK: Migrate aws-architect to aws:architect -> https://github.com/amdmax/claude_marketplace/pull/10
+[16:44:46] --- Processing: aws:cdk (branch: migrate/aws-cdk)
+[16:44:50] OK: Migrate cdk-scripting to aws:cdk -> https://github.com/amdmax/claude_marketplace/pull/11
+[16:44:50] --- Processing: bug-fix (branch: migrate/bug-fix)
+[16:44:54] OK: Migrate bug-fix to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/12
+[16:44:54] --- Processing: claude:hooks (branch: migrate/claude-hooks)
+[16:44:58] OK: Migrate hooks to claude:hooks -> https://github.com/amdmax/claude_marketplace/pull/13
+[16:44:58] --- Processing: claude:refactor-skill (branch: migrate/claude-refactor-skill)
+[16:45:01] OK: Migrate refactor-skill to claude:refactor-skill -> https://github.com/amdmax/claude_marketplace/pull/14
+[16:45:01] --- Processing: claude:skill-creator (branch: migrate/claude-skill-creator)
+[16:45:05] OK: Migrate skill-creator to claude:skill-creator -> https://github.com/amdmax/claude_marketplace/pull/15
+[16:45:05] --- Processing: claude:sync-skills (branch: migrate/claude-sync-skills)
+[16:45:09] OK: Migrate sync-skills to claude:sync-skills -> https://github.com/amdmax/claude_marketplace/pull/16
+[16:45:09] --- Processing: claude:validate-skills (branch: migrate/claude-validate-skills)
+[16:45:12] OK: Migrate claude:validate-skills to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/17
+[16:45:12] --- Processing: create-adr (branch: migrate/create-adr)
+[16:45:16] OK: Migrate create-adr to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/18
+[16:45:16] --- Processing: creative-writing (branch: migrate/creative-writing)
+[16:45:20] OK: Migrate creative-writing to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/19
+[16:45:20] --- Processing: css-architecture (branch: migrate/css-architecture)
+[16:45:24] OK: Migrate css-architecture to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/20
+[16:45:24] --- Processing: cuda-remote-manager (branch: migrate/cuda-remote-manager)
+[16:45:28] OK: Migrate cuda-remote-manager to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/21
+[16:45:28] --- Processing: editor-in-chief (branch: migrate/editor-in-chief)
+[16:45:31] OK: Migrate editor-in-chief to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/22
+[16:45:31] --- Processing: gather-context (branch: migrate/gather-context)
+[16:45:36] OK: Migrate gather-context to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/23
+[16:45:36] --- Processing: gather-nfr (branch: migrate/gather-nfr)
+[16:45:42] OK: Migrate gather-nfr to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/24
+[16:45:42] --- Processing: git:commit (branch: migrate/git-commit)
+[16:45:47] OK: Migrate commit to git:commit -> https://github.com/amdmax/claude_marketplace/pull/25
+[16:45:47] --- Processing: github:actions (branch: migrate/github-actions)
+[16:45:52] OK: Migrate gh-actions to github:actions -> https://github.com/amdmax/claude_marketplace/pull/26
+[16:45:52] --- Processing: github:create-issue (branch: migrate/github-create-issue)
+[16:45:58] OK: Migrate gh-create-issue to github:create-issue -> https://github.com/amdmax/claude_marketplace/pull/27
+[16:45:58] --- Processing: github:pull-request (branch: migrate/github-pull-request)
+[16:46:03] OK: Migrate pr to github:pull-request -> https://github.com/amdmax/claude_marketplace/pull/28
+[16:46:03] --- Processing: github:runner-setup (branch: migrate/github-runner-setup)
+[16:46:08] OK: Consolidate runner-setup into github:runner-setup -> https://github.com/amdmax/claude_marketplace/pull/29
+[16:46:08] --- Processing: github:story-create (branch: migrate/github-story-create)
+[16:46:12] OK: Migrate create-story to github:story-create -> https://github.com/amdmax/claude_marketplace/pull/30
+[16:46:12] --- Processing: github:story-fetch (branch: migrate/github-story-fetch)
+[16:46:15] OK: Migrate fetch-story to github:story-fetch -> https://github.com/amdmax/claude_marketplace/pull/31
+[16:46:15] --- Processing: github:story-play (branch: migrate/github-story-play)
+[16:46:19] OK: Migrate play-story to github:story-play -> https://github.com/amdmax/claude_marketplace/pull/32
+[16:46:19] --- Processing: github:story-quality (branch: migrate/github-story-quality)
+[16:46:23] OK: Migrate check-story-quality to github:story-quality -> https://github.com/amdmax/claude_marketplace/pull/33
+[16:46:23] --- Processing: mermaid-diagram (branch: migrate/mermaid-diagram)
+[16:46:26] OK: Migrate mermaid-diagram to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/34
+[16:46:26] --- Processing: regenerate-course-content (branch: migrate/regenerate-course-content)
+[16:46:30] OK: Migrate regenerate-course-content to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/35
+[16:46:30] --- Processing: review:overall (branch: migrate/review-overall)
+[16:46:34] OK: Migrate overall-review to review:overall -> https://github.com/amdmax/claude_marketplace/pull/36
+[16:46:34] --- Processing: review:performance (branch: migrate/review-performance)
+[16:46:39] OK: Migrate performance-review to review:performance -> https://github.com/amdmax/claude_marketplace/pull/37
+[16:46:39] --- Processing: review:security (branch: migrate/review-security)
+[16:46:44] OK: Migrate security-review to review:security -> https://github.com/amdmax/claude_marketplace/pull/38
+[16:46:44] --- Processing: team:agile-dev (branch: migrate/team-agile-dev)
+[16:46:49] OK: Migrate agile-dev-team to team:agile-dev -> https://github.com/amdmax/claude_marketplace/pull/39
+[16:46:49] --- Processing: ux-professional (branch: migrate/ux-professional)
+[16:46:54] OK: Migrate ux-professional to .claude/skills/ -> https://github.com/amdmax/claude_marketplace/pull/40
+[16:46:54] --- Processing: Delete mr skill
+[16:47:00] OK: Delete mr -> https://github.com/amdmax/claude_marketplace/pull/41
+[16:47:00] --- Processing: Update migration docs
+[16:47:05] OK: Update docs -> https://github.com/amdmax/claude_marketplace/pull/42
+[16:47:05] 
+[16:47:05] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:47:05] Migration Summary
+[16:47:05] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:47:05] Created: 36 PRs
+[16:47:05] Failed:  0
+[16:47:05] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
