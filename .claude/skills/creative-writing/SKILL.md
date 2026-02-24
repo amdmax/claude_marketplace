@@ -1,9 +1,12 @@
-# Creative Writing Skill
-
 ---
 name: creative-writing
-description: Generate creative content using Caitlin Kelly's journalistic writing techniques across multiple genres—narrative journalism, fiction (short stories, novels), educational content, and general creative writing. Use when users request creative content generation with vivid scene-setting, character-driven narratives, conversational voice, and specific-to-universal storytelling patterns. Invokable with /creative-writing or /write.
+description: "Generate creative content using Caitlin Kelly's journalistic writing techniques across multiple genres. Use when users request creative content generation with vivid scene-setting, character-driven narratives, conversational voice, and specific-to-universal storytelling patterns. Invokable with /creative-writing or /write."
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
 ---
+
+# Creative Writing Skill
+
 
 ## Overview
 
@@ -185,11 +188,9 @@ Present generated content using this template:
 **Length:** [Approximate word count]
 **Audience:** [Target audience description]
 
----
 
 [Generated content]
 
----
 
 ## Style Notes
 
@@ -299,7 +300,6 @@ For requests that blend genres (e.g., "educational fiction" or "journalistic ess
 - **`references/general-patterns.md`** - Essays, memoirs, opinion, creative nonfiction
 - **`references/examples-library.md`** - Before/after transformations and fill-in-the-blank templates
 
----
 
 **Version:** 1.0
 **Last updated:** 2026-01-29

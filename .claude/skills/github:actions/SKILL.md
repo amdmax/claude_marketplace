@@ -1,17 +1,19 @@
-# GitHub Actions Composite Actions
-
 ---
-name: gh-actions
+name: github:actions
 description: Create and manage GitHub Actions composite actions
-invocation: gh-actions
 tags: [github, workflows, ci-cd, composite-actions]
 version: 1.0.0
+author: "@thesolutionarchitect"
+email: maksym.diabin@gmail.com
 hooks:
   PostToolUse:
-    - matcher: Write.*action\.yml
-      command: npx tsx $SKILL_DIR/validate-action.ts
-      timeout: 10
+    command: npx tsx $SKILL_DIR/validate-action.ts
+    description: Validate action.yml after write
+    timeout: 10000
 ---
+
+# GitHub Actions Composite Actions
+
 
 ## Overview
 
