@@ -4,10 +4,9 @@ description: "Run Python code and notebooks on a Jupyter kernel, remote or local
 user-invocable: true
 hooks:
   PostToolUse:
-    - matcher: "Write"
-      hooks:
-        - type: command
-          command: "bash ~/.claude/hooks/ruff-format-remote.sh"
+    command: "bash ~/.claude/hooks/ruff-format-remote.sh"
+    description: "Format Python files with ruff after writing"
+    timeout: 30000
 metadata:
   author: aigensa
   version: "2.0.0"
