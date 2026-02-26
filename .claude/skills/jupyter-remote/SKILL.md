@@ -1,16 +1,12 @@
 ---
 name: jupyter-remote
 description: "Run Python code and notebooks on a Jupyter kernel, remote or local. Use when running GPU-intensive or training code on a remote box, or when running experiments locally via Jupyter."
-user-invocable: true
 hooks:
   PostToolUse:
-    command: "bash ~/.claude/hooks/ruff-format-remote.sh"
-    description: "Format Python files with ruff after writing"
-    timeout: 30000
-metadata:
-  author: aigensa
-  version: "2.0.0"
-  requires-skill: remote-execution
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "bash ~/.claude/hooks/ruff-format-remote.sh"
 ---
 
 # jupyter-remote
