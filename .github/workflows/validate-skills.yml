@@ -105,7 +105,7 @@ jobs:
             # Validate hooks if present
             HOOKS=$(echo "$FRONTMATTER" | yq eval '.hooks' -)
             if [[ "$HOOKS" != "null" ]]; then
-              VALID_EVENTS="Start Stop PreToolUse PostToolUse Notification SessionStart"
+              VALID_EVENTS="Start Stop PreToolUse PostToolUse Notification SessionStart UserPromptSubmit SubagentStart SubagentStop PreCompact SessionEnd"
 
               HOOK_EVENTS=$(echo "$FRONTMATTER" | yq eval '.hooks | keys | .[]' -)
               while IFS= read -r EVENT; do
@@ -116,16 +116,46 @@ jobs:
                   FILE_ERRORS=$((FILE_ERRORS + 1))
                 fi
 
-                COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
-                if [[ "$COMMAND" == "null" ]]; then
-                  echo "::error file=$SKILL_FILE::Hook '$EVENT' missing required field 'command'"
-                  FILE_ERRORS=$((FILE_ERRORS + 1))
-                fi
+                # Detect hook format: array (native Claude Code) or map (flat legacy)
+                HOOK_TYPE=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | type" -)
 
-                TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
-                if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
-                  echo "::error file=$SKILL_FILE::Hook '$EVENT' timeout must be a number (milliseconds)"
-                  FILE_ERRORS=$((FILE_ERRORS + 1))
+                if [[ "$HOOK_TYPE" == "!!map" ]]; then
+                  # Flat format: hooks.<EVENT>.command is a direct string
+                  COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
+                  if [[ "$COMMAND" == "null" ]]; then
+                    echo "::error file=$SKILL_FILE::Hook '$EVENT' missing required field 'command'"
+                    FILE_ERRORS=$((FILE_ERRORS + 1))
+                  fi
+                  TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
+                  if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
+                    echo "::error file=$SKILL_FILE::Hook '$EVENT' timeout must be a number (milliseconds)"
+                    FILE_ERRORS=$((FILE_ERRORS + 1))
+                  fi
+                elif [[ "$HOOK_TYPE" == "!!seq" ]]; then
+                  # Native Claude Code array format: [{matcher?, hooks: [{type, command|prompt}]}]
+                  COUNT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | length" -)
+                  for ((i=0; i<COUNT; i++)); do
+                    INNER=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks" -)
+                    if [[ "$INNER" == "null" ]]; then
+                      echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i] missing 'hooks' array"
+                      FILE_ERRORS=$((FILE_ERRORS + 1))
+                      continue
+                    fi
+                    INNER_COUNT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks | length" -)
+                    for ((j=0; j<INNER_COUNT; j++)); do
+                      TYPE=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].type" -)
+                      CMD=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].command" -)
+                      PROMPT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].prompt" -)
+                      if [[ "$TYPE" == "null" ]]; then
+                        echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i].hooks[$j] missing 'type'"
+                        FILE_ERRORS=$((FILE_ERRORS + 1))
+                      fi
+                      if [[ "$CMD" == "null" && "$PROMPT" == "null" ]]; then
+                        echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i].hooks[$j] missing 'command' or 'prompt'"
+                        FILE_ERRORS=$((FILE_ERRORS + 1))
+                      fi
+                    done
+                  done
                 fi
               done <<< "$HOOK_EVENTS"
             fi

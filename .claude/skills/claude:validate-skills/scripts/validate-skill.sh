@@ -83,7 +83,7 @@ fi
 # Validate hooks if present
 HOOKS=$(echo "$FRONTMATTER" | yq eval '.hooks' -)
 if [[ "$HOOKS" != "null" ]]; then
-  VALID_EVENTS=("Start" "Stop" "PreToolUse" "PostToolUse" "Notification" "SessionStart")
+  VALID_EVENTS=("Start" "Stop" "PreToolUse" "PostToolUse" "Notification" "SessionStart" "UserPromptSubmit" "SubagentStart" "SubagentStop" "PreCompact" "SessionEnd")
 
   # Check each hook event
   HOOK_EVENTS=$(echo "$FRONTMATTER" | yq eval '.hooks | keys | .[]' -)
@@ -92,20 +92,45 @@ if [[ "$HOOKS" != "null" ]]; then
       error "Invalid hook event type: '$EVENT' (valid: ${VALID_EVENTS[*]})"
     fi
 
-    # Check hook has required fields
-    COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
-    if [[ "$COMMAND" == "null" ]]; then
-      error "Hook '$EVENT' missing required field 'command'"
-    fi
+    # Detect hook format: map (flat legacy) or seq (native Claude Code array)
+    HOOK_TYPE=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | type" -)
 
-    DESCRIPTION=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.description" -)
-    if [[ "$DESCRIPTION" == "null" ]]; then
-      warning "Hook '$EVENT' missing optional field 'description'"
-    fi
-
-    TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
-    if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
-      error "Hook '$EVENT' timeout must be a number (milliseconds)"
+    if [[ "$HOOK_TYPE" == "!!map" ]]; then
+      # Flat format: hooks.<EVENT>.command is a direct string
+      COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
+      if [[ "$COMMAND" == "null" ]]; then
+        error "Hook '$EVENT' missing required field 'command'"
+      fi
+      DESCRIPTION=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.description" -)
+      if [[ "$DESCRIPTION" == "null" ]]; then
+        warning "Hook '$EVENT' missing optional field 'description'"
+      fi
+      TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
+      if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
+        error "Hook '$EVENT' timeout must be a number (milliseconds)"
+      fi
+    elif [[ "$HOOK_TYPE" == "!!seq" ]]; then
+      # Native Claude Code array format: [{matcher?, hooks: [{type, command|prompt}]}]
+      COUNT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | length" -)
+      for ((i=0; i<COUNT; i++)); do
+        INNER=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks" -)
+        if [[ "$INNER" == "null" ]]; then
+          error "Hook '$EVENT'[$i] missing 'hooks' array"
+          continue
+        fi
+        INNER_COUNT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks | length" -)
+        for ((j=0; j<INNER_COUNT; j++)); do
+          TYPE=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].type" -)
+          CMD=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].command" -)
+          PROMPT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].prompt" -)
+          if [[ "$TYPE" == "null" ]]; then
+            error "Hook '$EVENT'[$i].hooks[$j] missing 'type'"
+          fi
+          if [[ "$CMD" == "null" && "$PROMPT" == "null" ]]; then
+            error "Hook '$EVENT'[$i].hooks[$j] missing 'command' or 'prompt'"
+          fi
+        done
+      done
     fi
   done <<< "$HOOK_EVENTS"
 fi

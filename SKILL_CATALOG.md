@@ -24,6 +24,8 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [review:performance](#reviewperformance) | Quality | Performance analysis | Tier 3 |
 | [review:overall](#reviewoverall) | Quality | General code reviews | Tier 3 |
 | [arch:fitness-function](#archfitness-function) | Architecture | Architecture validation | Tier 3 |
+| [jupyter-remote](#jupyter-remote) | Specialized | Run Python code/notebooks on Jupyter kernel (remote SSH or local) | Tier 4 |
+| [remote-execution](#remote-execution) | Specialized | Routing pattern for SSH-dispatched compute (reference skill) | Tier 4 |
 | [css-architecture](#css-architecture) | Specialized | CSS architecture patterns | Tier 4 |
 | [ux-professional](#ux-professional) | Specialized | UX guidance | Tier 4 |
 | [creative-writing](#creative-writing) | Content | Content creation | Tier 4 |
@@ -504,6 +506,63 @@ Define and implement architecture fitness functions for governance.
 ---
 
 ## Content & Specialized Skills
+
+### jupyter-remote
+
+**Category:** Specialized
+**Priority:** Tier 4
+
+**Purpose:**
+Run Python code and notebooks on a Jupyter kernel, routing automatically to a remote box via SSH tunnel or to a local server.
+
+**Key Features:**
+- Local/remote routing via `JUPYTER_SSH_HOST` env var
+- SSH tunnel opened automatically when remote mode is active
+- Run inline code, stdin, or full `.ipynb` notebooks cell by cell
+- Kernel reuse (attaches to existing idle/busy kernel)
+- Configurable timeout, start/stop cell for partial notebook runs
+
+**Configuration Required:**
+- `JUPYTER_SSH_HOST` (for remote mode, e.g. `cuda-dev`)
+- `JUPYTER_TOKEN` (default: `aigensa`)
+
+**Dependencies:**
+- `remote-execution` skill (routing pattern)
+- `websocket-client` Python package
+
+**Use Cases:**
+- Run GPU-intensive training or eval on a remote machine
+- Execute notebook cells on a remote Jupyter kernel
+- Run local Jupyter experiments from Claude
+
+**Invoke:** `/jupyter-remote`
+
+---
+
+### remote-execution
+
+**Category:** Specialized
+**Priority:** Tier 4
+
+**Purpose:**
+Behavioral reference skill documenting the `*_SSH_HOST` routing pattern for skills that dispatch compute to a remote host or fall back to local.
+
+**Key Features:**
+- Defines the `*_SSH_HOST` env var convention
+- Remote mode: opens SSH tunnel via `scripts/ssh_tunnel.py`
+- Local mode: probes once, exits immediately if unreachable
+- Implementation reference code snippet included
+
+**Configuration Required:**
+- None (pattern/reference skill — not directly invocable)
+
+**Use Cases:**
+- Reference when building new remote-capable skills
+- Ensure consistent routing behavior across tools
+
+**Invoke:** N/A (behavioral reference skill, not user-invocable)
+
+---
 
 ### css-architecture
 
