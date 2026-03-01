@@ -24,6 +24,7 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [review:performance](#reviewperformance) | Quality | Performance analysis | Tier 3 |
 | [review:overall](#reviewoverall) | Quality | General code reviews | Tier 3 |
 | [arch:fitness-function](#archfitness-function) | Architecture | Architecture validation | Tier 3 |
+| [reveal-pdf-export](#reveal-pdf-export) | Specialized | Export Reveal.js presentations to pixel-perfect PDF via Chrome CDP | Tier 4 |
 | [jupyter-remote](#jupyter-remote) | Specialized | Run Python code/notebooks on Jupyter kernel (remote SSH or local) | Tier 4 |
 | [remote-execution](#remote-execution) | Specialized | Routing pattern for SSH-dispatched compute (reference skill) | Tier 4 |
 | [css-architecture](#css-architecture) | Specialized | CSS architecture patterns | Tier 4 |
@@ -506,6 +507,36 @@ Define and implement architecture fitness functions for governance.
 ---
 
 ## Content & Specialized Skills
+
+### reveal-pdf-export
+
+**Category:** Specialized
+**Priority:** Tier 4
+
+**Purpose:**
+Export a Reveal.js HTML presentation to a pixel-perfect PDF using Chrome CDP — no Puppeteer or Playwright dependency required. Codifies all known Reveal.js 4.x print-pdf rendering bugs and their fixes.
+
+**Key Features:**
+- `scripts/export-pdf.mjs` — zero-dependency Node 22+ CDP exporter (configurable via CLI args and env vars)
+- Inner wrapper div pattern for slides where `reveal.css` zeroes section padding in print mode
+- JS fix for blank trailing page caused by `page-break-after:always` on the last `.pdf-page`
+- Speaker notes hidden in print output (prevent height inflation)
+- CDP-based height debugging snippet for diagnosing page count issues
+
+**Requirements:**
+- Node.js 22+ (uses top-level `await` and native `WebSocket`)
+- Google Chrome installed (macOS default path; override with `CHROME` env var)
+
+**Configuration:**
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `CHROME` | macOS default | Chrome binary path |
+| `WIDTH` | `1280` | Slide width in px |
+| `HEIGHT` | `720` | Slide height in px |
+
+**Dependencies:** None
+
+---
 
 ### jupyter-remote
 
