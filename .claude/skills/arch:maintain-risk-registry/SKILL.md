@@ -1,5 +1,5 @@
 ---
-name: maintain-risk-registry
+name: arch:maintain-risk-registry
 author: "@amdmax"
 description: Read or update the project risk registry at {{REGISTRY_DIR}}/risks.yaml. Use when the architect identifies new risks during story design, when a risk is mitigated and needs a status update, or when any agent needs to review existing open risks. Supports both project-level risks (persistent across stories) and story-level risks (scoped to one issue).
 ---
@@ -8,7 +8,7 @@ description: Read or update the project risk registry at {{REGISTRY_DIR}}/risks.
 
 Registry file: `{{REGISTRY_DIR}}/risks.yaml`
 
-For schema, examples, and scope rules: see @.claude/skills/maintain-risk-registry/references/schema.md
+For schema, examples, and scope rules: see @.claude/skills/arch:maintain-risk-registry/references/schema.md
 
 ## Operations
 

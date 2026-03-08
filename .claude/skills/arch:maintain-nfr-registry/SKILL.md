@@ -1,5 +1,5 @@
 ---
-name: maintain-nfr-registry
+name: arch:maintain-nfr-registry
 author: "@amdmax"
 description: Read or update the non-functional requirements registry at {{REGISTRY_DIR}}/nfr-registry.yaml. Use when the architect maps NFRs to a story's implementation brief, when new project-wide NFRs are established, or when an agent needs to query which NFRs apply to a given story or category. Distinguishes project-level NFRs (permanent, all stories) from story-level NFRs (scoped to one issue).
 ---
@@ -8,7 +8,7 @@ description: Read or update the non-functional requirements registry at {{REGIST
 
 Registry file: `{{REGISTRY_DIR}}/nfr-registry.yaml`
 
-For schema, categories, and examples: see @.claude/skills/maintain-nfr-registry/references/schema.md
+For schema, categories, and examples: see @.claude/skills/arch:maintain-nfr-registry/references/schema.md
 
 ## Operations
 

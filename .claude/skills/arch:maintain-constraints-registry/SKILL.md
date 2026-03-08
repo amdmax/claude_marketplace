@@ -1,5 +1,5 @@
 ---
-name: maintain-constraints-registry
+name: arch:maintain-constraints-registry
 author: "@amdmax"
 description: Read or update the project constraints registry at {{REGISTRY_DIR}}/constraints.yaml. Use when the architect needs to check project-wide constraints before proposing a design, when a new constraint is established (e.g., "only target AWS", "no GPL libraries"), or when any agent needs to validate that a proposed approach doesn't violate a hard constraint. Hard constraints are blocking; soft constraints are advisory.
 ---
@@ -8,7 +8,7 @@ description: Read or update the project constraints registry at {{REGISTRY_DIR}}
 
 Registry file: `{{REGISTRY_DIR}}/constraints.yaml`
 
-For schema, categories, enforcement levels, and examples: see @.claude/skills/maintain-constraints-registry/references/schema.md
+For schema, categories, enforcement levels, and examples: see @.claude/skills/arch:maintain-constraints-registry/references/schema.md
 
 ## Operations
 

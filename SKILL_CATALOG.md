@@ -20,9 +20,9 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [github:story-quality](#githubstory-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
 | [aws:architect](#awsarchitect) | Architecture | AWS architecture guidance | Tier 3 |
 | [aws:cdk](#awscdk) | Architecture | CDK infrastructure as code | Tier 3 |
-| [maintain-risk-registry](#maintain-risk-registry) | Architecture | Read/append project and story risks to a YAML risk registry | Tier 3 |
-| [maintain-nfr-registry](#maintain-nfr-registry) | Architecture | Read/append project and story NFRs to a YAML NFR registry | Tier 3 |
-| [maintain-constraints-registry](#maintain-constraints-registry) | Architecture | Read/check project constraints (hard/soft) in a YAML registry | Tier 3 |
+| [arch:maintain-risk-registry](#archmaintain-risk-registry) | Architecture | Read/append project and story risks to a YAML risk registry | Tier 3 |
+| [arch:maintain-nfr-registry](#archmaintain-nfr-registry) | Architecture | Read/append project and story NFRs to a YAML NFR registry | Tier 3 |
+| [arch:maintain-constraints-registry](#archmaintain-constraints-registry) | Architecture | Read/check project constraints (hard/soft) in a YAML registry | Tier 3 |
 | [review:security](#reviewsecurity) | Quality | Security code reviews | Tier 3 |
 | [review:performance](#reviewperformance) | Quality | Performance analysis | Tier 3 |
 | [review:overall](#reviewoverall) | Quality | General code reviews | Tier 3 |
@@ -908,7 +908,7 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 
 **Invoke:** `/github:story-quality`
 
-### maintain-risk-registry
+### arch:maintain-risk-registry
 **Category:** Architecture
 **Priority:** Tier 3 (Important)
 **Purpose:** Read or update a YAML risk registry. Supports project-level (persistent) and story-level (issue-scoped) risks with open/mitigated status tracking.
@@ -917,11 +917,11 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - Distinguishes project vs story scope
 - Never-delete policy (status updates only)
 **Configuration Required:** `registry_dir` (default: `docs`)
-**Invoke:** `/maintain-risk-registry`
+**Invoke:** `/arch:maintain-risk-registry`
 
 ---
 
-### maintain-nfr-registry
+### arch:maintain-nfr-registry
 **Category:** Architecture
 **Priority:** Tier 3 (Important)
 **Purpose:** Read or update a YAML non-functional requirements registry. Separates permanent project-level NFRs from story-scoped NFRs.
@@ -930,11 +930,11 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - 7 NFR categories (performance, security, reliability, cost, scalability, maintainability, accessibility)
 - Project vs story scope distinction
 **Configuration Required:** `registry_dir` (default: `docs`)
-**Invoke:** `/maintain-nfr-registry`
+**Invoke:** `/arch:maintain-nfr-registry`
 
 ---
 
-### maintain-constraints-registry
+### arch:maintain-constraints-registry
 **Category:** Architecture
 **Priority:** Tier 3 (Important)
 **Purpose:** Read or update a YAML constraints registry. Hard constraints block silently violating design decisions; soft constraints require PM approval + ADR entry.
@@ -943,7 +943,7 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - Hard vs soft enforcement levels
 - Hard constraint violations escalate to PM automatically
 **Configuration Required:** `registry_dir` (default: `docs`)
-**Invoke:** `/maintain-constraints-registry`
+**Invoke:** `/arch:maintain-constraints-registry`
 
 ---
 
