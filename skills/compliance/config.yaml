@@ -1,0 +1,119 @@
+# Compliance Skill Configuration
+# Customize settings for OpenAPI generation, contract testing, coverage analysis, and acceptance criteria validation
+
+# Phase 1: OpenAPI Spec Generation
+openapi:
+  enabled: true
+  output_dir: "docs/api"
+  validate: true  # Run swagger-parser validation
+  format: "yaml"  # yaml or json
+
+  # Lambda functions to generate specs for
+  apis:
+    - name: admin
+      path: lambda/admin/index.ts
+      base_path: /api/admin
+      description: Administrative operations for course management
+
+    - name: referral
+      path: lambda/referral/index.ts
+      base_path: /api/referrals
+      description: Referral tracking and management
+
+  # OpenAPI spec metadata
+  info:
+    version: "1.0.0"
+    contact:
+      name: API Support
+      email: support@aigensa.com
+    license:
+      name: Proprietary
+
+  # Authentication configuration
+  security:
+    type: cognito
+    user_pool_id: us-east-1_vCiOk83HE
+    region: us-east-1
+
+# Phase 2: Contract Test Generation
+contract:
+  enabled: true
+  output_pattern: "lambda/{api}/__tests__/contract.test.ts"
+  validator: ajv  # ajv or joi
+
+  # Test scenarios to generate
+  test_scenarios:
+    - success_responses  # 2xx responses
+    - client_errors      # 4xx responses
+    - server_errors      # 5xx responses
+    - auth_errors        # 401/403 responses
+
+# Phase 3: Test Coverage Analysis
+coverage:
+  enabled: true
+
+  # Coverage thresholds by module type
+  thresholds:
+    lambda: 80              # Lambda functions (business logic)
+    infrastructure: 70      # CDK infrastructure code
+    utilities: 90           # Utility/helper functions
+
+  # Generate missing tests for untested code
+  generate_missing: true
+
+  # Mock AWS services in generated tests
+  mock_aws_services: true
+
+# Phase 0: AC Validation (Quality Architect Mode)
+# Runs before other phases as pre-commit quality gate
+ac_validation:
+  enabled: true
+
+  generation:
+    parse_from_story: true      # Extract from story.body markdown
+    generate_if_missing: true   # Generate from title if missing
+    augment_with_nfrs: true     # Always add NFR-based ACs
+
+  linking:
+    keyword_search: true        # Use Grep to find tests
+    similarity_threshold: 0.7   # Jaccard similarity (0.0-1.0)
+
+  coverage:
+    p0_threshold: 100    # P0 must be 100% tested
+    p1_threshold: 80     # P1 should be 80% tested
+    p2_threshold: 50     # P2 could be 50% tested
+
+  gates:
+    block_commit_on_p0_gaps: true   # Exit with error if P0 not 100%
+    block_pr_on_p1_gaps: false      # Warn but allow PR if P1 < 80%
+    generate_stubs: true            # Auto-create test files for gaps
+    stub_location: "auto"           # Auto-detect module or "src"
+
+  output:
+    json: .claude/compliance/acceptance-criteria.json
+    report: .claude/compliance/story-{issueNumber}-compliance.md
+
+# Phase 4: Acceptance Criteria Validation (Legacy PRD mode)
+# Preserved for backward compatibility with PRD validation
+acceptance:
+  enabled: false  # Disabled by default (use Phase 0 instead)
+
+  # Sources to extract acceptance criteria from
+  sources:
+    - docs/archive/root/PRD-*.md
+    - docs/adrs/*.md
+
+  # Output compliance report
+  output: docs/compliance-report.md
+
+  # GitHub integration (optional)
+  github_integration:
+    enabled: false  # Set true to update issues with AC checklists
+    label: "compliance"
+
+# Reporting
+reporting:
+  verbose: false              # Show detailed progress
+  save_artifacts: true        # Save intermediate artifacts (.claude/compliance/)
+  artifact_dir: .claude/compliance
+  include_evidence: true      # Link to files/tests as evidence in reports

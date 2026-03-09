@@ -1,0 +1,1242 @@
+---
+name: commit
+description: Create git commits with sequential AIGCODE-### numbering. Analyzes staged changes and generates commit messages following project conventions. Use when creating commits or when user says "commit changes", "make a commit", or mentions AIGCODE.
+---
+
+# AIGCODE Commit Automation
+
+## Overview
+
+This skill automates the creation of git commits following the project's AIGCODE-### numbering convention. It:
+
+1. **Finds the next sequential AIGCODE number** by checking all branches
+2. **Analyzes staged changes** to understand what's being committed
+3. **Generates a concise, descriptive commit message** explaining WHY, not just WHAT
+4. **Follows project conventions** including co-author attribution
+
+The skill ensures consistent commit numbering across all branches and maintains the project's commit message quality standards.
+
+## Workflow
+
+### Step 1: Verify Staged Changes
+
+```bash
+git diff --cached --stat
+```
+
+**Check for staged changes:**
+- If no staged changes exist: Error and instruct user to stage files first
+- If changes exist: Proceed to analyze
+
+**Example output:**
+```
+ .github/workflows/deploy.yml | 36 ++++++++-----------
+ 1 file changed, 6 insertions(+), 30 deletions(-)
+```
+
+### Step 2: Find Next AIGCODE Number
+
+```bash
+# Get all AIGCODE commits across ALL branches
+git log --oneline --all --grep="AIGCODE-"
+```
+
+**Parsing logic:**
+
+1. **Extract all AIGCODE numbers:**
+   ```bash
+   git log --oneline --all --grep="AIGCODE-" | grep -o "AIGCODE-[0-9]*" | sort -u
+   ```
+
+   Example output:
+   ```
+   AIGCODE-014
+   AIGCODE-015
+   AIGCODE-016
+   AIGCODE-017
+   AIGCODE-018
+   ```
+
+2. **Find the highest number:**
+   ```bash
+   git log --oneline --all --grep="AIGCODE-" | grep -o "AIGCODE-[0-9]*" | sort -u | sort -t- -k2 -n | tail -1
+   ```
+
+   Result: `AIGCODE-018`
+
+3. **Increment and format:**
+   - Extract number: `018` → `18`
+   - Increment: `18 + 1 = 19`
+   - Zero-pad to 3 digits: `19` → `019`
+   - Format: `AIGCODE-019`
+
+**Critical:** Always use `--all` flag to check ALL branches, not just current branch. This prevents duplicate AIGCODE numbers when working across multiple branches.
+
+### Step 2b: Detect Related Recent Commits (Grouping Detection)
+
+**Purpose:** Identify if the current changes are related to recent commits and offer to group them with a suffix (e.g., AIGCODE-067b, AIGCODE-067c).
+
+**When to detect:**
+- Changes affect files modified in recent commits (<4 hours ago)
+- Multiple commits targeting the same functional area
+- Iterative fixes or enhancements to the same feature
+
+**Detection algorithm:**
+
+```bash
+# Get recent commits on current branch (last 4 hours, max 10 commits)
+git log --since="4 hours ago" -10 --format="%H|%s|%ar"
+
+# For each recent commit:
+#   1. Get files changed in that commit: git diff-tree --no-commit-id --name-only -r <commit>
+#   2. Get currently staged files: git diff --cached --name-only
+#   3. Calculate file overlap
+```
+
+**Overlap calculation:**
+
+```bash
+# Get staged files
+STAGED_FILES=$(git diff --cached --name-only)
+STAGED_COUNT=$(echo "$STAGED_FILES" | wc -l | tr -d ' ')
+
+# For each recent commit
+for COMMIT in $(git log --since="4 hours ago" -10 --format="%H|%s|%ar"); do
+  COMMIT_HASH=$(echo "$COMMIT" | cut -d'|' -f1)
+  COMMIT_MSG=$(echo "$COMMIT" | cut -d'|' -f2)
+  COMMIT_AGE=$(echo "$COMMIT" | cut -d'|' -f3)
+
+  # Get files from that commit
+  COMMIT_FILES=$(git diff-tree --no-commit-id --name-only -r "$COMMIT_HASH")
+
+  # Find overlapping files
+  OVERLAPPING=$(comm -12 <(echo "$STAGED_FILES" | sort) <(echo "$COMMIT_FILES" | sort))
+  OVERLAP_COUNT=$(echo "$OVERLAPPING" | grep -c .)
+
+  # Calculate overlap percentage
+  OVERLAP_PCT=$((100 * $OVERLAP_COUNT / $STAGED_COUNT))
+
+  # Determine confidence level
+done
+```
+
+**Confidence scoring:**
+
+| Condition | Confidence Level | Action |
+|-----------|------------------|---------|
+| Same file(s) AND <1 hour | **HIGH (≥80%)** | Prompt user to group |
+| Same file(s) AND <4 hours | **MEDIUM (60-79%)** | Prompt user to group |
+| >50% file overlap AND <1 hour | **HIGH (≥80%)** | Prompt user to group |
+| >30% file overlap AND <4 hours | **MEDIUM (60-79%)** | Prompt user to group |
+| Message indicates refinement ("fix", "gap", "improve") | **+10% bonus** | |
+| <30% overlap OR >4 hours | **LOW (<60%)** | Skip detection, use new number |
+
+**User prompt when confidence ≥60%:**
+
+```
+🔍 Related Commit Detected
+
+These changes appear related to AIGCODE-067:
+  • Same file: scripts/test-guard.ts
+  • Committed: 22 minutes ago
+  • Message: "Add test count and coverage guard"
+
+Your staged changes:
+  • scripts/test-guard.ts (validation and fail-fast logic)
+
+Options:
+  [1] Use AIGCODE-067b (group with related work) - Recommended
+  [2] Use AIGCODE-070 (new independent change)
+  [3] Show diff comparison
+
+Choice:
+```
+
+**Diff comparison (option 3):**
+
+```bash
+# Show side-by-side comparison
+echo "=== Previous commit (AIGCODE-067) ==="
+git show COMMIT_HASH --stat
+
+echo "=== Current staged changes ==="
+git diff --cached --stat
+
+echo "=== File overlap ==="
+echo "$OVERLAPPING"
+
+# Then re-prompt with options [1] or [2]
+```
+
+### Step 2c: Handle Suffix Strategy
+
+**When user chooses to group (option 1):**
+
+1. **Extract base AIGCODE number from related commit:**
+   ```bash
+   # From commit message "AIGCODE-067: Add test count guard"
+   BASE_AIGCODE=$(echo "$COMMIT_MSG" | grep -o "AIGCODE-[0-9]*" | head -1)
+   # Result: AIGCODE-067
+   ```
+
+2. **Check for existing suffixes:**
+   ```bash
+   # Search all branches for commits with this base number + suffix
+   git log --all --oneline --grep="$BASE_AIGCODE[a-z]"
+
+   # Extract suffixes
+   EXISTING_SUFFIXES=$(git log --all --oneline --grep="$BASE_AIGCODE[a-z]" | \
+     grep -o "$BASE_AIGCODE[a-z]" | \
+     grep -o "[a-z]$" | \
+     sort -u)
+
+   # Example output:
+   # b
+   # c
+   ```
+
+3. **Determine next suffix:**
+   ```bash
+   if [ -z "$EXISTING_SUFFIXES" ]; then
+     # No suffixes exist, start with 'b'
+     NEXT_SUFFIX="b"
+   else
+     # Find the last (highest) suffix
+     LAST_SUFFIX=$(echo "$EXISTING_SUFFIXES" | tail -1)
+
+     # Increment (ASCII arithmetic)
+     NEXT_SUFFIX=$(echo "$LAST_SUFFIX" | tr 'a-z' 'b-za')
+   fi
+
+   # Result: AIGCODE-067b (or 067c if b exists, etc.)
+   NEXT_AIGCODE="${BASE_AIGCODE}${NEXT_SUFFIX}"
+   ```
+
+4. **Warning at 5+ suffixes:**
+   ```bash
+   SUFFIX_COUNT=$(echo "$EXISTING_SUFFIXES" | wc -l)
+
+   if [ "$SUFFIX_COUNT" -ge 5 ]; then
+     echo "⚠️  Warning: AIGCODE-067 already has 5 related commits (067b through 067f)"
+     echo "Consider consolidating these commits or using a new AIGCODE number."
+     echo ""
+     echo "Continue with AIGCODE-067g? [y/N]"
+   fi
+   ```
+
+5. **Generate commit message with "Builds on" reference:**
+   ```bash
+   COMMIT_TITLE="[Generated title based on changes]"
+
+   COMMIT_MESSAGE="$(cat <<EOF
+$NEXT_AIGCODE: $COMMIT_TITLE
+
+Builds on $BASE_AIGCODE by addressing:
+- [Key improvement 1]
+- [Key improvement 2]
+- [Key improvement 3]
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+EOF
+)"
+   ```
+
+**Example "Builds on" message:**
+
+```
+AIGCODE-067b: Add validation and fail-fast error handling
+
+Builds on AIGCODE-067 by addressing:
+- Missing validation for coverage thresholds
+- Need for fail-fast on corrupted baseline
+- Edge cases in pattern matching
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**When user chooses new number (option 2):**
+
+```bash
+# Proceed with normal increment logic (Step 2)
+NEXT_AIGCODE="AIGCODE-070"  # Next sequential number
+```
+
+**Edge cases:**
+
+| Scenario | Handling |
+|----------|----------|
+| Both branches have 067b | Both can exist; git history preserves both upon merge |
+| File overlap <30% despite time proximity | Force new AIGCODE (likely different feature) |
+| Suffix reaches 'z' | Switch to numeric: 067aa, 067ab, or prompt for new number |
+| Commit message detection fails | Fall back to option 2 (new number) |
+| User in detached HEAD state | Skip detection, proceed with new number |
+
+### Step 3: Analyze Staged Changes
+
+```bash
+# Get list of changed files
+git diff --cached --name-only
+
+# Get summary of changes
+git diff --cached --stat
+
+# Get brief diff for context (optional, for better understanding)
+git diff --cached
+```
+
+**Categorize changes by file paths:**
+
+| Path Pattern | Category | Typical Prefix |
+|--------------|----------|----------------|
+| `content/week_*/` | Content updates | Add, Update |
+| `.github/workflows/` | CI/CD changes | Fix, Update |
+| `infrastructure/` | Infrastructure | Refactor, Fix |
+| `lambda/` | Lambda functions | Fix, Add |
+| `src/` | Build system | Update, Refactor |
+| `.claude/skills/` | Skills/automation | Add |
+| Multiple categories | Cross-cutting | Consolidate, Integrate |
+
+**Identify change type:**
+- **Bug fixes** → "Fix"
+- **New functionality** → "Add"
+- **Improvements** → "Update", "Enhance"
+- **Code restructuring** → "Refactor"
+- **Consolidation** → "Consolidate", "Merge"
+- **Documentation** → "Document", "Add documentation"
+
+### Step 4: Generate Commit Message
+
+**Format:**
+```
+AIGCODE-###: [Action verb] [what] [why/impact]
+
+[Optional body with grouped changes - only if multiple categories]
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Title Guidelines:**
+- **Max 72 characters** (not counting AIGCODE-###:)
+- **Imperative mood** (Fix, Add, Update, not Fixed, Added, Updated)
+- **Explain WHY, not just WHAT** - Focus on the purpose/impact
+- **Be specific** - Mention the component or area affected
+
+**Title Examples:**
+
+| Changes | ❌ Bad Title | ✅ Good Title |
+|---------|-------------|--------------|
+| Removed duplicate steps in CI | `AIGCODE-019: Update workflow` | `AIGCODE-019: Consolidate build and lint jobs to eliminate duplication` |
+| Added logo files to build | `AIGCODE-019: Add logos` | `AIGCODE-019: Add logo assets to HTML build pipeline` |
+| Fixed Lambda bundling | `AIGCODE-019: Fix Lambda` | `AIGCODE-019: Fix Lambda@Edge to include auth dependencies` |
+| Updated multiple tests | `AIGCODE-019: Update tests` | `AIGCODE-019: Add comprehensive test coverage for Lambda function` |
+
+**Body Guidelines (optional - use when needed):**
+
+Include a body when:
+- Changes span multiple categories (infrastructure + content + workflows)
+- Context is needed to understand the why
+- Related changes should be grouped for clarity
+
+**Body format:**
+```
+[Category 1]:
+- Change 1 with brief context
+- Change 2 with brief context
+
+[Category 2]:
+- Change 1 with brief context
+```
+
+**Example with body:**
+```
+AIGCODE-019: Refactor Lambda bundling to use esbuild
+
+Infrastructure:
+- Switch from Docker bundling to native esbuild (lambda/auth-edge/)
+- Remove Docker dependency from CDK stack (infrastructure/lib/stack.ts)
+- Add esbuild configuration for Lambda@Edge constraints
+
+Build:
+- Update .gitignore to exclude compiled Lambda artifacts
+- Add pre-deployment validation script
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Example without body (simple single-purpose commit):**
+```
+AIGCODE-019: Add logo assets to HTML build pipeline
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+### Step 5: Create the Commit
+
+```bash
+git commit -m "$(cat <<'EOF'
+AIGCODE-###: [title]
+
+[optional body]
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+EOF
+)"
+```
+
+**Why use heredoc:**
+- Handles multi-line messages correctly
+- Preserves formatting
+- Avoids issues with special characters in commit messages
+- Single quotes prevent variable expansion
+
+**Alternative for simple commits (no body):**
+```bash
+git commit -m "AIGCODE-###: [title]
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>"
+```
+
+### Step 6: Verify and Report
+
+```bash
+# Show the commit just created
+git show --stat HEAD
+
+# Or get commit info
+git log -1 --oneline
+```
+
+**Report to user:**
+```
+✓ Commit Created: AIGCODE-019
+
+Commit: a1b2c3d4
+Message: AIGCODE-019: Consolidate build and lint jobs to eliminate duplication
+
+Files changed:
+ .github/workflows/deploy.yml | 36 ++++++++-----------
+ 1 file changed, 6 insertions(+), 30 deletions(-)
+```
+
+## AIGCODE Counter Logic
+
+### Why Check All Branches?
+
+The project uses a **global sequential counter** across all branches. This prevents:
+
+- **Duplicate numbers** when multiple branches are active
+- **Merge conflicts** from overlapping AIGCODE numbers
+- **Confusion** in git history and PR discussions
+
+### Finding the Highest Number
+
+**Command:**
+```bash
+git log --oneline --all --grep="AIGCODE-"
+```
+
+**Output example:**
+```
+a1b2c3d eb8e5f6 AIGCODE-018: Consolidate build and lint jobs to eliminate duplication
+b2c3d4e 417f56a AIGCODE-017: Add logo assets to HTML build pipeline
+c3d4e5f 86aca26 AIGCODE-016: Fix remaining major issues from PR feedback
+d4e5f6a aba6cfa AIGCODE-015: Add comprehensive test coverage for Lambda function
+e5f6a7b cb890ac AIGCODE-014: Add HTML escaping to prevent XSS vulnerabilities
+```
+
+**Extraction:**
+```bash
+# Get unique AIGCODE numbers
+git log --oneline --all --grep="AIGCODE-" | grep -o "AIGCODE-[0-9]*" | sort -u
+
+# Sort numerically by the number part (after the dash)
+sort -t- -k2 -n
+
+# Get the last (highest) one
+tail -1
+```
+
+**Result:** `AIGCODE-018`
+
+### Incrementing
+
+```bash
+# Extract the number part
+HIGHEST=$(git log --oneline --all --grep="AIGCODE-" | grep -o "AIGCODE-[0-9]*" | sort -u | sort -t- -k2 -n | tail -1 | grep -o "[0-9]*")
+
+# If no AIGCODE commits exist, start at 001
+if [ -z "$HIGHEST" ]; then
+  NEXT="001"
+else
+  # Increment (strips leading zeros automatically in bash arithmetic)
+  NEXT_NUM=$((10#$HIGHEST + 1))
+
+  # Zero-pad to 3 digits
+  NEXT=$(printf "%03d" $NEXT_NUM)
+fi
+
+# Result: AIGCODE-019
+echo "AIGCODE-$NEXT"
+```
+
+### Edge Cases
+
+**No AIGCODE commits exist:**
+- Start with `AIGCODE-001`
+- This happens on new projects or first use
+
+**Number exceeds 999:**
+- Use 4 digits: `AIGCODE-1000`
+- Format: `printf "%04d"` instead of `"%03d"`
+
+**Gaps in sequence:**
+- Acceptable and expected
+- May occur from rebasing, amending, or cherry-picking
+- Always increment from highest, regardless of gaps
+
+## Commit Message Examples
+
+### Example 1: Single-file CI/CD fix
+
+**Staged changes:**
+```
+Modified: .github/workflows/deploy.yml
+```
+
+**Diff analysis:**
+```diff
+- name: Build site
+-   run: npm run build
+- name: Lint
+-   run: npm run lint
++ name: Build and lint
++   run: |
++     npm run build
++     npm run lint
+```
+
+**Generated commit:**
+```
+AIGCODE-019: Consolidate build and lint jobs to eliminate duplication
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why this is good:**
+- Explains the PURPOSE (eliminate duplication) not just the action
+- Specific about what was consolidated (build and lint jobs)
+- Concise and clear
+
+### Example 2: Multi-file infrastructure change
+
+**Staged changes:**
+```
+Modified: infrastructure/lib/website-stack.ts
+Modified: lambda/auth-edge/package.json
+Modified: lambda/auth-edge/tsconfig.json
+Added: lambda/auth-edge/build.ts
+```
+
+**Diff analysis:**
+- Switched from Docker bundling to esbuild
+- Added build script for Lambda@Edge
+- Updated CDK to use local bundling
+
+**Generated commit:**
+```
+AIGCODE-019: Refactor Lambda@Edge bundling to use esbuild instead of Docker
+
+Infrastructure:
+- Replace BundlingDockerImage with local esbuild bundling
+- Add Lambda size validation and error handling
+
+Lambda Function:
+- Add build.ts script for esbuild configuration
+- Configure output for Lambda@Edge compatibility (no sourcemaps)
+
+Build Performance:
+- Reduce cold start time by eliminating Docker overhead
+- Enable faster local development iteration
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why this is good:**
+- Title explains the key change (Docker → esbuild) and why
+- Body groups changes by category
+- Includes impact/benefit section
+- Provides context for reviewers
+
+### Example 3: Content addition
+
+**Staged changes:**
+```
+Added: content/week_6/images/ralph-loop.png
+Modified: content/week_6/hooks.md
+```
+
+**Diff analysis:**
+- Added new diagram
+- Updated hooks documentation with Ralph Loop pattern
+
+**Generated commit:**
+```
+AIGCODE-019: Add Ralph Loop pattern to Week 6 hooks documentation
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why this is good:**
+- Clear and specific (Ralph Loop pattern)
+- Location mentioned (Week 6)
+- No unnecessary body (simple addition)
+
+### Example 4: Bug fix with test coverage
+
+**Staged changes:**
+```
+Modified: lambda/auth-edge/index.ts
+Added: lambda/auth-edge/index.test.ts
+Modified: lambda/auth-edge/package.json
+```
+
+**Diff analysis:**
+- Fixed XSS vulnerability by adding HTML escaping
+- Added comprehensive test suite
+- Added testing dependencies
+
+**Generated commit:**
+```
+AIGCODE-019: Add HTML escaping to prevent XSS vulnerabilities
+
+Security:
+- Escape HTML in error messages and redirects
+- Add input validation for OAuth parameters
+
+Testing:
+- Add comprehensive test coverage (90%+)
+- Include XSS attack vector tests
+- Add fixtures for common auth scenarios
+
+Dependencies:
+- Add vitest for Lambda function testing
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why this is good:**
+- Highlights security concern in title
+- Groups related changes (security + testing)
+- Shows thoroughness (test coverage, attack vectors)
+
+### Example 5: Multi-category cleanup
+
+**Staged changes:**
+```
+Deleted: src/images/Screenshot 2026-01-01 at 18.58.10.png
+Deleted: src/images/Screenshot 2026-01-02 at 15.15.07.png
+Deleted: src/images/Screenshot 2026-01-02 at 15.21.45.png
+Modified: .gitignore
+```
+
+**Diff analysis:**
+- Removed old screenshots with default names
+- Updated gitignore to prevent future screenshot commits
+
+**Generated commit:**
+```
+AIGCODE-019: Remove default-named screenshots and update gitignore
+
+Cleanup:
+- Remove screenshots with generic timestamp names
+- These were likely test uploads or mistakes
+
+Prevention:
+- Update .gitignore to exclude screenshots with default naming pattern
+- Prevents accidental commits of temporary screenshot files
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why this is good:**
+- Explains WHY files were removed
+- Shows forward-thinking (prevention)
+- Provides context (test uploads)
+
+## Error Handling
+
+### No Staged Changes
+
+**Detection:**
+```bash
+git diff --cached --quiet
+echo $?  # 0 = no changes, 1 = changes exist
+```
+
+**Error message:**
+```
+❌ No staged changes to commit
+
+Please stage your changes first:
+  git add <file>         # Stage specific file
+  git add .              # Stage all changes
+  git add -p             # Stage interactively
+
+Then run /commit again.
+```
+
+### Not a Git Repository
+
+**Detection:**
+```bash
+git rev-parse --git-dir 2>/dev/null
+```
+
+**Error message:**
+```
+❌ Not a git repository
+
+This command must be run from within a git repository.
+Please navigate to your project directory and try again.
+```
+
+### Detached HEAD State
+
+**Detection:**
+```bash
+git symbolic-ref -q HEAD
+# Exit code 1 if detached HEAD
+```
+
+**Warning message:**
+```
+⚠️  Warning: Detached HEAD state detected
+
+You're not currently on a branch. Your commit will be created,
+but may be lost if you switch branches without creating a branch reference.
+
+Recommended:
+  git checkout -b <branch-name>  # Create a branch first
+  git checkout <existing-branch> # Or switch to existing branch
+
+Continue anyway? [y/N]
+```
+
+### Merge Conflict in Progress
+
+**Detection:**
+```bash
+git ls-files -u  # Lists unmerged files
+```
+
+**Error message:**
+```
+❌ Merge conflict in progress
+
+Please resolve merge conflicts before committing:
+  git status                    # See conflicted files
+  [edit files to resolve]
+  git add <resolved-files>      # Stage resolved files
+  git commit                    # Complete merge
+
+Or abort the merge:
+  git merge --abort
+```
+
+### AIGCODE Parsing Fails
+
+**Scenario:** `git log` command fails or returns unexpected output
+
+**Fallback:**
+```bash
+# If git log fails, ask user for number
+echo "⚠️  Could not automatically determine next AIGCODE number"
+echo "Last AIGCODE found: $HIGHEST (or none)"
+echo "Please enter the number to use (e.g., 019): "
+read NEXT
+```
+
+**Validation:**
+```bash
+# Ensure user entered valid number
+if ! [[ "$NEXT" =~ ^[0-9]+$ ]]; then
+  echo "❌ Invalid number format"
+  exit 1
+fi
+
+# Warn if number already exists
+if git log --oneline --all --grep="AIGCODE-$NEXT" | grep -q "AIGCODE-$NEXT"; then
+  echo "⚠️  Warning: AIGCODE-$NEXT already exists"
+  echo "Continue anyway? [y/N]"
+fi
+```
+
+### Commit Fails (Pre-commit Hook)
+
+**Detection:**
+```bash
+git commit ...
+# Exit code non-zero = commit failed
+```
+
+**Error message:**
+```
+❌ Commit failed
+
+The commit was rejected, likely by a pre-commit hook or other validation.
+
+Error output:
+[Show git output]
+
+Common causes:
+- Pre-commit hook failure (linting, tests, formatting)
+- File size restrictions
+- Protected branch
+
+Please fix the issues and try again.
+```
+
+**Recovery:**
+```
+Your commit message was:
+AIGCODE-019: [title]
+
+After fixing issues, you can:
+1. Run /commit again (will use next AIGCODE number)
+2. Or commit manually with: git commit -m "[saved message]"
+```
+
+### Empty Commit Message Generated
+
+**Should never happen, but safeguard:**
+
+```bash
+if [ -z "$COMMIT_TITLE" ]; then
+  echo "❌ Could not generate commit message from staged changes"
+  echo ""
+  echo "Please provide a commit message:"
+  read COMMIT_TITLE
+fi
+```
+
+## Best Practices
+
+### When to Commit
+
+**✅ Good times to commit:**
+- After completing a logical unit of work
+- Before switching to a different task
+- After fixing a specific bug
+- After adding a distinct feature
+- When tests pass and build succeeds
+
+**❌ Bad times to commit:**
+- In the middle of implementing a feature
+- With failing tests or build errors
+- With multiple unrelated changes mixed together
+- Without staging the right files
+
+### Staging Strategy
+
+**Selective staging:**
+```bash
+# Stage specific files
+git add src/builder.ts src/templates/
+
+# Interactive staging (choose hunks)
+git add -p file.ts
+
+# Stage by pattern
+git add *.test.ts
+```
+
+**Check before committing:**
+```bash
+# See what will be committed
+git diff --cached
+
+# See status
+git status
+```
+
+### Commit Frequency
+
+**Project guidelines:**
+- **Commit frequently** with clear messages
+- Each commit should be a logical, atomic change
+- Prefer many small commits over few large ones
+- Makes debugging and reverting easier
+
+### Message Quality
+
+**Focus on WHY, not WHAT:**
+```
+❌ AIGCODE-019: Update deploy.yml
+✅ AIGCODE-019: Consolidate build and lint jobs to eliminate duplication
+
+❌ AIGCODE-019: Add files
+✅ AIGCODE-019: Add logo assets to HTML build pipeline
+
+❌ AIGCODE-019: Fix bug
+✅ AIGCODE-019: Fix Lambda@Edge to include auth dependencies
+```
+
+**Be specific:**
+- Mention the component/file/area affected
+- Explain the impact or benefit
+- Provide context if needed in the body
+
+### Co-Authorship
+
+**Always include the co-author footer:**
+```
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+**Why:**
+- Proper attribution for AI-assisted work
+- Follows project convention
+- Indicates collaborative development
+
+## Integration with Project Workflow
+
+### Relationship to /mr Skill
+
+**Typical workflow:**
+1. Make changes to files
+2. **Stage changes:** `git add <files>`
+3. **Create commit:** `/commit` → Generates AIGCODE-### commit
+4. Repeat steps 1-3 as needed for multiple logical changes
+5. **Create PR:** `/mr` → Pushes branch and creates pull request
+
+**Benefits of this flow:**
+- Each commit is numbered and tracked
+- PR contains multiple well-documented commits
+- Easy to review changes incrementally
+- Clear history of what was done and why
+
+### AIGCODE in PRs
+
+**PR with multiple AIGCODE commits:**
+```
+feature/lambda-bundling-refactor-1735756800
+
+Commits:
+- AIGCODE-015: Add comprehensive test coverage for Lambda function
+- AIGCODE-016: Fix remaining major issues from PR feedback
+- AIGCODE-017: Add logo assets to HTML build pipeline
+- AIGCODE-018: Consolidate build and lint jobs to eliminate duplication
+```
+
+**Benefits:**
+- Each commit is independently reviewable
+- Changes are logically grouped
+- Sequential numbering shows development order
+- Easy to cherry-pick or revert individual commits
+
+### Working Across Branches
+
+**Scenario:** Working on multiple features in parallel
+
+```bash
+# Branch 1: feature/auth-improvements
+git checkout feature/auth-improvements
+git add lambda/auth-edge/index.ts
+/commit  # Creates AIGCODE-019
+
+# Switch to Branch 2: feature/content-updates
+git checkout feature/content-updates
+git add content/week_6/hooks.md
+/commit  # Creates AIGCODE-020 (not 019 again!)
+
+# The --all flag in git log ensures no duplicate numbers
+```
+
+## Complete Example Flows
+
+### Example 1: Simple Bug Fix
+
+```bash
+$ git status
+On branch fix/lambda-bundling
+
+Changes not staged for commit:
+  modified:   lambda/auth-edge/package.json
+
+$ git add lambda/auth-edge/package.json
+
+$ /commit
+
+→ Checking staged changes...
+  ✓ Found 1 file staged
+
+→ Finding next AIGCODE number...
+  git log --oneline --all --grep="AIGCODE-"
+  Highest: AIGCODE-018
+  Next: AIGCODE-019
+
+→ Analyzing changes...
+  Modified: lambda/auth-edge/package.json
+  Category: Lambda function dependencies
+  Type: Fix
+
+→ Generating commit message...
+  Title: Fix Lambda@Edge package.json to include auth dependencies
+
+→ Creating commit...
+  git commit -m "$(cat <<'EOF'
+  AIGCODE-019: Fix Lambda@Edge package.json to include auth dependencies
+
+  Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+  EOF
+  )"
+
+✓ Commit Created: AIGCODE-019
+
+Commit: a1b2c3d4
+Message: AIGCODE-019: Fix Lambda@Edge package.json to include auth dependencies
+
+Files changed:
+ lambda/auth-edge/package.json | 3 +++
+ 1 file changed, 3 insertions(+)
+```
+
+### Example 2: Multi-file Feature Addition
+
+```bash
+$ git status
+On branch feature/test-coverage
+
+Changes not staged for commit:
+  modified:   lambda/auth-edge/index.ts
+  modified:   lambda/auth-edge/package.json
+  new file:   lambda/auth-edge/index.test.ts
+  new file:   lambda/auth-edge/vitest.config.ts
+
+$ git add lambda/auth-edge/
+
+$ /commit
+
+→ Checking staged changes...
+  ✓ Found 4 files staged
+
+→ Finding next AIGCODE number...
+  git log --oneline --all --grep="AIGCODE-"
+  Highest: AIGCODE-019
+  Next: AIGCODE-020
+
+→ Analyzing changes...
+  Categories: Testing (2 new files), Implementation (1 modified), Config (1 modified)
+  Type: Add (new functionality - test coverage)
+
+→ Generating commit message...
+  Title: Add comprehensive test coverage for Lambda function
+  Body: Yes (multiple categories)
+
+→ Creating commit...
+  git commit -m "$(cat <<'EOF'
+  AIGCODE-020: Add comprehensive test coverage for Lambda function
+
+  Testing:
+  - Add test suite with 90%+ coverage (index.test.ts)
+  - Include OAuth flow, error handling, and edge cases
+  - Add vitest configuration for Lambda environment
+
+  Implementation:
+  - Refactor index.ts for better testability
+  - Extract helper functions for easier mocking
+
+  Dependencies:
+  - Add vitest and testing utilities (package.json)
+
+  Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+  EOF
+  )"
+
+✓ Commit Created: AIGCODE-020
+
+Commit: b2c3d4e5
+Message: AIGCODE-020: Add comprehensive test coverage for Lambda function
+
+Files changed:
+ lambda/auth-edge/index.test.ts     | 245 ++++++++++++++++++++++++++++++
+ lambda/auth-edge/index.ts          |  67 +++++----
+ lambda/auth-edge/package.json      |   8 +
+ lambda/auth-edge/vitest.config.ts  |  12 ++
+ 4 files changed, 310 insertions(+), 22 deletions(-)
+```
+
+### Example 3: Error - No Staged Changes
+
+```bash
+$ git status
+On branch feature/new-feature
+
+Changes not staged for commit:
+  modified:   README.md
+
+$ /commit
+
+❌ No staged changes to commit
+
+Please stage your changes first:
+  git add <file>         # Stage specific file
+  git add .              # Stage all changes
+  git add -p             # Stage interactively
+
+Then run /commit again.
+
+$ git add README.md
+$ /commit
+→ Proceeding with commit...
+```
+
+### Example 4: Working Across Branches
+
+```bash
+# On branch feature/auth
+$ git add lambda/auth-edge/index.ts
+$ /commit
+✓ Commit Created: AIGCODE-021
+
+# Switch branches
+$ git checkout feature/content
+$ git add content/week_7/
+$ /commit
+→ Finding next AIGCODE number...
+  Checking ALL branches...
+  Highest: AIGCODE-021 (from feature/auth branch)
+  Next: AIGCODE-022
+
+✓ Commit Created: AIGCODE-022
+
+# No duplicate numbers! The --all flag caught the commit from the other branch.
+```
+
+## Troubleshooting
+
+### Issue: "AIGCODE number already exists"
+
+**Cause:** Another commit with the same number was created (possibly on another branch or by another developer)
+
+**Solution:**
+```bash
+# Refresh and try again
+git fetch --all
+/commit  # Will find the correct next number
+```
+
+### Issue: "Cannot determine next AIGCODE number"
+
+**Cause:** Git log command failed or returned unexpected output
+
+**Solution:**
+```bash
+# Check manually
+git log --oneline --all --grep="AIGCODE-" | head -5
+
+# Use manual number entry (fallback in skill)
+Enter AIGCODE number: 019
+```
+
+### Issue: "Commit message too long"
+
+**Cause:** Generated title exceeds 72 characters
+
+**Solution:**
+- Skill should automatically truncate or rephrase
+- Or ask user for shorter version
+- Keep body for details
+
+### Issue: "Pre-commit hook failed"
+
+**Cause:** Linting, tests, or other validations failed
+
+**Solution:**
+```bash
+# Fix the issues
+npm run lint:fix
+npm test
+
+# Stage fixes if needed
+git add .
+
+# Try again
+/commit
+```
+
+### Issue: "Lost commit after detached HEAD"
+
+**Cause:** Committed in detached HEAD state and switched branches
+
+**Solution:**
+```bash
+# Find the lost commit
+git reflog
+
+# Create a branch to save it
+git branch recover-branch <commit-hash>
+
+# Or cherry-pick it
+git cherry-pick <commit-hash>
+```
+
+## Advanced Usage
+
+### Amending Commits
+
+**Scenario:** Made a commit but need to add more changes
+
+```bash
+# Make additional changes
+git add <forgotten-files>
+
+# Amend the previous commit (keeps same AIGCODE number)
+git commit --amend
+
+# Note: /commit skill creates new commits; use manual amend for fixes
+```
+
+### Squashing Multiple Commits
+
+**Scenario:** Want to combine multiple AIGCODE commits before merging
+
+```bash
+# Interactive rebase
+git rebase -i HEAD~3
+
+# Mark commits to squash
+pick AIGCODE-019: First change
+squash AIGCODE-020: Second change
+squash AIGCODE-021: Third change
+
+# Result: Single commit with combined message
+```
+
+**Recommendation:** Keep separate AIGCODE commits in branches; squash only if absolutely necessary.
+
+### Cherry-picking AIGCODE Commits
+
+**Scenario:** Want to apply a specific AIGCODE commit to another branch
+
+```bash
+# From branch feature/a, cherry-pick AIGCODE-019 to feature/b
+git checkout feature/b
+git cherry-pick <commit-hash-of-AIGCODE-019>
+
+# The AIGCODE number stays the same (AIGCODE-019)
+# This is OK - it's the same change, just on a different branch
+```
+
+## Summary
+
+The `/commit` skill streamlines the commit process by:
+
+✅ **Automating AIGCODE numbering** - No manual tracking needed
+✅ **Ensuring consistency** - Checks all branches for the next number
+✅ **Generating quality messages** - Focuses on WHY, not just WHAT
+✅ **Following conventions** - Includes co-author attribution
+✅ **Saving time** - Analyzes changes and creates descriptive messages
+✅ **Preventing errors** - Validates staged changes and handles edge cases
+
+Use `/commit` whenever you're ready to create a commit, and it will handle the rest!

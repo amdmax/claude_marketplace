@@ -1,0 +1,48 @@
+# Configuration for /create-story skill
+# Creates minimal GitHub issues for commit workflow
+
+# GitHub repository settings
+repository:
+  # Repository slug (owner/repo)
+  slug: "aigensa/vibe-coding-course"
+
+  # Default labels to apply to created issues
+  # Note: Uncomment and customize if your repository has these labels
+  # default_labels:
+  #   - "story"
+  default_labels: []
+
+# Issue creation settings
+issue:
+  # Auto-generate body from git diff if user doesn't provide one
+  auto_generate_body: true
+
+  # Maximum lines to analyze from git diff for body generation
+  diff_analysis_lines: 50
+
+  # Default body template when no staged changes exist
+  default_body: "Auto-created during commit workflow"
+
+# Active story file settings
+active_story:
+  # Path to active story JSON file (relative to project root)
+  path: ".agile-dev-team/active-story.json"
+
+  # Minimal fields to store (fast path for commits)
+  # Full story format used by /fetch-story includes ~15 fields
+  # This minimal version only stores what /commit needs
+  minimal_fields:
+    - "issueNumber"
+    - "title"
+    - "body"
+    - "url"
+
+# Error handling
+errors:
+  # Behavior when GitHub CLI is not authenticated
+  # Options: "prompt" (show gh auth login instructions), "fail" (exit with error)
+  no_auth: "prompt"
+
+  # Behavior when network/API call fails
+  # Options: "retry" (attempt once more), "fail" (exit with error)
+  network_failure: "fail"
