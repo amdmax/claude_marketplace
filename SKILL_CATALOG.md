@@ -20,6 +20,9 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [github:story-quality](#githubstory-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
 | [aws:architect](#awsarchitect) | Architecture | AWS architecture guidance | Tier 3 |
 | [aws:cdk](#awscdk) | Architecture | CDK infrastructure as code | Tier 3 |
+| [arch:maintain-risk-registry](#archmaintain-risk-registry) | Architecture | Read/append project and story risks to a YAML risk registry | Tier 3 |
+| [arch:maintain-nfr-registry](#archmaintain-nfr-registry) | Architecture | Read/append project and story NFRs to a YAML NFR registry | Tier 3 |
+| [arch:maintain-constraints-registry](#archmaintain-constraints-registry) | Architecture | Read/check project constraints (hard/soft) in a YAML registry | Tier 3 |
 | [review:security](#reviewsecurity) | Quality | Security code reviews | Tier 3 |
 | [review:performance](#reviewperformance) | Quality | Performance analysis | Tier 3 |
 | [review:overall](#reviewoverall) | Quality | General code reviews | Tier 3 |
@@ -904,6 +907,43 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - Automated story refinement feedback
 
 **Invoke:** `/github:story-quality`
+
+### arch:maintain-risk-registry
+**Category:** Architecture
+**Priority:** Tier 3 (Important)
+**Purpose:** Read or update a YAML risk registry. Supports project-level (persistent) and story-level (issue-scoped) risks with open/mitigated status tracking.
+**Key Features:**
+- Auto-increments RISK-NNN ids
+- Distinguishes project vs story scope
+- Never-delete policy (status updates only)
+**Configuration Required:** `registry_dir` (default: `docs`)
+**Invoke:** `/arch:maintain-risk-registry`
+
+---
+
+### arch:maintain-nfr-registry
+**Category:** Architecture
+**Priority:** Tier 3 (Important)
+**Purpose:** Read or update a YAML non-functional requirements registry. Separates permanent project-level NFRs from story-scoped NFRs.
+**Key Features:**
+- Auto-increments NFR-NNN ids
+- 7 NFR categories (performance, security, reliability, cost, scalability, maintainability, accessibility)
+- Project vs story scope distinction
+**Configuration Required:** `registry_dir` (default: `docs`)
+**Invoke:** `/arch:maintain-nfr-registry`
+
+---
+
+### arch:maintain-constraints-registry
+**Category:** Architecture
+**Priority:** Tier 3 (Important)
+**Purpose:** Read or update a YAML constraints registry. Hard constraints block silently violating design decisions; soft constraints require PM approval + ADR entry.
+**Key Features:**
+- Auto-increments CONST-NNN ids
+- Hard vs soft enforcement levels
+- Hard constraint violations escalate to PM automatically
+**Configuration Required:** `registry_dir` (default: `docs`)
+**Invoke:** `/arch:maintain-constraints-registry`
 
 ---
 
