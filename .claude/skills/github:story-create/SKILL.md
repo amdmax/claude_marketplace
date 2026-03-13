@@ -5,6 +5,8 @@ author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com
 ---
 
+Active project: !`cat .agile-dev-team/active-project.json 2>/dev/null || echo "none"`
+
 # Create Story Skill
 
 > **Quick issue creation for ad-hoc commits**
@@ -171,6 +173,26 @@ echo "$ISSUE_URL"
 ```
 
 **Why minimal?** `/fetch-story` stores 15+ fields for planned work. This skill stores only what `/commit` needs for fast path.
+
+### Step 7: Add to GitHub Project (if configured)
+
+```bash
+# Read active project config (loaded above)
+PROJECT=$(cat .agile-dev-team/active-project.json 2>/dev/null)
+if [ -n "$PROJECT" ] && [ "$PROJECT" != "none" ]; then
+  PROJECT_URL=$(echo "$PROJECT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('url',''))")
+  if [ -n "$PROJECT_URL" ]; then
+    # Parse owner and number from URL
+    # e.g. https://github.com/orgs/aigensa/projects/2 → owner=aigensa, number=2
+    OWNER=$(echo "$PROJECT_URL" | sed 's|.*/orgs/\([^/]*\)/projects/.*|\1|')
+    NUMBER=$(echo "$PROJECT_URL" | grep -o '[0-9]*$')
+    gh project item-add "$NUMBER" --owner "$OWNER" --url "$ISSUE_URL"
+    echo "✓ Added to project: $PROJECT_URL"
+  fi
+fi
+```
+
+Skip silently if `active-project.json` is absent or has no valid URL — this step is best-effort for the fast path.
 
 ## Configuration
 

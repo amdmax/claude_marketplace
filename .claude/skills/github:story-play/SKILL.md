@@ -3,6 +3,8 @@ name: play-story
 description: Put a story "in play" by fetching it from GitHub Projects, gathering NFRs, collecting context, and creating ADRs as needed. Invokable with /play-story.
 ---
 
+Active project: !`cat .agile-dev-team/active-project.json 2>/dev/null || echo "none"`
+
 # Play Story Workflow
 
 ## Overview
@@ -19,6 +21,20 @@ This skill orchestrates the complete story preparation workflow, coordinating al
 This is the **primary entry point** for developers starting work on a new story.
 
 ## Workflow
+
+### Step 0: Display Active Project Banner
+
+At the start, display the orchestrator banner including project context:
+
+```
+═══════════════════════════════════════════════════════════════
+  Story Workflow Orchestrator
+═══════════════════════════════════════════════════════════════
+
+Project: <name> (<url>)   ← from active-project.json, or "(not configured)" if none
+```
+
+If `active-project.json` is not present or is "none", show "(not configured)" for project context and continue — do not block the workflow.
 
 ### Step 1: Pull Latest Changes from Master
 
