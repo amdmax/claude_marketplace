@@ -1,0 +1,28 @@
+# Configuration for /tidy-board skill - Example
+# Copy this to config.yaml and customize
+
+# GitHub repository settings
+repository:
+  # Repository slug (owner/repo)
+  slug: "myorg/myrepo"
+
+# Board tidy settings
+board:
+  # Maximum items to fetch from the project board per run
+  max_items: 100
+
+  # Maximum projects to list when discovering linked projects
+  max_projects: 5
+
+  # Status column name for items currently in progress (must match exactly)
+  in_progress_column: "In Progress"
+
+  # Status column name to move stale items into
+  done_column: "Done"
+
+# Error handling
+errors:
+  # Show login instructions if not authenticated
+  no_auth: "prompt"
+  # Fail immediately on network errors
+  network_failure: "fail"

@@ -1,0 +1,32 @@
+# Configuration for /tidy-board skill
+# Tidies a GitHub Project V2 board by moving stale "In Progress" items to "Done"
+# This is a TEMPLATE - replace {{VARIABLES}} with your values
+
+# GitHub repository settings
+repository:
+  # Repository slug (owner/repo) — used as the default argument when none is provided
+  slug: "{{REPO_SLUG}}"
+
+# Board tidy settings
+board:
+  # Maximum items to fetch from the project board per run
+  max_items: 100
+
+  # Maximum projects to list when discovering linked projects
+  max_projects: 5
+
+  # Status column names to treat as "in progress" (must match project field option names exactly)
+  in_progress_column: "In Progress"
+
+  # Status column name to move stale items into
+  done_column: "Done"
+
+# Error handling
+errors:
+  # Behavior when GitHub CLI is not authenticated
+  # Options: "prompt" (show gh auth login instructions), "fail" (exit with error)
+  no_auth: "prompt"
+
+  # Behavior when network/API call fails
+  # Options: "retry" (attempt once more), "fail" (exit with error)
+  network_failure: "fail"

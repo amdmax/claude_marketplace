@@ -18,6 +18,7 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [claude:sync-skills](#claudesync-skills) | Development | Synchronize skills across projects | Tier 2 |
 | [gather-context](#gather-context) | Development | Code exploration and context gathering | Tier 2 |
 | [github:story-quality](#githubstory-quality) | Quality | SMART AC and NFR validation for stories | Tier 2 |
+| [github:tidy-board](#githubtidy-board) | Core Workflow | Sync GitHub Project board — move stale In Progress items to Done | Tier 2 |
 | [aws:architect](#awsarchitect) | Architecture | AWS architecture guidance | Tier 3 |
 | [aws:cdk](#awscdk) | Architecture | CDK infrastructure as code | Tier 3 |
 | [arch:maintain-risk-registry](#archmaintain-risk-registry) | Architecture | Read/append project and story risks to a YAML risk registry | Tier 3 |
@@ -907,6 +908,35 @@ Analyze GitHub Project stories for SMART acceptance criteria and NFR coverage. A
 - Automated story refinement feedback
 
 **Invoke:** `/github:story-quality`
+
+---
+
+### github:tidy-board
+
+**Category:** Core Workflow
+**Priority:** Tier 2
+
+**Purpose:**
+Sync a GitHub Project board by closing stale "In Progress" items whose linked issues are closed or PRs are merged.
+
+**Key Features:**
+- Detects items stuck "In Progress" with closed/merged linked issues or PRs
+- Moves stale items to the configured "Done" column
+- Accepts repository as argument or falls back to config
+- Safe dry-run friendly (reports what would move before acting)
+
+**Configuration Required:**
+- `REPO_SLUG` — `owner/repo` (e.g. `myorg/myapp`)
+- Board column names if non-standard (`In Progress`, `Done`)
+
+**Use Cases:**
+- Weekly board cleanup
+- Post-sprint hygiene
+- CI-triggered board synchronization
+
+**Invoke:** `/github:tidy-board owner/repo`
+
+---
 
 ### arch:maintain-risk-registry
 **Category:** Architecture

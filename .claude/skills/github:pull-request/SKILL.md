@@ -218,88 +218,89 @@ fi
 - Saves minimal data to `.claude/active-story.json`
 - Works seamlessly with `/commit` skill
 
+### Step 5.5: Validate PR Against Active Story
+
+Before creating the PR, read `active_story.json` and verify the changes align with the story's acceptance criteria. This is a **soft check** — it warns but does not block.
+
+**How to perform this validation:**
+
+1. Read `.claude/active-story.json` — extract `title`, `body`, `acceptanceCriteria` (if present)
+2. Run `git diff --name-only origin/master..HEAD` to get all changed files
+3. Cross-reference: for each acceptance criterion or key feature mentioned in the story body, check whether the changed files plausibly address it
+4. Flag any story expectations with no corresponding file changes as a warning
+5. Set `STORY_ALIGNMENT_NOTE` — a short one-line note to include in the PR body:
+   - If fully aligned: empty (omit from PR)
+   - If gaps found: `⚠️ Story gap: <specific unaddressed expectation>`
+
+**Example alignment check logic:**
+
+```
+Story body mentions "contact form" → check if src/components/ContactForm* changed
+Story body mentions "CI/CD" or "workflow" → check if .github/workflows/* changed
+Story body mentions "CDK" or "infrastructure" → check if infrastructure/* changed
+Story body mentions "i18n" or "translation" → check if src/i18n/* or src/pages/es/* changed
+```
+
+If gaps are found, print a warning:
+```
+⚠️  Story alignment check:
+    Story expects: "Update contact form validation"
+    No changes found in: src/components/ContactForm*
+    Include this in the PR or confirm it was intentionally skipped.
+```
+
 ### Step 6: Generate PR Title and Body
 
-Creates PR content using issue context and commit history:
+Creates a **concise** PR body: one line per domain changed, no commit list, no verbose test plan.
 
 ```bash
 # PR title is issue title
 PR_TITLE="$ISSUE_TITLE"
 
-# Generate commit list with AIGCODE numbers
-COMMIT_LIST=$(git log --format='- %s' origin/master..HEAD)
-
-# Detect impact areas from changed files
+# Detect changed domains from file paths
 CHANGED_FILES=$(git diff --name-only origin/master..HEAD)
 
-IMPACT=""
+DOMAIN_LINES=""
+if echo "$CHANGED_FILES" | grep -q '^src/'; then
+  DOMAIN_LINES="${DOMAIN_LINES}- **src/**: Frontend changes\n"
+fi
 if echo "$CHANGED_FILES" | grep -q '^infrastructure/'; then
-  IMPACT="${IMPACT}- Infrastructure (CDK stacks)\n"
+  DOMAIN_LINES="${DOMAIN_LINES}- **infrastructure/**: CDK stack changes\n"
 fi
 if echo "$CHANGED_FILES" | grep -q '^lambda/'; then
-  IMPACT="${IMPACT}- Lambda functions\n"
+  DOMAIN_LINES="${DOMAIN_LINES}- **lambda/**: Lambda function changes\n"
 fi
-if echo "$CHANGED_FILES" | grep -q '^src/'; then
-  IMPACT="${IMPACT}- Static site builder\n"
+if echo "$CHANGED_FILES" | grep -q '^\.github/'; then
+  DOMAIN_LINES="${DOMAIN_LINES}- **.github/**: CI/CD workflow changes\n"
 fi
 if echo "$CHANGED_FILES" | grep -q '^content/'; then
-  IMPACT="${IMPACT}- Course content\n"
+  DOMAIN_LINES="${DOMAIN_LINES}- **content/**: Course content changes\n"
 fi
 if echo "$CHANGED_FILES" | grep -q '^docs/'; then
-  IMPACT="${IMPACT}- Documentation\n"
+  DOMAIN_LINES="${DOMAIN_LINES}- **docs/**: Documentation changes\n"
+fi
+# Root-level config files (package.json, tsconfig, astro.config, etc.)
+if echo "$CHANGED_FILES" | grep -qE '^[^/]+\.(json|ts|js|yaml|yml|md)$'; then
+  DOMAIN_LINES="${DOMAIN_LINES}- **root**: Config/build file changes\n"
 fi
 
-# Generate test plan items based on impact
-TEST_PLAN=""
-if echo "$IMPACT" | grep -q 'Infrastructure'; then
-  TEST_PLAN="${TEST_PLAN}- [ ] CDK synth passes\n"
-fi
-if echo "$IMPACT" | grep -q 'Static site'; then
-  TEST_PLAN="${TEST_PLAN}- [ ] Site builds successfully\n"
-fi
-if echo "$IMPACT" | grep -q 'Course content'; then
-  TEST_PLAN="${TEST_PLAN}- [ ] Content renders correctly\n"
-fi
-TEST_PLAN="${TEST_PLAN}- [ ] Pre-commit hooks passed\n"
-TEST_PLAN="${TEST_PLAN}- [ ] CI/CD validation will run on PR\n"
-
-# Build PR body using template
+# Build minimal PR body
 PR_BODY=$(cat <<EOF
-## Summary
-
-$ISSUE_TITLE
-
-## Related Issue
-
 Closes #${ISSUE_NUMBER}
 
-$ISSUE_URL
-
-## Changes
-
-$COMMIT_LIST
-
-## Test Plan
-
-$TEST_PLAN
-
-## Impact
-
-$IMPACT
-
+${DOMAIN_LINES}${STORY_ALIGNMENT_NOTE:+
+> ${STORY_ALIGNMENT_NOTE}}
 ---
-
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 EOF
 )
 ```
 
-**Template features:**
-- Links to GitHub issue (Closes #...)
-- Lists all commits with AIGCODE numbers
-- Auto-generates test checklist based on changed files
-- Shows impact areas for reviewers
-- Claude Code attribution
+**Design rationale:**
+- One line per domain — reviewers see scope at a glance
+- No commit list (visible in the PR's commit tab)
+- No verbose test plan (CI enforces this)
+- Story alignment warning included only when gaps are detected
 
 ### Step 7: Create Pull Request
 
