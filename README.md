@@ -33,7 +33,7 @@ Install all bundles or choose specific ones:
 
 **Available Bundles:**
 - **core-workflow** (5 skills) - git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
-- **development-tools** (5 skills) - bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
+- **development-tools** (5 skills) - github:bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
 - **architecture-quality** (6 skills) - aws:architect, aws:cdk, review:security, review:performance, review:overall, arch:fitness-function
 - **content-specialized** (12 skills) - css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, and more
 
@@ -99,7 +99,7 @@ claude_marketplace/
 - **github:story-play** - Story workflow activation
 
 ### Development
-- **bug-fix** - Bug fix workflow
+- **github:bug-fix** - Bug fix workflow
 - **claude:skill-creator** - Create new skills
 - **claude:refactor-skill** - Refactor existing skills
 - **claude:sync-skills** - Synchronize skills across projects

@@ -183,7 +183,7 @@ For each skill, we selected the source version based on:
 
 ### Tier 2: Development Skills
 
-#### bug-fix
+#### github:bug-fix
 
 **Source:** Landing Page
 **Rationale:** Has references directory, complete workflow
@@ -453,7 +453,7 @@ Most skills were identical across projects with only prefix/repository differenc
 ### Skills Migrated
 
 - **Tier 1:** 5 skills (commit, mr, create-story, fetch-story, play-story)
-- **Tier 2:** 5 skills (bug-fix, skill-creator, refactor-skill, sync-skills, gather-context)
+- **Tier 2:** 5 skills (github:bug-fix, skill-creator, refactor-skill, sync-skills, gather-context)
 - **Total:** 10 skills
 
 ### Abstraction Metrics

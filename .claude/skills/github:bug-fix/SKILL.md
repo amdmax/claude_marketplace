@@ -1,5 +1,5 @@
 ---
-name: bug-fix
+name: github:bug-fix
 description: "Automate investigation and fixing of reported bugs from GitHub backlog. Use when user requests bug fixing, wants to pick up issues from backlog, or says phrases like 'fix this bug', 'investigate bug report', 'work on reported issue'. REQUIRED: Always create regression tests before committing any fix."
 ---
 
@@ -11,7 +11,7 @@ description: "Automate investigation and fixing of reported bugs from GitHub bac
 
 ```bash
 # Invoke the skill
-/bug-fix
+/github:bug-fix
 
 # Skill workflow:
 # 1. Fetch bugs from GitHub (label: "bug")

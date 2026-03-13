@@ -12,7 +12,7 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [github:story-play](#githubstory-play) | Core Workflow | Story workflow activation | Tier 1 |
 | [github:pull-request](#githubpull-request) | Core Workflow | Pull request creation | Tier 1 |
 | [team:agile-dev](#teamagile-dev) | Team Orchestration | 5-agent TDD team with story-driven workflow | Tier 1 |
-| [bug-fix](#bug-fix) | Development | Bug fix workflow | Tier 2 |
+| [github:bug-fix](#githubbug-fix) | Development | Bug fix workflow | Tier 2 |
 | [claude:skill-creator](#claudeskill-creator) | Development | Create new skills | Tier 2 |
 | [claude:refactor-skill](#clauderefactor-skill) | Development | Refactor existing skills | Tier 2 |
 | [claude:sync-skills](#claudesync-skills) | Development | Synchronize skills across projects | Tier 2 |
@@ -199,7 +199,7 @@ Activate a GitHub issue as the current story, creating branch and tracking file.
 
 ## Development Skills
 
-### bug-fix
+### github:bug-fix
 
 **Category:** Development
 **Priority:** Tier 2
@@ -223,7 +223,7 @@ Structured bug fix workflow with root cause analysis and verification.
 - Create bug fix documentation
 - Ensure comprehensive testing
 
-**Invoke:** `/bug-fix`
+**Invoke:** `/github:bug-fix`
 
 ---
 

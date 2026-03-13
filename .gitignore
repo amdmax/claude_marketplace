@@ -1,0 +1,3 @@
+# Project-specific config (set up per clone)
+.agile-dev-team/active-project.json
+.agile-dev-team/active-story.json

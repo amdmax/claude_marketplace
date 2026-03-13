@@ -1,11 +1,12 @@
 ---
-name: finalize-story
+name: github:story-finalize
 description: "Closes the loop on a completed story: updates the issue, links the PR, labels it, assigns it, and adds it to the project board."
 argument-hint: "[issue-url] [project-url]"
 disable-model-invocation: true
 ---
 
 Active story context: !`cat .agile-dev-team/active-story.json 2>/dev/null || echo "none"`
+Active project: !`cat .agile-dev-team/active-project.json 2>/dev/null || echo "none"`
 
 # Finalize Story
 
@@ -42,9 +43,13 @@ Arguments:
 - `gh issue edit --add-assignee "@me"`
 
 **Step 7: Add to GitHub Project**
-- If $ARGUMENTS[1] is provided, parse OWNER and PROJECT_NUMBER from the URL
-  - e.g. `https://github.com/orgs/aigensa/projects/2` → owner=aigensa, project=2
-- Otherwise default: owner=aigensa, project=1
+Resolve the project URL in this order:
+1. If $ARGUMENTS[1] is provided, parse OWNER and PROJECT_NUMBER from the URL
+   - e.g. `https://github.com/orgs/aigensa/projects/2` → owner=aigensa, project=2
+2. Otherwise read `url` from `.agile-dev-team/active-project.json` (shown above) and parse OWNER + PROJECT_NUMBER from it
+3. If neither is available, ask the user for the project URL
+
+Once resolved:
 - Run: `gh project item-add <PROJECT_NUMBER> --owner <OWNER> --url "$ISSUE_URL"`
 
 **Step 8: Confirm**

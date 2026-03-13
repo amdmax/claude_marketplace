@@ -55,7 +55,7 @@ All installed skills are immediately available:
   - Use when: Managing git commits, PRs, and GitHub issues
 
 - **development-tools** - Development utilities
-  - Skills: bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
+  - Skills: github:bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
   - Use when: Developing, debugging, or extending Claude Code
 
 - **architecture-quality** - Architecture and code reviews

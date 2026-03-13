@@ -3,6 +3,8 @@ name: fetch-story
 description: Fetch the next Ready story from GitHub Projects by priority. Stores story data in .claude/active-story.json and updates GitHub status to In Progress. Invokable with /fetch-story.
 ---
 
+Active project: !`cat .agile-dev-team/active-project.json 2>/dev/null || echo "none"`
+
 # Fetch Story from GitHub Projects
 
 ## Overview
@@ -63,6 +65,14 @@ This skill uses JSON Schema validation for data integrity:
 - Self-documenting data structures
 
 ## Workflow
+
+### Step 0: Display Active Project Context
+
+If `active-project.json` is loaded (not "none"), display:
+```
+Fetching from: <name> (<url>)
+```
+Otherwise proceed silently.
 
 ### Step 1: Verify Configuration
 

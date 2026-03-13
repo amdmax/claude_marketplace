@@ -225,9 +225,9 @@ See `story-workflow-config.example.json` for discovery instructions.
 
 ---
 
-### bug-fix
+### github:bug-fix
 
-**File:** `.claude/skills/bug-fix/config.yaml`
+**File:** `.claude/skills/github:bug-fix/config.yaml`
 
 
 ```yaml
@@ -352,7 +352,7 @@ project:
   name: "My Application" # Full project name (optional)
 ```
 
-Used by: git:commit, bug-fix
+Used by: git:commit, github:bug-fix
 
 ### Repository
 
@@ -391,7 +391,7 @@ commands:
   format: "prettier --write ."
 ```
 
-Used by: git:commit, bug-fix
+Used by: git:commit, github:bug-fix
 
 ## Variable Reference
 
@@ -401,7 +401,7 @@ These must be set for skills to work:
 
 | Variable | Skills | Purpose | Example |
 |----------|--------|---------|---------|
-| `PROJECT_PREFIX` | git:commit, bug-fix | Commit prefix | MYAPP |
+| `PROJECT_PREFIX` | git:commit, github:bug-fix | Commit prefix | MYAPP |
 | `REPO_SLUG` | Most | GitHub repository | owner/repo |
 | `DEFAULT_BRANCH` | github:pull-request, git:commit | Target branch | main |
 
@@ -414,7 +414,7 @@ These have sensible defaults or are feature-specific:
 | `STORY_PREFIX` | github:pull-request, github:story-play | Story branch prefix | story |
 | `MAX_BRANCH_LENGTH` | github:pull-request | Branch name limit | 25 |
 | `SIMILARITY_THRESHOLD` | github:pull-request | Theme grouping | 0.40 |
-| `TEST_CMD` | git:commit, bug-fix | Test command | npm test |
+| `TEST_CMD` | git:commit, github:bug-fix | Test command | npm test |
 
 ### Conditional Variables
 
