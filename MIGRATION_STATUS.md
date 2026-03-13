@@ -193,3 +193,12 @@ Future enhancements not in scope:
 - Ready for distribution and use
 
 Users can copy any skill to their project, customize the config, and start using it immediately.
+
+## Post-Migration Cleanup (2026-03-13)
+
+Removed stale root-level artifacts that duplicated content already in `.claude/skills/`:
+
+- **`bundles/`** — 4 bundle directories containing 29 broken/dead symlinks (the root-level `skills/` dir they pointed to was deleted during migration). All referenced skills confirmed present in `.claude/skills/`.
+- **`docs/`** — 4 markdown guide files (`abstraction-guide.md`, `configuration-reference.md`, `migration-notes.md`, `statusline-guide.md`).
+- **`jupyter-remote.skill`** — Binary ZIP archive (old distribution format), superseded by `.claude/skills/jupyter-remote/`.
+- **`reveal-pdf-export.skill`** — Binary ZIP archive (old distribution format), superseded by `.claude/skills/reveal-pdf-export/`.
