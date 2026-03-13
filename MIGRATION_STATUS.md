@@ -24,7 +24,7 @@ All planned skills successfully migrated to the marketplace.
 - [x] team:agile-dev
 
 ### Tier 2 - Development (5/5) ✓
-- [x] bug-fix
+- [x] github:bug-fix
 - [x] claude:skill-creator
 - [x] claude:refactor-skill
 - [x] claude:sync-skills
@@ -120,7 +120,7 @@ claude_marketplace/
 │       ├── arch:fitness-function/  # Architecture fitness functions
 │       ├── aws:architect/          # AWS architecture guidance
 │       ├── aws:cdk/                # CDK infrastructure as code
-│       ├── bug-fix/                # Bug fix workflow
+│       ├── github:bug-fix/         # Bug fix workflow
 │       ├── claude:hooks/           # Claude Code hooks
 │       ├── claude:refactor-skill/  # Skill refactoring
 │       ├── claude:skill-creator/   # Skill creation

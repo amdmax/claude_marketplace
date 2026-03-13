@@ -1,5 +1,5 @@
 ---
-name: finalize-story
+name: github:story-finalize
 description: "Closes the loop on a completed story: updates the issue, links the PR, labels it, assigns it, and adds it to the project board."
 argument-hint: "[issue-url] [project-url]"
 disable-model-invocation: true
