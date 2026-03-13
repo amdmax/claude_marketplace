@@ -1,11 +1,10 @@
 name: Validate Skills
 
 on:
-  pull_request:
+  push:
     paths:
       - '.claude/skills/**/SKILL.md'
-  push:
-    branches: [main]
+  pull_request:
     paths:
       - '.claude/skills/**/SKILL.md'
 
@@ -56,9 +55,13 @@ jobs:
           VALID=0
           TOTAL=0
 
+          echo "## Skill Validation" >> "$GITHUB_STEP_SUMMARY"
+
           while IFS= read -r SKILL_FILE; do
             [[ -z "$SKILL_FILE" ]] && continue
             TOTAL=$((TOTAL + 1))
+
+            SKILL_NAME=$(basename "$(dirname "$SKILL_FILE")")/$(basename "$SKILL_FILE")
 
             echo "::group::Validating $SKILL_FILE"
 
@@ -68,6 +71,7 @@ jobs:
             # Check frontmatter exists
             if [[ -z "$FRONTMATTER" ]]; then
               echo "::error file=$SKILL_FILE::Missing frontmatter delimiters (---)"
+              echo "- [ ] \`$SKILL_NAME\` — Missing frontmatter delimiters (---)" >> "$GITHUB_STEP_SUMMARY"
               ERRORS=$((ERRORS + 1))
               echo "::endgroup::"
               continue
@@ -76,29 +80,34 @@ jobs:
             # Validate YAML syntax
             if ! echo "$FRONTMATTER" | yq eval '.' - >/dev/null 2>&1; then
               echo "::error file=$SKILL_FILE::Invalid YAML syntax in frontmatter"
+              echo "- [ ] \`$SKILL_NAME\` — Invalid YAML syntax in frontmatter" >> "$GITHUB_STEP_SUMMARY"
               ERRORS=$((ERRORS + 1))
               echo "::endgroup::"
               continue
             fi
 
             FILE_ERRORS=0
+            FIRST_ERROR=""
 
             # Check required fields
             NAME=$(echo "$FRONTMATTER" | yq eval '.name' -)
             if [[ "$NAME" == "null" || -z "$NAME" ]]; then
               echo "::error file=$SKILL_FILE::Required field 'name' not found"
+              [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Required field 'name' not found"
               FILE_ERRORS=$((FILE_ERRORS + 1))
             fi
 
             DESCRIPTION=$(echo "$FRONTMATTER" | yq eval '.description' -)
             if [[ "$DESCRIPTION" == "null" || -z "$DESCRIPTION" ]]; then
               echo "::error file=$SKILL_FILE::Required field 'description' not found"
+              [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Required field 'description' not found"
               FILE_ERRORS=$((FILE_ERRORS + 1))
             fi
 
             # Validate name format
             if [[ "$NAME" != "null" && ! "$NAME" =~ ^[a-zA-Z0-9:_-]+$ ]]; then
               echo "::error file=$SKILL_FILE::Invalid skill name format: $NAME (use alphanumeric, hyphens, colons, underscores)"
+              [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Invalid skill name format: $NAME"
               FILE_ERRORS=$((FILE_ERRORS + 1))
             fi
 
@@ -113,6 +122,7 @@ jobs:
 
                 if [[ ! " $VALID_EVENTS " =~ " $EVENT " ]]; then
                   echo "::error file=$SKILL_FILE::Invalid hook event type: '$EVENT' (valid: $VALID_EVENTS)"
+                  [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Invalid hook event type: '$EVENT'"
                   FILE_ERRORS=$((FILE_ERRORS + 1))
                 fi
 
@@ -124,11 +134,13 @@ jobs:
                   COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
                   if [[ "$COMMAND" == "null" ]]; then
                     echo "::error file=$SKILL_FILE::Hook '$EVENT' missing required field 'command'"
+                    [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Hook '$EVENT' missing required field 'command'"
                     FILE_ERRORS=$((FILE_ERRORS + 1))
                   fi
                   TIMEOUT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.timeout" -)
                   if [[ "$TIMEOUT" != "null" ]] && ! [[ "$TIMEOUT" =~ ^[0-9]+$ ]]; then
                     echo "::error file=$SKILL_FILE::Hook '$EVENT' timeout must be a number (milliseconds)"
+                    [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Hook '$EVENT' timeout must be a number"
                     FILE_ERRORS=$((FILE_ERRORS + 1))
                   fi
                 elif [[ "$HOOK_TYPE" == "!!seq" ]]; then
@@ -138,6 +150,7 @@ jobs:
                     INNER=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks" -)
                     if [[ "$INNER" == "null" ]]; then
                       echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i] missing 'hooks' array"
+                      [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Hook '$EVENT'[$i] missing 'hooks' array"
                       FILE_ERRORS=$((FILE_ERRORS + 1))
                       continue
                     fi
@@ -148,10 +161,12 @@ jobs:
                       PROMPT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks[$j].prompt" -)
                       if [[ "$TYPE" == "null" ]]; then
                         echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i].hooks[$j] missing 'type'"
+                        [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Hook '$EVENT'[$i].hooks[$j] missing 'type'"
                         FILE_ERRORS=$((FILE_ERRORS + 1))
                       fi
                       if [[ "$CMD" == "null" && "$PROMPT" == "null" ]]; then
                         echo "::error file=$SKILL_FILE::Hook '$EVENT'[$i].hooks[$j] missing 'command' or 'prompt'"
+                        [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Hook '$EVENT'[$i].hooks[$j] missing 'command' or 'prompt'"
                         FILE_ERRORS=$((FILE_ERRORS + 1))
                       fi
                     done
@@ -162,13 +177,18 @@ jobs:
 
             if [[ $FILE_ERRORS -eq 0 ]]; then
               echo "✓ Valid"
+              echo "- [x] \`$SKILL_NAME\`" >> "$GITHUB_STEP_SUMMARY"
               VALID=$((VALID + 1))
             else
+              echo "- [ ] \`$SKILL_NAME\` — $FIRST_ERROR" >> "$GITHUB_STEP_SUMMARY"
               ERRORS=$((ERRORS + 1))
             fi
 
             echo "::endgroup::"
           done < /tmp/changed-skills.txt
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Skill Validation — $VALID/$TOTAL passed" >> "$GITHUB_STEP_SUMMARY"
 
           echo ""
           echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
