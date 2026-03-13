@@ -2,6 +2,16 @@
 name: claude:skill-creator
 description: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.
 license: Complete terms in LICENSE.txt
+hooks:
+  PostToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: bash "$SKILL_DIR/scripts/validate-frontmatter.sh"
+    - matcher: "Edit"
+      hooks:
+        - type: command
+          command: bash "$SKILL_DIR/scripts/validate-frontmatter.sh"
 ---
 
 # Skill Creator
