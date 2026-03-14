@@ -1,0 +1,8 @@
+{
+  "name": "github",
+  "description": "GitHub workflow skills: issue management, pull requests, story lifecycle, Actions, runner setup, and board triage",
+  "author": {
+    "name": "aigensa",
+    "email": ""
+  }
+}
