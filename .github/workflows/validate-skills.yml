@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - '.claude/skills/**/SKILL.md'
+      - '.claude/plugins/**/SKILL.md'
   pull_request:
     paths:
       - '.claude/skills/**/SKILL.md'
+      - '.claude/plugins/**/SKILL.md'
 
 permissions:
   contents: read
@@ -35,7 +37,7 @@ jobs:
             HEAD="${{ github.sha }}"
           fi
 
-          CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE" "$HEAD" -- '.claude/skills/**/SKILL.md' || true)
+          CHANGED=$(git diff --name-only --diff-filter=ACMR "$BASE" "$HEAD" -- '.claude/skills/**/SKILL.md' '.claude/plugins/**/SKILL.md' || true)
 
           if [[ -z "$CHANGED" ]]; then
             echo "No SKILL.md files changed"
