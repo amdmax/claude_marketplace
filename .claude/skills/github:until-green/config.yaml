@@ -1,0 +1,8 @@
+ci:
+  poll_interval_seconds: 30
+  max_fix_iterations: 5
+  check_timeout_minutes: 15
+
+behavior:
+  auto_finalize_story: true
+  push_after_fix: true

@@ -1,0 +1,26 @@
+tools:
+  cdk_nag:
+    enabled: true
+    verbose: false  # Set true for detailed cdk-nag output
+  cfn_lint:
+    enabled: true
+    ignore_rules: []  # Add CloudFormation rule IDs to ignore (e.g., ["E3001", "W3002"])
+
+behavior:
+  blocking: true                  # Block operations on validation errors
+  blocking_on_errors: true        # Fail fast if errors found
+  blocking_on_warnings: false     # Allow warnings (non-blocking)
+  timeout: 60                     # Maximum validation time in seconds
+
+files:
+  watch_dirs:
+    - "infrastructure/"
+  exclude_patterns:
+    - "*.md"
+    - "*.json"
+    - "cdk.out/"
+    - "node_modules/"
+
+installation:
+  auto_install_cdk_nag: true      # Automatically install cdk-nag if missing
+  graceful_degradation: true       # Continue if validation tools unavailable

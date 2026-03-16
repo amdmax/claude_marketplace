@@ -1,0 +1,61 @@
+# Code Review Orchestrator Configuration
+
+# Phase 1: Deterministic Checks (fast, no LLM tokens)
+phase1:
+  type_check:
+    enabled: true
+    command: "npm run type-check"
+    block_on_failure: true
+    description: "TypeScript type checking"
+
+  eslint:
+    enabled: true
+    command: "npm run lint"
+    block_on_failure: true
+    allow_warnings: true
+    description: "ESLint code quality checks"
+
+  stylelint:
+    enabled: true
+    command: "npm run lint:css"
+    block_on_failure: true
+    description: "Stylelint CSS validation"
+
+  tests:
+    enabled: true
+    command: "npm test"
+    block_on_failure: true
+    description: "Unit and integration tests"
+
+# Phase 2: LLM-Based Reviews (only after Phase 1 passes)
+phase2:
+  security_review:
+    enabled: true
+    skip_on_phase1_failure: true
+    description: "OWASP Top 10 security vulnerability scan"
+
+  performance_review:
+    enabled: true
+    skip_on_phase1_failure: true
+    description: "Algorithmic complexity and performance analysis"
+
+  overall_review:
+    enabled: true
+    skip_on_phase1_failure: true
+    description: "Code quality, maintainability, and best practices"
+
+# Reporting Options
+reporting:
+  verbose: false
+  save_report: true
+  report_directory: ".claude/reviews"
+  report_format: "markdown"
+  include_timestamp: true
+
+# Behavior
+behavior:
+  fail_fast: true  # Stop Phase 1 on first failure
+  parallel_phase2: false  # Run Phase 2 reviews sequentially
+  exit_code_on_critical: 2  # Exit code when critical issues found
+  exit_code_on_major: 1  # Exit code when major issues found
+  exit_code_on_success: 0  # Exit code when all checks pass

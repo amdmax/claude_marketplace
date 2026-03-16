@@ -40,6 +40,18 @@ Then fetch:
 gh issue view $ISSUE_NUMBER --repo $REPOSITORY --json title,body,labels,comments,url
 ```
 
+**Guard — verify "ready for dev" label before proceeding:**
+```bash
+LABELS=$(gh issue view $ISSUE_NUMBER --repo $REPOSITORY --json labels --jq '[.labels[].name]')
+if ! echo "$LABELS" | grep -q "ready for dev"; then
+  echo "⛔ Scout aborted: issue #$ISSUE_NUMBER does not have the 'ready for dev' label."
+  echo "Run the story-review workflow first. Current labels: $LABELS"
+  exit 1
+fi
+```
+
+If the label is missing, stop here and tell the user to run story-review first.
+
 ### Step 2 — Extract from the issue
 
 - Business objective
