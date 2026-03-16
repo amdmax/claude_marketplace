@@ -653,7 +653,7 @@ Known Issues:
 ✓ Context saved to {{ACTIVE_STORY_FILE}}
 
 Next steps:
-  Run /create-adr to generate Architecture Decision Record
+  Run /arch:create-adr to generate Architecture Decision Record
   Or run /play-story to continue the full workflow
 ```
 
@@ -815,10 +815,10 @@ function extractDecisions(adrFiles) {
 1. /fetch-story → Get story
 2. /gather-nfr → Collect NFRs
 3. /gather-context → Collect context (this skill)
-4. /create-adr → Generate ADR
+4. /arch:create-adr → Generate ADR
 ```
 
-### Output Used by /create-adr
+### Output Used by /arch:create-adr
 
 **Context feeds directly into ADR generation:**
 
