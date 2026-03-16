@@ -1,0 +1,76 @@
+# /debug Skill Configuration
+# User-configurable options for hypothesis-driven bug investigation
+
+hypothesis_generation:
+  # Number of initial hypotheses to generate
+  initial_count: 5
+
+  # Hypothesis types to consider (in priority order)
+  types_to_consider:
+    - logic_error          # Wrong condition, off-by-one, incorrect operator
+    - missing_validation   # No input checks, no error handling
+    - race_condition       # Concurrent access, timing issues
+    - configuration        # Wrong defaults, missing env vars
+    - dependency           # Version mismatch, breaking change
+
+research:
+  # Maximum rounds of hypothesis generation (if all rejected)
+  max_rounds: 3
+
+  # Research depth: "quick" | "thorough" | "exhaustive"
+  depth: "thorough"
+
+  # Include git history in investigation (git blame, recent changes)
+  include_git_history: true
+
+  # Context lines to read around suspicious code
+  context_lines: 20
+
+tests:
+  # Tests are MANDATORY and cannot be disabled
+  required: true
+
+  # Validate tests fail-before/pass-after (CRITICAL)
+  validate_before_after: true
+
+  # Minimum number of test cases to generate
+  min_test_count: 3
+
+  # Test types to include
+  types:
+    - reproduction    # Bug reproduction test (MUST fail before fix)
+    - edge_cases      # Boundary conditions
+    - regression      # Non-buggy paths still work
+
+commit:
+  # Use /commit skill for AIGCODE numbering
+  use_skill: true
+
+  # Create separate commits for fix and tests (with grouping suffix)
+  separate_fix_and_tests: true
+
+  # Include "Fixes #<issue>" in commit message
+  include_fixes_reference: true
+
+pull_request:
+  # Use /mr skill for PR creation
+  use_skill: true
+
+  # Include investigation summary in PR description
+  include_investigation_summary: true
+
+  # Include hypothesis outcomes (confirmed/rejected)
+  include_hypothesis_outcomes: true
+
+  # Include test validation results
+  include_test_validation: true
+
+output:
+  # Verbosity level: "quiet" | "normal" | "verbose"
+  verbosity: "normal"
+
+  # Show evidence collection in real-time
+  show_evidence_collection: true
+
+  # Show research progress
+  show_research_progress: true

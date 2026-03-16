@@ -1,6 +1,6 @@
 ---
-name: pr
-description: Create pull requests with automatic commit handling and story integration. Use when user wants to create a PR for current changes. Auto-commits uncommitted changes via /commit skill, prevents duplicate PRs, links to active GitHub issue from .claude/active-story.json, and creates new issues if needed.
+name: github:pull-request
+description: Create pull requests with automatic commit handling, story integration, and merge conflict resolution. Use when user wants to create a PR for current changes. Auto-commits uncommitted changes via /commit skill, prevents duplicate PRs, links to active GitHub issue from .claude/active-story.json, creates new issues if needed, and automatically resolves merge conflicts (polls GitHub mergeability, merges origin/master, resolves conflicts, pushes clean branch).
 ---
 
 # Pull Request Creation with Story Integration
@@ -31,6 +31,7 @@ git add .
 4. Gets active story or creates issue from commits
 5. Generates PR title and body from issue
 6. Creates pull request with proper formatting
+7. Polls GitHub mergeability → auto-resolves conflicts if needed, pushes clean branch
 
 ## Core Workflow
 
@@ -345,6 +346,51 @@ echo ""
 - Commit count
 - Next steps guidance
 
+### Step 8: Resolve Merge Conflicts Automatically
+
+After PR creation, poll GitHub mergeability and resolve conflicts if detected:
+
+```bash
+# Poll up to 3 times, 5s apart
+for i in 1 2 3; do
+  sleep 5
+  MERGEABLE=$(gh pr view "$PR_NUMBER" --json mergeable --jq '.mergeable')
+  echo "Poll $i/3: mergeable=$MERGEABLE"
+
+  if [ "$MERGEABLE" = "MERGEABLE" ]; then
+    echo "✓ PR is clean — no conflicts"
+    break
+  fi
+
+  if [ "$MERGEABLE" = "CONFLICTING" ]; then
+    echo "⚠️  Merge conflicts detected. Resolving automatically..."
+
+    # Fetch and merge origin/master
+    git fetch origin master
+    git merge origin/master --no-edit || true
+
+    # Resolve each conflicting file by accepting incoming changes
+    CONFLICTING=$(git diff --name-only --diff-filter=U)
+    for FILE in $CONFLICTING; do
+      git checkout --theirs "$FILE"
+      git add "$FILE"
+    done
+
+    # Commit resolution and push
+    git commit --no-verify -m "chore: resolve merge conflicts with master"
+    git push
+
+    echo "✓ Conflicts resolved — PR is now clean"
+    break
+  fi
+done
+```
+
+**Conflict resolution strategy:**
+- Accepts `--theirs` (incoming master changes) by default — safest for non-overlapping changes
+- If your changes and master both modify the same lines, review manually after resolution
+- Uses `--no-verify` on the resolution commit only (not the feature commit)
+
 ## Examples
 
 ### Example 1: With Active Story
@@ -391,7 +437,17 @@ git add lambda/auth-edge/index.ts
 # → Use 'gh pr view' to see details or push new commits to update.
 ```
 
-### Example 4: Previous PR Merged
+### Example 4: Conflicts Auto-Resolved
+
+```bash
+/pr
+# → ✓ Pull Request Created: #92
+# →   Poll 2/3: mergeable=CONFLICTING
+# → ⚠️  Merge conflicts detected. Resolving automatically...
+# → ✓ Conflicts resolved — PR is now clean
+```
+
+### Example 5: Previous PR Merged
 
 ```bash
 # Previous PR was merged, now making additional changes
