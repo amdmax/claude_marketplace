@@ -13,7 +13,7 @@ This skill orchestrates the complete story preparation workflow, coordinating al
 2. **Fetches next Ready story** - Calls `/fetch-story` to get highest-priority story
 3. **Gathers non-functional requirements** - Calls `/gather-nfr` for NFR collection
 4. **Collects technical context** - Calls `/gather-context` for comprehensive context
-5. **Creates ADR if needed** - Calls `/create-adr` for architectural decisions
+5. **Creates ADR if needed** - Calls `/arch:create-adr` for architectural decisions
 6. **Provides summary** - Shows complete story preparation and suggests next steps
 
 This is the **primary entry point** for developers starting work on a new story.
@@ -293,7 +293,7 @@ if (needsADR) {
   console.log('→ Step 5/5: Creating Architecture Decision Record');
   console.log('  ADR recommended: [Reason]');
   console.log('');
-  console.log('Calling /create-adr...');
+  console.log('Calling /arch:create-adr...');
 } else {
   console.log('ℹ️  Step 5/5: ADR not needed');
   console.log('  Reason: [Simple bug fix | Following established pattern]');
@@ -302,7 +302,7 @@ if (needsADR) {
 }
 ```
 
-**If ADR needed, call `/create-adr`:**
+**If ADR needed, call `/arch:create-adr`:**
 
 ```javascript
 Skill: "create-adr"
@@ -315,7 +315,7 @@ Skill: "create-adr"
 
 **Error handling:**
 
-If `/create-adr` fails:
+If `/arch:create-adr` fails:
 
 ```
 ⚠️  ADR creation failed
@@ -625,7 +625,7 @@ Partial progress saved to .claude/active-story.json
   ├── /fetch-story
   ├── /gather-nfr
   ├── /gather-context
-  └── /create-adr (conditional)
+  └── /arch:create-adr (conditional)
 ```
 
 ### Called Before Implementation
@@ -649,7 +649,7 @@ Users can also run helper skills individually:
 /fetch-story         # Just fetch story
 /gather-nfr          # Just collect NFRs
 /gather-context      # Just gather context
-/create-adr          # Just create ADR
+/arch:create-adr          # Just create ADR
 ```
 
 ## Best Practices

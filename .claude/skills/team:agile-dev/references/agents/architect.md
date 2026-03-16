@@ -14,7 +14,7 @@ Map business requirements to concrete implementation approach. Produce an implem
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `{{ADR_DIR}}/` and `{{ACTIVE_STORY_FILE}}` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/create-adr`, `/gather-context`)
+- Skill (`/arch:create-adr`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -49,7 +49,7 @@ For each AC and applicable NFR, determine:
 ### Step 4: Create ADR (if needed)
 
 If the story introduces an architectural decision (new service, new pattern, security change):
-1. Run `/create-adr`
+1. Run `/arch:create-adr`
 2. Document the decision, alternatives considered, and rationale
 
 ### Step 5: Risk Assessment

@@ -1,6 +1,6 @@
 ---
-name: create-adr
-description: Generate Architecture Decision Records in MADR format with auto-numbering. Analyzes story context, NFRs, and technical context to create comprehensive ADRs. Invokable with /create-adr.
+name: arch:create-adr
+description: Generate Architecture Decision Records in MADR format with auto-numbering. Analyzes story context, NFRs, and technical context to create comprehensive ADRs. Invokable with /arch:create-adr.
 ---
 
 # Create Architecture Decision Record
@@ -815,7 +815,7 @@ Next steps:
 1. /fetch-story
 2. /gather-nfr
 3. /gather-context
-4. /create-adr (this skill, if needed)
+4. /arch:create-adr (this skill, if needed)
 5. Summary and next steps
 ```
 
@@ -833,7 +833,7 @@ Next steps:
 
 ## Summary
 
-The `/create-adr` skill generates comprehensive ADRs by:
+The `/arch:create-adr` skill generates comprehensive ADRs by:
 
 ✅ **Auto-numbering** - Sequential ADR numbering with zero-padding
 ✅ **Context-aware** - Uses NFRs and context to inform decisions
@@ -841,4 +841,4 @@ The `/create-adr` skill generates comprehensive ADRs by:
 ✅ **Comprehensive** - Includes options, pros/cons, implementation notes
 ✅ **Linked** - References story, related ADRs, and documentation
 
-Use `/create-adr` to document architectural decisions and preserve decision rationale!
+Use `/arch:create-adr` to document architectural decisions and preserve decision rationale!

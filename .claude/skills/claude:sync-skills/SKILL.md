@@ -83,7 +83,7 @@ find .claude/skills -mindepth 1 -maxdepth 1 -type d | sort
 .claude/skills/add-content-image
 .claude/skills/cdk-scripting
 .claude/skills/commit
-.claude/skills/create-adr
+.claude/skills/arch:create-adr
 .claude/skills/editor-in-chief
 .claude/skills/fetch-story
 .claude/skills/gather-context

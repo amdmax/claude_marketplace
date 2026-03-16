@@ -50,7 +50,7 @@ Create 6 tasks with dependencies:
 - activeForm: "Fetching and enriching story"
 
 **Task 2:** "Design implementation approach"
-- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in {{ACTIVE_STORY_FILE}}. Creates ADR if needed via /create-adr."
+- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in {{ACTIVE_STORY_FILE}}. Creates ADR if needed via /arch:create-adr."
 - activeForm: "Designing implementation approach"
 - blockedBy: [Task 1]
 
@@ -126,7 +126,7 @@ Wait for PM to assign you Task 2 or message you. Then:
 1. Read enriched story from {{ACTIVE_STORY_FILE}}
 2. Run /gather-context to find related code and patterns
 3. Map ACs and NFRs to files, interfaces, and function signatures
-4. Create ADR if architectural decision is needed (/create-adr)
+4. Create ADR if architectural decision is needed (/arch:create-adr)
 5. Assess risks: business, implementation, security (1 line each)
 6. Write implementationBrief and risks to {{ACTIVE_STORY_FILE}} teamState
 7. Mark Task 2 complete

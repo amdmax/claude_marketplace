@@ -653,12 +653,12 @@ if (labels.includes('payment') || title.includes('payment') || title.includes('c
 1. /fetch-story → Get story
 2. /gather-nfr → Collect NFRs (this skill)
 3. /gather-context → Collect technical context
-4. /create-adr → Generate ADR
+4. /arch:create-adr → Generate ADR
 ```
 
 ### Output Used by Other Skills
 
-**By /create-adr:**
+**By /arch:create-adr:**
 - NFRs become "Decision Drivers" in ADR
 - Security compliance informs technology choices
 - Performance/scalability constraints guide architecture decisions

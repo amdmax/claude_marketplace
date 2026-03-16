@@ -668,7 +668,7 @@ The master orchestrator skill calls /fetch-story as the first step:
 - Uses story title/body to search for related docs and code
 - Appends context to the `context` field
 
-**By /create-adr:**
+**By /arch:create-adr:**
 - Uses story data + NFRs + context to generate ADR
 - Updates `adr` field with ADR file path
 
