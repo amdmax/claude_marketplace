@@ -1,6 +1,6 @@
 ---
 name: github:story-finalize
-description: Close the loop on any completed GitHub issue (story, bug, task, or chore): update the issue body with actual work done, link the PR, apply type and domain labels, assign to self, and add to the GitHub Project board. Use after implementation is merged or verified complete. Accepts a GitHub issue URL or number as argument; falls back to .agile-dev-team/active-story.json. Invokable with /gh:story-finalize.
+description: "Close the loop on any completed GitHub issue (story, bug, task, or chore): update the issue body with actual work done, link the PR, apply type and domain labels, assign to self, and add to the GitHub Project board. Use after implementation is merged or verified complete. Accepts a GitHub issue URL or number as argument; falls back to .agile-dev-team/active-story.json. Invokable with /gh:story-finalize."
 ---
 
 # Finalize Story

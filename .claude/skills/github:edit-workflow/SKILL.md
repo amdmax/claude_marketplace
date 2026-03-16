@@ -5,7 +5,9 @@ tags: [github, workflows, ci-cd, validation]
 hooks:
   PostToolUse:
     - matcher: Edit|Write
-      command: $SKILL_DIR/validate-workflow-output.sh
+      hooks:
+        - type: command
+          command: $SKILL_DIR/validate-workflow-output.sh
 ---
 
 # GitHub Actions Workflow Editor

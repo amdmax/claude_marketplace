@@ -1,6 +1,6 @@
 ---
 name: github:until-green
-description: Implement a scope of work end-to-end — writes code, commits, creates a PR, then loops fixing CI failures until all checks pass. Invoke with a natural language description of the work to do. Example: /until-green add validation to the email field in the signup form.
+description: "Implement a scope of work end-to-end — writes code, commits, creates a PR, then loops fixing CI failures until all checks pass. Invoke with a natural language description of the work to do. Example: /until-green add validation to the email field in the signup form."
 ---
 
 # Until Green

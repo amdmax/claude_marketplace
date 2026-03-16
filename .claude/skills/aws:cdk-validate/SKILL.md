@@ -5,7 +5,9 @@ tags: [infrastructure, aws, cdk, validation, security]
 hooks:
   PostToolUse:
     - matcher: Edit|Write
-      command: $SKILL_DIR/validate-cdk-output.sh
+      hooks:
+        - type: command
+          command: $SKILL_DIR/validate-cdk-output.sh
 ---
 
 # CDK Infrastructure Validator
