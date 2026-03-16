@@ -19,12 +19,12 @@ WARNING_COUNT=0
 
 error() {
   echo -e "${RED}✗ $1${NC}" >&2
-  ((ERROR_COUNT++))
+  ERROR_COUNT=$((ERROR_COUNT + 1))
 }
 
 warning() {
   echo -e "${YELLOW}⚠ $1${NC}" >&2
-  ((WARNING_COUNT++))
+  WARNING_COUNT=$((WARNING_COUNT + 1))
 }
 
 success() {
@@ -38,7 +38,7 @@ if [[ ! -f "$SKILL_FILE" ]]; then
 fi
 
 # Extract frontmatter
-FRONTMATTER=$(awk '/^---$/{flag=!flag; next} flag' "$SKILL_FILE")
+FRONTMATTER=$(awk 'NR==1 && /^---$/{found=1; next} found && /^---$/{exit} found{print}' "$SKILL_FILE")
 
 # Check frontmatter exists
 if [[ -z "$FRONTMATTER" ]]; then

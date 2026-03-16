@@ -122,7 +122,7 @@ claude_marketplace/
 - **creative-writing** - Content creation
 - **editor-in-chief** - Editorial review
 - **mermaid-diagram** - Diagram generation
-- **create-adr** - Architecture decision records
+- **arch:create-adr** - Architecture decision records
 - **gather-nfr** - Non-functional requirements
 - **claude:hooks** - Claude Code hooks configuration
 

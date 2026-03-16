@@ -38,7 +38,14 @@ Complete index of all skills available in the Claude Code Skills Marketplace.
 | [mermaid-diagram](#mermaid-diagram) | Content | Diagram generation | Tier 4 |
 | [add-content-image](#add-content-image) | Content | Image handling | Tier 4 |
 | [regenerate-course-content](#regenerate-course-content) | Content | Course content generation | Tier 4 |
-| [create-adr](#create-adr) | Documentation | Architecture decision records | Tier 4 |
+| [arch:create-adr](#archcreate-adr) | Documentation | Architecture decision records | Tier 4 |
+| [aws:cdk-validate](#awscdk-validate) | Architecture | CDK validation with cdk-nag and cfn-lint | Tier 3 |
+| [debug](#debug) | Development | Hypothesis-driven bug investigation with regression tests | Tier 2 |
+| [github:edit-workflow](#githubedit-workflow) | Core Workflow | Edit GitHub Actions workflows with automatic validation | Tier 2 |
+| [github:story-finalize](#githubstory-finalize) | Core Workflow | Close GitHub issues with PR links, labels, and project board | Tier 2 |
+| [github:until-green](#githubuntil-green) | Core Workflow | End-to-end implementation loop until CI passes | Tier 2 |
+| [review:code](#reviewcode) | Quality | Comprehensive code review orchestrator | Tier 2 |
+| [review:compliance](#reviewcompliance) | Quality | Business requirements compliance validator | Tier 2 |
 | [gather-nfr](#gather-nfr) | Documentation | Non-functional requirements | Tier 4 |
 | [claude:hooks](#claudehooks) | Configuration | Claude Code hooks configuration | Tier 4 |
 
@@ -70,7 +77,7 @@ Spin up a coordinated 5-agent TDD team that fetches stories, designs implementat
 - Agent definition files in `.claude/agents/`
 
 **Dependencies:**
-- `/fetch-story`, `/check-story-quality`, `/gather-context`, `/create-adr`, `/commit`, `/pr` (or `/github:pull-request`)
+- `/fetch-story`, `/check-story-quality`, `/gather-context`, `/arch:create-adr`, `/commit`, `/pr` (or `/github:pull-request`)
 
 **Use Cases:**
 - Fully automated story implementation
@@ -795,7 +802,7 @@ Generate and update course or educational content.
 
 ---
 
-### create-adr
+### arch:create-adr
 
 **Category:** Documentation
 **Priority:** Tier 4
@@ -819,7 +826,7 @@ Create Architecture Decision Records (ADR) for documenting technical decisions.
 - Track technical choices
 - Maintain decision history
 
-**Invoke:** `/create-adr`
+**Invoke:** `/arch:create-adr`
 
 ---
 
@@ -974,6 +981,165 @@ Sync a GitHub Project board by closing stale "In Progress" items whose linked is
 - Hard constraint violations escalate to PM automatically
 **Configuration Required:** `registry_dir` (default: `docs`)
 **Invoke:** `/arch:maintain-constraints-registry`
+
+---
+
+### aws:cdk-validate
+
+**Category:** Architecture
+**Priority:** Tier 3
+
+**Purpose:**
+Validate AWS CDK infrastructure using cdk-nag (AWS best practices) and cfn-lint (CloudFormation syntax). Runs automatically after infrastructure edits via PostToolUse hook.
+
+**Key Features:**
+- cdk-nag: AWS Solutions best practices, security, IAM least privilege
+- cfn-lint: CloudFormation syntax and resource property validation
+- Blocking mode: errors block operations, warnings allowed
+- Auto-runs after Edit/Write to infrastructure files
+
+**Use Cases:**
+- CDK infrastructure code review
+- CI/CD pipeline validation
+- Security and compliance checks for IaC
+
+**Invoke:** `/aws:cdk-validate`
+
+---
+
+### debug
+
+**Category:** Development
+**Priority:** Tier 2
+
+**Purpose:**
+Systematic, hypothesis-driven bug investigation using the scientific method: generate hypotheses, test them through research, implement fixes with user approval, and create mandatory regression tests.
+
+**Key Features:**
+- Hypothesis generation and structured investigation
+- Mandatory regression test creation before any fix
+- GitHub issue integration (fetch or create)
+- Evidence-based root cause analysis
+
+**Use Cases:**
+- Investigate reported bugs from GitHub backlog
+- Reproduce and fix flaky tests
+- Diagnose production issues
+
+**Invoke:** `/debug` or `/debug <issue-number>`
+
+---
+
+### github:edit-workflow
+
+**Category:** Core Workflow
+**Priority:** Tier 2
+
+**Purpose:**
+Edit GitHub Actions workflows safely with automatic actionlint validation after changes.
+
+**Key Features:**
+- Automatic actionlint validation via PostToolUse hook
+- Safe workflow editing with immediate feedback
+- Supports all GitHub Actions workflow syntax
+
+**Use Cases:**
+- Modify CI/CD pipelines
+- Add or update workflow steps
+- Fix broken GitHub Actions configurations
+
+**Invoke:** `/github:edit-workflow`
+
+---
+
+### github:story-finalize
+
+**Category:** Core Workflow
+**Priority:** Tier 2
+
+**Purpose:**
+Close the loop on any completed GitHub issue: update the issue body with actual work done, link the PR, apply type and domain labels, assign to self, and add to the GitHub Project board.
+
+**Key Features:**
+- Updates issue body with actual work summary
+- Links merged PR to issue
+- Applies type and domain labels automatically
+- Adds issue to GitHub Project board
+
+**Use Cases:**
+- Post-merge story closure
+- Sprint completion hygiene
+- Project board synchronization
+
+**Invoke:** `/github:story-finalize` or `/github:story-finalize <issue-number>`
+
+---
+
+### github:until-green
+
+**Category:** Core Workflow
+**Priority:** Tier 2
+
+**Purpose:**
+Full-lifecycle orchestrator that implements code, commits, opens a PR, and loops fixing CI failures until every check passes.
+
+**Key Features:**
+- End-to-end implementation from description to green CI
+- Automatic commit and PR creation
+- CI failure loop: reads logs, fixes code, re-commits
+- Stops when all checks pass or escalates to user
+
+**Use Cases:**
+- Implement features with CI verification
+- Fix CI failures end-to-end
+- Automated implementation with quality gates
+
+**Invoke:** `/github:until-green <scope-description>`
+
+---
+
+### review:code
+
+**Category:** Quality
+**Priority:** Tier 2
+
+**Purpose:**
+Comprehensive code review orchestrator that runs deterministic checks (type-check, lint, tests) before LLM-based reviews to save tokens and ensure quality gates pass first.
+
+**Key Features:**
+- Phase 1: TypeScript type-check, ESLint, Stylelint, unit tests (no LLM tokens)
+- Phase 2: Security review (OWASP Top 10), performance, overall code quality
+- Runs non-probabilistic checks first for efficiency
+
+**Use Cases:**
+- Pre-PR code review
+- Automated quality gate enforcement
+- Multi-dimensional code analysis
+
+**Invoke:** `/review:code`
+
+---
+
+### review:compliance
+
+**Category:** Quality
+**Priority:** Tier 2
+
+**Purpose:**
+Validates business requirements compliance: enforces test coverage for acceptance criteria before commits and validates API compliance via OpenAPI spec generation and contract tests.
+
+**Key Features:**
+- Validates acceptance criteria from active story (Phase 0)
+- Generates OpenAPI specs from TypeScript Lambda handlers
+- Creates contract tests from OpenAPI schemas
+- Analyzes test coverage gaps
+
+**Use Cases:**
+- Pre-commit acceptance criteria validation
+- API contract testing
+- Business requirements coverage verification
+
+**Invoke:** `/review:compliance`
 
 ---
 

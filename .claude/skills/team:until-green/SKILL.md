@@ -1,0 +1,223 @@
+---
+name: team:until-green
+description: "Implement a scope of work end-to-end: writes code, commits, creates a PR, then loops fixing CI failures until all checks pass. Invoke with a natural language description of the work to do."
+---
+
+# Until Green
+
+## Overview
+
+`/until-green <scope>` is a full-lifecycle orchestrator. Give it a description of what needs to be done — it implements the code, commits, opens a PR, and then loops: reading CI failure logs, fixing the code, and re-committing until every check is green.
+
+## Quick Start
+
+```bash
+/until-green fix the failing unit tests in the auth module
+/until-green add input validation to the signup form
+/until-green implement the search index generation step
+```
+
+## Workflow
+
+### Phase 1 — Implement the scope
+
+1. Read and understand the scope argument
+2. Explore the relevant files in the codebase
+3. Implement the required changes (minimal, focused)
+4. Stage changed files: `git add <files>`
+
+### Phase 2 — Commit
+
+Invoke `{{COMMIT_SKILL}}`:
+- Auto-links to active story (reads `{{ACTIVE_STORY_FILE}}`)
+- Creates an issue if no active story exists
+- Produces a properly formatted commit message
+
+### Phase 3 — Create PR
+
+Invoke `{{PR_SKILL}}`:
+- Verifies commits exist ahead of `{{DEFAULT_BRANCH}}`
+- Creates PR with `--base {{DEFAULT_BRANCH}}`
+- Stores PR number for the CI loop
+
+```bash
+PR_NUMBER=$(gh pr list --head "$(git rev-parse --abbrev-ref HEAD)" \
+  --state open --json number --jq '.[0].number')
+```
+
+Save loop state:
+```json
+{
+  "scope": "<the original scope argument>",
+  "prNumber": 123,
+  "prUrl": "https://github.com/{{REPO_SLUG}}/pull/123",
+  "iteration": 0,
+  "startedAt": "<ISO timestamp>"
+}
+```
+Write to `{{UNTIL_GREEN_STATE_FILE}}`.
+
+### Phase 4 — CI loop
+
+Load config:
+```bash
+MAX_ITER=$(yq e '.ci.max_fix_iterations' config.yaml)      # default: 5
+TIMEOUT_MIN=$(yq e '.ci.check_timeout_minutes' config.yaml) # default: 15
+POLL_SEC=$(yq e '.ci.poll_interval_seconds' config.yaml)    # default: 30
+```
+
+Loop:
+```
+FOR iteration IN 1..MAX_ITER:
+
+  1. Wait for checks to start (push triggers CI with a brief delay)
+     sleep $POLL_SEC
+
+  2. Poll check status
+     STATUS=$(gh pr checks $PR_NUMBER --json name,state,conclusion)
+
+     Wait up to TIMEOUT_MIN for all checks to complete.
+
+  3. Read conclusions
+     FAILURES=$(gh pr checks $PR_NUMBER --json name,conclusion \
+       --jq '[.[] | select(.conclusion == "FAILURE" or .conclusion == "TIMED_OUT")]')
+
+  4. If FAILURES is empty → all green ✅ → exit loop
+
+  5. For each failing check:
+     a. Get the run ID
+        RUN_ID=$(gh run list --branch "$(git branch --show-current)" \
+          --json databaseId,status --jq '[.[] | select(.status=="completed")][0].databaseId')
+
+     b. Fetch failure logs
+        gh run view $RUN_ID --log-failed
+
+     c. Analyze: understand WHY the check failed (build error, test assertion,
+        lint violation, synth failure, etc.)
+
+     d. Fix the code — minimal targeted changes only
+
+     e. Stage and commit:
+        git add <changed files>
+        {{COMMIT_SKILL}}
+        # commit auto-detects the open PR and groups fix commits
+        # with letter suffixes (e.g. PREFIX-123a, PREFIX-123b)
+
+     f. Push:
+        git push
+
+  6. Increment iteration counter in {{UNTIL_GREEN_STATE_FILE}}
+
+ENDLOOP
+
+If MAX_ITER exceeded without green:
+  → Report final status
+  → List remaining failures with log excerpts
+  → Stop (do not attempt further fixes — surface to user)
+```
+
+### Phase 5 — Done
+
+```
+✅ PR #123 is green: <PR URL>
+   All checks passed after N iteration(s).
+```
+
+If `behavior.auto_finalize_story: true` in config.yaml, invoke `{{FINALIZE_SKILL}}`.
+
+---
+
+## State File
+
+`{{UNTIL_GREEN_STATE_FILE}}` — persists loop state across interruptions:
+
+```json
+{
+  "scope": "fix the failing unit tests in the auth module",
+  "prNumber": 123,
+  "prUrl": "https://github.com/{{REPO_SLUG}}/pull/123",
+  "iteration": 2,
+  "startedAt": "<ISO timestamp>"
+}
+```
+
+To resume after an interruption, re-run `/until-green` — if this file exists and the PR is still open, the skill picks up from the CI loop (skips phases 1-3).
+
+---
+
+## How Fix Commits Are Grouped
+
+The commit skill auto-detects the open PR on the current branch and groups all fix commits under the original number with letter suffixes:
+
+```
+PREFIX-157:  Add validation to email field       ← original commit
+PREFIX-157a: Fix TypeScript error in validator   ← first CI fix
+PREFIX-157b: Fix eslint no-unused-vars warning   ← second CI fix
+```
+
+No manual configuration needed — this is handled by the commit skill's PR-based grouping.
+
+---
+
+## Examples
+
+**Simple feature, passes CI first try:**
+```bash
+/until-green add a debug log in the auth handler
+
+# → Phase 1: Implement — edits auth handler file
+# → Phase 2: Commit
+# → Phase 3: PR created
+# → Phase 4: Poll — all checks pass on first poll
+# → ✅ PR is green
+```
+
+**Fix with one CI failure:**
+```bash
+/until-green fix the chart rendering test
+
+# → Phase 1-3: commit + PR created
+# → Iteration 1:
+#     Fetching CI logs...
+#     ❌ test:unit failed — Expected 3 charts, got 2
+#     Analyzing... fixing src/charts.ts
+#     Committing fix → PREFIX-161a: Fix chart count assertion
+#     Pushing...
+# → Iteration 2:
+#     ✅ All checks passed
+# → ✅ PR is green
+```
+
+**Iterative fixes:**
+```bash
+/until-green add CDK construct for new Lambda function
+
+# → Phase 1-3: CDK code written, committed, PR opened
+# → Iteration 1: CDK synth fails — missing IAM policy → fix → PREFIX-162a
+# → Iteration 2: lint warning on resource naming → fix → PREFIX-162b
+# → Iteration 3: ✅ All checks green
+```
+
+---
+
+## Error Handling
+
+| Situation | Behavior |
+|-----------|----------|
+| No changes after implement | Prompt user — nothing to commit |
+| PR already open for branch | Skip to Phase 4 (reuse existing PR) |
+| CI checks never start | Warn after 2× poll_interval, continue polling |
+| Timeout exceeded | Report status + remaining failures, stop |
+| Max iterations exceeded | Report final failures, stop |
+| Push fails (branch protected) | Surface error, stop |
+| Commit skill fails | Surface error, stop |
+
+---
+
+## Integration
+
+- **`{{COMMIT_SKILL}}`** — invoked in Phase 2 and after each fix in Phase 4
+- **`{{PR_SKILL}}`** — invoked in Phase 3
+- **`{{FINALIZE_SKILL}}`** — optional post-green cleanup (config-driven)
+- **`gh pr checks`** — native gh CLI for polling CI status
+- **`gh run view --log-failed`** — native gh CLI for fetching failure logs
