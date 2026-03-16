@@ -96,7 +96,7 @@ git clone <marketplace-repo> ~/claude-marketplace
 # Symlink skills you want to use
 cd /path/to/your/project/.claude/skills
 ln -s ~/claude-marketplace/.claude/skills/git:commit git:commit
-ln -s ~/claude-marketplace/.claude/skills/github:pull-request github:pull-request
+ln -s ~/claude-marketplace/.claude/plugins/github/skills/github:pull-request github:pull-request
 ```
 
 Benefits: Easy updates when marketplace skills improve.
