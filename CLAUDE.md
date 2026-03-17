@@ -8,7 +8,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 ```bash
 /plugin marketplace add amdmax/claude_marketplace
-/plugin install core-workflow@claude-skills-marketplace
+/plugin install core-workflow@thesolutionarchitect_marketplace
 ```
 
 ## Repo Structure
@@ -50,7 +50,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 The marketplace install location symlinks here:
 ```
-~/.claude/plugins/marketplaces/claude-skills-marketplace → <this repo>
+~/.claude/plugins/marketplaces/thesolutionarchitect_marketplace → <this repo>
 ```
 
 To test changes locally, edit skills in `.claude/skills/` — they resolve immediately via symlinks.

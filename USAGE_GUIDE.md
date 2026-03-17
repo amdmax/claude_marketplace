@@ -29,13 +29,13 @@ Install all bundles or just the ones you need:
 
 ```bash
 # Option A: Install everything
-/plugin install core-workflow@claude-skills-marketplace
-/plugin install development-tools@claude-skills-marketplace
-/plugin install architecture-quality@claude-skills-marketplace
-/plugin install content-specialized@claude-skills-marketplace
+/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install development-tools@thesolutionarchitect_marketplace
+/plugin install architecture-quality@thesolutionarchitect_marketplace
+/plugin install content-specialized@thesolutionarchitect_marketplace
 
 # Option B: Install only what you need
-/plugin install core-workflow@claude-skills-marketplace  # Just git workflow skills
+/plugin install core-workflow@thesolutionarchitect_marketplace  # Just git workflow skills
 ```
 
 #### Step 3: Use the Skills

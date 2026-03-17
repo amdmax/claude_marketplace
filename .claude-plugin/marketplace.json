@@ -1,6 +1,6 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "claude-skills-marketplace",
+  "name": "thesolutionarchitect_marketplace",
   "description": "A centralized marketplace of 28+ production-ready Claude Code skills organized into focused bundles. Includes workflow automation, architecture guidance, code quality tools, and specialized content creation skills.",
   "owner": {
     "name": "AIGENSA",

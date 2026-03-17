@@ -22,13 +22,13 @@ Install all bundles or choose specific ones:
 /plugin marketplace add aigensa/claude_marketplace
 
 # Install all bundles
-/plugin install core-workflow@claude-skills-marketplace
-/plugin install development-tools@claude-skills-marketplace
-/plugin install architecture-quality@claude-skills-marketplace
-/plugin install content-specialized@claude-skills-marketplace
+/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install development-tools@thesolutionarchitect_marketplace
+/plugin install architecture-quality@thesolutionarchitect_marketplace
+/plugin install content-specialized@thesolutionarchitect_marketplace
 
 # Or install just what you need
-/plugin install core-workflow@claude-skills-marketplace
+/plugin install core-workflow@thesolutionarchitect_marketplace
 ```
 
 **Available Bundles:**
