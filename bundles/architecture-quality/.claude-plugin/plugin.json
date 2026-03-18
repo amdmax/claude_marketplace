@@ -1,6 +1,6 @@
 {
   "name": "architecture-quality",
-  "description": "Architecture guidance and code quality reviews: AWS, CDK, security, performance, and fitness functions",
+  "description": "Architecture guidance and code quality reviews: AWS, CDK, security, performance, fitness functions, and ADR YAML authoring",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
