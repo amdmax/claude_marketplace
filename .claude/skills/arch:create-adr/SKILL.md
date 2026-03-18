@@ -89,17 +89,14 @@ function shouldCreateADR(story, nfrs, context) {
 
 ```markdown
 ---
-status: proposed | accepted | superseded | deprecated | rejected
+status: "{proposed | rejected | accepted | deprecated | … | superseded by ADR-0123}"
 date: YYYY-MM-DD
-decision-makers: [Name(s)]
-consulted: [Name(s)] (optional)
-informed: [Name(s)] (optional)
+decision-makers: [list of names]
+consulted: [list of names]
+informed: [list of names]
 ---
 
 # ADR-NNNN: [Short Title of Decision]
-
-**Story:** GitHub Issue #XXX
-**Date:** YYYY-MM-DD
 
 ## Context and Problem Statement
 
@@ -165,18 +162,18 @@ Chosen option: "[Option 1]", because [justification considering decision drivers
 * Cost: [cost implications]
 * Complexity: [complexity level]
 
-## Implementation Notes
-
-[Technical details for implementing the chosen option]
-
-[Code patterns, configuration examples, migration steps, testing strategy]
-
-## Links
+## More Information
 
 * [Story Issue #XXX](https://github.com/owner/repo/issues/XXX)
 * [Related ADR-YYYY](./YYYY-related-decision.md) (if superseding or related)
 * [External Documentation](https://example.com/docs)
 * [Technology Homepage](https://example.com)
+
+### Implementation Notes
+
+[Technical details for implementing the chosen option]
+
+[Code patterns, configuration examples, migration steps, testing strategy]
 ```
 
 ### MADR YAML Frontmatter
@@ -516,12 +513,12 @@ We will validate this decision by:
 If payment completion rate falls below 80% or abandonment exceeds 25%, we will re-evaluate the custom UI option (Stripe Elements).
 ```
 
-### Step 10: Add Implementation Notes
+### Step 10: Add Implementation Notes (under More Information)
 
-**Include technical details:**
+**Include technical details as a subsection of More Information:**
 
 ```markdown
-## Implementation Notes
+### Implementation Notes
 
 ### Backend (Lambda Function)
 
@@ -591,18 +588,22 @@ If critical issues arise:
 3. Expected downtime: <15 minutes
 ```
 
-### Step 11: Add Links Section
+### Step 11: Add More Information Section
 
-**Include relevant links:**
+**Include relevant links and implementation notes:**
 
 ```markdown
-## Links
+## More Information
 
 * [Story Issue #123](https://github.com/aigensa/vibe-coding-course/issues/123)
 * [Related ADR-0005: Lambda@Edge Authentication](./0005-lambda-edge-auth.md) - Payment endpoints use this auth
 * [Stripe Checkout Documentation](https://stripe.com/docs/payments/checkout)
 * [PCI-DSS Compliance Guide](https://stripe.com/docs/security/guide)
 * [Payment Testing Guide (internal)](../DEVELOPMENT_WORKFLOW.md#payment-testing)
+
+### Implementation Notes
+
+[Technical details, code patterns, migration steps, rollback plan]
 ```
 
 **Link to related ADRs:**
@@ -620,15 +621,14 @@ context.relatedADRs.forEach(adr => {
 
 ```javascript
 const adrContent = `---
-status: proposed
+status: "proposed"
 date: ${new Date().toISOString().split('T')[0]}
 decision-makers: [User Name]
+consulted: []
+informed: []
 ---
 
 # ADR-${adrNumber}: ${titleSlug}
-
-**Story:** GitHub Issue #${issueNumber}
-**Date:** ${new Date().toISOString().split('T')[0]}
 
 ${contextSection}
 
@@ -640,9 +640,7 @@ ${decisionOutcomeSection}
 
 ${prosAndConsSection}
 
-${implementationNotesSection}
-
-${linksSection}
+${moreInformationSection}
 `;
 
 // Write file
