@@ -1,0 +1,455 @@
+{
+  "schema_version": "1",
+  "generated_at": "2026-03-18T18:56:50Z",
+  "repo": "amdmax/claude_marketplace",
+  "skills": {
+    "add-content-image": {
+      "hash": "sha256:0d229ec87579a3fe78ca41a5ee874d22b05e6e0961ac6946ebcc5a077f715f19",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "android:mobile-test": {
+      "hash": "sha256:f6123e0f1198d4a38dfe011569fe7dbca079d8af9ff0c45f4e8791d275eca1c3",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "anthropic:skill-creator": {
+      "hash": "sha256:2bde0efffafbebaead4aa5cebe94e9b2f382d6ed81044613d44788fa9186eac1",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "arch:adr-render": {
+      "hash": "sha256:63e3d4c936b16b4af42871cbbe646549202f50f2af9683b3febc9173eaaa9d2f",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "arch:adr-yaml": {
+      "hash": "sha256:5e09b3cf102c1f8dee2fb724cbd266ea21f99a139d33a669d9e7d1e7d1253198",
+      "files": [
+        "SKILL.md",
+        "schemas/adr.schema.json",
+        "scripts/validate-adr-yaml.py"
+      ],
+      "file_count": 3
+    },
+    "arch:create-adr": {
+      "hash": "sha256:5db68cb19c43d36814abe64b93ab0c9cc2d500b3b5bd7b60742733330d9ea374",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "arch:fitness-function": {
+      "hash": "sha256:6978c1941467c7bc2368e92ca93d695f1cc6b4112873c13416c7d6598fb70c37",
+      "files": [
+        "SKILL.md",
+        "business-priority-templates.md",
+        "examples/accessibility-wcag-example.md",
+        "examples/performance-latency-example.md",
+        "examples/security-compliance-example.md",
+        "examples/ux-clicks-example.md",
+        "nfr-to-fitness-mapping.md"
+      ],
+      "file_count": 7
+    },
+    "arch:maintain-constraints-registry": {
+      "hash": "sha256:32a2da45c5314bff588886ac44a2b30acb1511d6fff27d77fa424b6c8c44db29",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "references/schema.md"
+      ],
+      "file_count": 3
+    },
+    "arch:maintain-nfr-registry": {
+      "hash": "sha256:9fd9d010ec368f2b6c215d794caa154f83d6304f37cb99838055e292f0c19301",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "references/schema.md"
+      ],
+      "file_count": 3
+    },
+    "arch:maintain-risk-registry": {
+      "hash": "sha256:9b8d546fa46bb1fbe225cbca0c2a4dc731a3a8f7f14273722bcfd63ae74f2bc2",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "references/schema.md"
+      ],
+      "file_count": 3
+    },
+    "aws:architect": {
+      "hash": "sha256:215896b53929de3545aba338b9035c8592421ba2ab959c627bcb427c44ab94c4",
+      "files": [
+        "SKILL.md",
+        "deployment-checklist.md",
+        "well-architected-pillars.md"
+      ],
+      "file_count": 3
+    },
+    "aws:cdk": {
+      "hash": "sha256:15071c9a09c29ccca778ac00f04a5efe61e16a7a6640b0e3ed7e4125f51b1bf9",
+      "files": [
+        "SKILL.md",
+        "examples.md",
+        "templates/api-lambda.md",
+        "templates/lambda-edge-auth.md",
+        "templates/multi-stack.md",
+        "templates/s3-cloudfront.md",
+        "tools.md",
+        "well-architected.md"
+      ],
+      "file_count": 8
+    },
+    "aws:cdk-validate": {
+      "hash": "sha256:d3e7a64378c0df0cacb5dd83e69f299c8ffa3da879bca10a3b938311600b13ac",
+      "files": [
+        "SKILL.md",
+        "config.yaml",
+        "references/cdk-nag-rules.md",
+        "references/cfn-lint-rules.md",
+        "references/suppression-guide.md",
+        "validate-cdk-output.sh"
+      ],
+      "file_count": 6
+    },
+    "bug-fix": {
+      "hash": "sha256:9ed51f54ff27c0b2a88529339931dd555123fa994a2fb3bf9da7a18266d766fb",
+      "files": [
+        "SKILL.md",
+        "config.yaml",
+        "references/bug-investigation.md",
+        "references/testing-best-practices.md"
+      ],
+      "file_count": 4
+    },
+    "claude:hooks": {
+      "hash": "sha256:de088f988e487a667a9b2baaf55adeae12e0edbad5e06f47b498a807ca3ea22e",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "config.yaml"
+      ],
+      "file_count": 3
+    },
+    "claude:plugin-scaffold": {
+      "hash": "sha256:738a81ab2dd28c0eec5451c6a6f7e9227178f1f6b9402a28516adcd20f8f20ff",
+      "files": [
+        "SKILL.md",
+        "references/file-templates.md"
+      ],
+      "file_count": 2
+    },
+    "claude:refactor-skill": {
+      "hash": "sha256:292611f47e7c1ac0a82c78f547f5606488ac3b2267294ab0312fcbe254f2941b",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "claude:skill-creator": {
+      "hash": "sha256:317b6fe8b622e2d500e496416b0034261a1b5dee2e19635112c04979b7576c15",
+      "files": [
+        "SKILL.md",
+        "references/output-patterns.md",
+        "references/workflows.md",
+        "scripts/validate-frontmatter.sh"
+      ],
+      "file_count": 4
+    },
+    "claude:sync-skills": {
+      "hash": "sha256:fee8e0374e02027bdb2915d6a7deb42bd566f07e65ec275139057c46a7b65b81",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "config.yaml"
+      ],
+      "file_count": 3
+    },
+    "claude:validate-skills": {
+      "hash": "sha256:688ac2ea51b5648488742015cffc66a95cde857fc1d6d669fa6b4c9b8bbd2a17",
+      "files": [
+        "SKILL.md",
+        "references/examples.md",
+        "references/hook-events.md",
+        "scripts/validate-all-skills.sh",
+        "scripts/validate-skill.sh"
+      ],
+      "file_count": 5
+    },
+    "creative-writing": {
+      "hash": "sha256:2e6d5fb29049f49a3af9b78f7af50b9e468220a4e675d67008c5707b1093382d",
+      "files": [
+        "SKILL.md",
+        "references/educational-patterns.md",
+        "references/examples-library.md",
+        "references/fiction-patterns.md",
+        "references/flow-patterns.md",
+        "references/general-patterns.md",
+        "references/hooks-library.md",
+        "references/journalism-patterns.md",
+        "references/kelly-style-overview.md",
+        "references/voice-guide.md"
+      ],
+      "file_count": 10
+    },
+    "css-architecture": {
+      "hash": "sha256:e59a4726b8f460da2bb97feab2f8efbb6c7cdbe897384a1f243369d01c8468fe",
+      "files": [
+        "SKILL.md",
+        "build-validation.md",
+        "decision-trees.md",
+        "faq.md",
+        "layers-guide.md",
+        "patterns.md",
+        "references/common-fixes.md",
+        "references/responsive-breakpoints.md",
+        "references/theme-system.md",
+        "references/variable-conventions.md",
+        "troubleshooting.md",
+        "workflows.md"
+      ],
+      "file_count": 12
+    },
+    "cuda-remote-manager": {
+      "hash": "sha256:8f6df7ace265a46de63b8151580806396daf7040fadda777f59f1627e0cb900c",
+      "files": [
+        "SKILL.md",
+        "references/machine_specs.md",
+        "references/vllm_models.md",
+        "scripts/check_cuda.sh",
+        "scripts/manage_power.sh",
+        "scripts/start_vllm.sh"
+      ],
+      "file_count": 6
+    },
+    "debug": {
+      "hash": "sha256:e404fc05317716bdb3aa8c653c17575f045b8c3b5d8228e8e8150190b565f7ec",
+      "files": [
+        "SKILL.md",
+        "config.yaml",
+        "references/hypothesis-tracking.md",
+        "references/research-strategies.md",
+        "references/test-generation-guide.md",
+        "scripts/hypothesis-tracker.py"
+      ],
+      "file_count": 6
+    },
+    "design-system": {
+      "hash": "sha256:4446b89365e71e3e515f54472dfec056e080b397b50ef910d7ed632ce5479655",
+      "files": [
+        "SKILL.md",
+        "references/guide.md"
+      ],
+      "file_count": 2
+    },
+    "editor-in-chief": {
+      "hash": "sha256:3e0975c1cf488d1c223536761e3aeed6d076060730b18ec74d01db4e7fa4a605",
+      "files": [
+        "SKILL.md",
+        "references/editorial-standards.md"
+      ],
+      "file_count": 2
+    },
+    "experimentator": {
+      "hash": "sha256:167702e632499b6032b3bac3635dc77de87f0ac3da8551a70f560e2a325830ea",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "finalize-story": {
+      "hash": "sha256:21bc832f568139a814c11a0682e64959dbae595f2d8789e17c3f6aa267af0e63",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "gather-context": {
+      "hash": "sha256:dfe5e6c16176925aa1bbd061563cb0935385107700ead836459fbc2dbcfbaea3",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "config.yaml"
+      ],
+      "file_count": 3
+    },
+    "gather-nfr": {
+      "hash": "sha256:85f05ef7fdb0c8d7b94c8eceae6433c8fe4e01b2f60e295eaba4144f4afd9759",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "git:commit": {
+      "hash": "sha256:da9f01797e94af1e06dc6afa25009e0fd9f7993bc5e5740faf7561197f72e689",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "config.yaml",
+        "references/aigcode-counter.md",
+        "references/issue-numbering.md"
+      ],
+      "file_count": 5
+    },
+    "github:edit-workflow": {
+      "hash": "sha256:1656eec2165fed4699229110d9ae5057975953de73430e215f58e89cdd59034e",
+      "files": [
+        "SKILL.md",
+        "validate-workflow-output.sh"
+      ],
+      "file_count": 2
+    },
+    "github:story-finalize": {
+      "hash": "sha256:6d4995fb6a773a2c4992b7568c4994f295feb52e9fcf53e71596eca79ff3a664",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "github:until-green": {
+      "hash": "sha256:8a930a3a8fbfbf851ef8a5a569c66f6e93fee9fc08b3ccd65c71247a9d82e523",
+      "files": [
+        "SKILL.md",
+        "config.yaml"
+      ],
+      "file_count": 2
+    },
+    "ios:mobile-test": {
+      "hash": "sha256:5364c6f91bc8cf89f6724e2d20bc562b72b9ce5144745a32b9fadecb283bb5fb",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "jupyter-remote": {
+      "hash": "sha256:9f39122d9485e474562507a3776ab7b607fd2f4af98689027af7c29ceb41c35a",
+      "files": [
+        "SKILL.md",
+        "scripts/jupyter_remote.py",
+        "scripts/ssh_tunnel.py"
+      ],
+      "file_count": 3
+    },
+    "mermaid-diagram": {
+      "hash": "sha256:faf36c3302acdfd22040b7650da8d35b0e2dee1adfecd13c5226d74bf5daaaf9",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "ready-for-dev-scout": {
+      "hash": "sha256:e274242d7c8d79f7da7fabc36868d2d6b75c3f0c9abad475fbd84b70befe917b",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "regenerate-course-content": {
+      "hash": "sha256:87736112756720102ae01bda5c20695ccf61b2b43add124101d7ffbf606d2a3f",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "remote-execution": {
+      "hash": "sha256:9ae82895e995e4aa6a234ecbc20b0fde7b90629b924dd60b56f32c07d60c4bb5",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "reveal-pdf-export": {
+      "hash": "sha256:887c38c67bb385b03448b9e48c7e3841d9c6df8ce50a855bb636b2054490bf7c",
+      "files": [
+        "SKILL.md",
+        "scripts/export-pdf.mjs"
+      ],
+      "file_count": 2
+    },
+    "review:code": {
+      "hash": "sha256:70575daa91ef015f2409d40859f991aeb5b8f1831c33e1694f0cf5ce426c41d2",
+      "files": [
+        "SKILL.md",
+        "config.yaml"
+      ],
+      "file_count": 2
+    },
+    "review:compliance": {
+      "hash": "sha256:132663456f0368b58431814e5d13fb5b5d6de55cfac08aee2cec6b1f3187d0cb",
+      "files": [
+        "SKILL.md",
+        "config.yaml",
+        "lib/ac-generator.ts",
+        "lib/quality-gates.ts",
+        "lib/test-linker.ts",
+        "lib/test-stub-generator.ts",
+        "references/acceptance-criteria.md",
+        "references/contract-testing.md",
+        "references/coverage-analysis.md",
+        "references/examples.md",
+        "references/openapi-generation.md",
+        "references/quality-architect-mode.md"
+      ],
+      "file_count": 12
+    },
+    "review:overall": {
+      "hash": "sha256:c88a9d4cf5b9f6ee646717bf79aead123d8637325ecabbd4b8e8b3aef256fb69",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "review:performance": {
+      "hash": "sha256:99c952f127f713d64c5942db00362e4143b87eb71dba591518a92ddaac47882e",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "review:security": {
+      "hash": "sha256:5993449d6d83588d1c1f5eb4ca85b778e9b482a2bd7546855d8ee8c5fa4c59ba",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "team:agile-dev": {
+      "hash": "sha256:adcb1d0d8b5e51bde9c79e3ea8c46c090c3e4403254b353d408c7fdca61bc5f9",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml",
+        "references/agents/architect.md",
+        "references/agents/backend-dev.md",
+        "references/agents/frontend-dev.md",
+        "references/agents/pm.md",
+        "references/agents/test-architect.md"
+      ],
+      "file_count": 7
+    },
+    "team:until-green": {
+      "hash": "sha256:715d6cb4e02e31d615f7ec45abab894a9e67947025e948fa39f6427206d25123",
+      "files": [
+        "SKILL.md",
+        "config.example.yaml"
+      ],
+      "file_count": 2
+    },
+    "ux-professional": {
+      "hash": "sha256:9416842231792a5bb1decab81d813d113acc265415cfb77215df7f1b113e38df",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    }
+  }
+}

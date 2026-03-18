@@ -1,0 +1,65 @@
+name: Generate Skill Hashes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.claude/skills/**'
+      - 'scripts/hash_skills.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-manifest:
+    name: Hash skills and publish manifest
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate skills manifest
+        run: python scripts/hash_skills.py
+
+      - name: Upload manifest as workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: skills-manifest
+          path: .claude-plugin/skills-manifest.json
+          retention-days: 90
+
+      - name: Publish manifest to GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          MANIFEST=".claude-plugin/skills-manifest.json"
+
+          # Find the latest release tag; create one if none exists
+          LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' 2>/dev/null || true)
+
+          if [[ -z "$LATEST_TAG" ]]; then
+            echo "No releases found — creating 'latest-manifest' release"
+            gh release create latest-manifest \
+              --title "Latest Skill Manifest" \
+              --notes "Auto-generated release for skills-manifest.json asset. Do not delete." \
+              --prerelease
+            LATEST_TAG="latest-manifest"
+          fi
+
+          echo "Uploading manifest to release: $LATEST_TAG"
+          gh release upload "$LATEST_TAG" "$MANIFEST" --clobber
+
+          echo "## Skill Manifest Published" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Release tag**: \`$LATEST_TAG\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Download URL**: https://github.com/${{ github.repository }}/releases/latest/download/skills-manifest.json" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Skills hashed**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(len(d['skills']))")" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Generated at**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(d['generated_at'])")" >> "$GITHUB_STEP_SUMMARY"
