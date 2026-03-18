@@ -14,7 +14,6 @@ Output: .claude-plugin/skills-manifest.json
 import argparse
 import hashlib
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -51,11 +50,12 @@ def hash_skill(skill_dir: Path) -> dict:
     # Sort by relative path for determinism
     files.sort(key=lambda f: str(f.relative_to(skill_dir)))
 
-    rel_paths = [str(f.relative_to(skill_dir)) for f in files]
-
-    # Build canonical string
+    # Build canonical string and collect rel_paths in one pass
     parts = []
-    for f, rel in zip(files, rel_paths):
+    rel_paths = []
+    for f in files:
+        rel = str(f.relative_to(skill_dir))
+        rel_paths.append(rel)
         try:
             content = f.read_text(encoding="utf-8")
         except UnicodeDecodeError:
