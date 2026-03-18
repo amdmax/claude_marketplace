@@ -49,8 +49,7 @@ jobs:
             echo "No releases found — creating 'latest-manifest' release"
             gh release create latest-manifest \
               --title "Latest Skill Manifest" \
-              --notes "Auto-generated release for skills-manifest.json asset. Do not delete." \
-              --prerelease
+              --notes "Auto-generated release for skills-manifest.json asset. Do not delete."
             LATEST_TAG="latest-manifest"
           fi
 
@@ -60,6 +59,6 @@ jobs:
           echo "## Skill Manifest Published" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Release tag**: \`$LATEST_TAG\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Download URL**: https://github.com/${{ github.repository }}/releases/latest/download/skills-manifest.json" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Download URL**: https://github.com/${{ github.repository }}/releases/download/$LATEST_TAG/skills-manifest.json" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Skills hashed**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(len(d['skills']))")" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Generated at**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(d['generated_at'])")" >> "$GITHUB_STEP_SUMMARY"
