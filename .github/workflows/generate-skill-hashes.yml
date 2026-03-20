@@ -40,6 +40,7 @@ jobs:
             echo "No changes to manifest — skipping commit"
           else
             git commit -m "chore: regenerate published-artifacts-manifest.json [skip ci]"
+            git pull --rebase origin main
             git push origin main
           fi
 
