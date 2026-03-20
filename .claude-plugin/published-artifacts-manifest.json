@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-20T12:11:52Z",
+  "generated_at": "2026-03-20T19:43:09Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -164,15 +164,6 @@
       ],
       "file_count": 1
     },
-    "finalize-story": {
-      "type": "skill",
-      "path": "skills/finalize-story/SKILL.md",
-      "hash": "sha256:3831c106d7d25e71113406b857cb8b2eceb886d84b9afb55ca57d401489cc14f",
-      "files": [
-        "SKILL.md"
-      ],
-      "file_count": 1
-    },
     "gather-context": {
       "type": "skill",
       "path": "skills/gather-context/SKILL.md",
@@ -218,6 +209,15 @@
       "type": "skill",
       "path": "skills/gh:pr/SKILL.md",
       "hash": "sha256:a472bf8c9f8ff67a0cdf58df99d850137c61c619b34a235daaffff41918f0f5a",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
+    "gh:story-finalize": {
+      "type": "skill",
+      "path": "skills/gh:story-finalize/SKILL.md",
+      "hash": "sha256:3831c106d7d25e71113406b857cb8b2eceb886d84b9afb55ca57d401489cc14f",
       "files": [
         "SKILL.md"
       ],
@@ -364,87 +364,6 @@
       "hash": "sha256:685b455d93dba1253c4631cb4e64d263fceaf22bb2e361ef48b46ac49cd6ffcb",
       "files": [
         "pm.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.analyze.md": {
-      "type": "command",
-      "path": "commands/speckit.analyze.md",
-      "hash": "sha256:4c0e76f8654d8a474fe427d2b0d148a75fc6c0d7fbdf410e16e27536ace1ceb1",
-      "files": [
-        "speckit.analyze.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.checklist.md": {
-      "type": "command",
-      "path": "commands/speckit.checklist.md",
-      "hash": "sha256:82bb25cc1ed9f1dbb261bb44b8e37c6a75c6ecd148d199562d0d777546b12ca6",
-      "files": [
-        "speckit.checklist.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.clarify.md": {
-      "type": "command",
-      "path": "commands/speckit.clarify.md",
-      "hash": "sha256:59436e4ef5b82bd347da8c9613addde935f96e5c988687425bbadbb41b82a6d8",
-      "files": [
-        "speckit.clarify.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.constitution.md": {
-      "type": "command",
-      "path": "commands/speckit.constitution.md",
-      "hash": "sha256:fa2d66226266aac99dd839aa21b6be57e22bc43a5f983e70a9622797803bd548",
-      "files": [
-        "speckit.constitution.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.implement.md": {
-      "type": "command",
-      "path": "commands/speckit.implement.md",
-      "hash": "sha256:4f4e62f6b7bf24fc1b11d3a725aa59a8dd86ecb70b695d6462970e0a5479fb05",
-      "files": [
-        "speckit.implement.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.plan.md": {
-      "type": "command",
-      "path": "commands/speckit.plan.md",
-      "hash": "sha256:cb8e7a354db0d0821d42671ab531abf50b13660f90e8ad35ae5145f7031b2f74",
-      "files": [
-        "speckit.plan.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.specify.md": {
-      "type": "command",
-      "path": "commands/speckit.specify.md",
-      "hash": "sha256:d43800cdf0e60c1ded5c1c0d6966dc3d108367ac99ecfdd24b5fdf6907a1f1f0",
-      "files": [
-        "speckit.specify.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.tasks.md": {
-      "type": "command",
-      "path": "commands/speckit.tasks.md",
-      "hash": "sha256:8c12f0f122861f0e5b6a6059a5ac2d4c569a9f2894e50157ce9a5941c723dab0",
-      "files": [
-        "speckit.tasks.md"
-      ],
-      "file_count": 1
-    },
-    "commands/speckit.taskstoissues.md": {
-      "type": "command",
-      "path": "commands/speckit.taskstoissues.md",
-      "hash": "sha256:aec04278df4c5d6f6bd82d66d15949cf288e5f3c9991a37783f86dc914f86a22",
-      "files": [
-        "speckit.taskstoissues.md"
       ],
       "file_count": 1
     },
