@@ -1,0 +1,36 @@
+# Configuration for /sync-skills skill - Example
+# Copy this to config.yaml and customize
+
+# Target repository for skills
+repository:
+  owner: "myuser"              # Your GitHub username or org
+  name: "my-claude-skills"     # Your skills repository name
+  branch: "main"               # Target branch
+  url: "https://github.com/myuser/my-claude-skills"
+
+# Local paths
+paths:
+  skills_dir: ".claude/skills/"
+  temp_dir: "/tmp/skill-sync"
+
+# Sync behavior
+sync:
+  generate_index: true
+  commit_message: "Sync {skill_count} skill(s): {skill_names}"
+  author_name: ""    # Leave empty to use git config
+  author_email: ""   # Leave empty to use git config
+
+# Filtering
+filters:
+  # Exclude template and example skills
+  exclude:
+    - "_templates"
+    - "example-*"
+
+  # Only sync specific skills (empty = all)
+  include: []
+
+# Advanced
+advanced:
+  verbose: false
+  dry_run: false

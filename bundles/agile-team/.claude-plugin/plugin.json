@@ -1,0 +1,13 @@
+{
+  "name": "agile-team",
+  "description": "Agile dev team skills: spawn the full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev) for controlled, single-agent delegation",
+  "version": "1.0.0",
+  "author": {
+    "name": "AIGENSA",
+    "email": "thesolutionarchitect@aigensa.com"
+  },
+  "homepage": "https://github.com/aigensa/claude_marketplace",
+  "repository": "https://github.com/aigensa/claude_marketplace",
+  "license": "MIT",
+  "keywords": ["agile", "tdd", "team", "agents", "pm", "architect", "developer", "workflow"]
+}

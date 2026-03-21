@@ -17,8 +17,9 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 |------|---------|
 | `.claude-plugin/marketplace.json` | Marketplace manifest — lists all bundles and their `./bundles/<name>` paths |
 | `bundles/<bundle-name>/` | Each installable plugin: has `.claude-plugin/plugin.json` + `skills/` |
-| `bundles/<bundle-name>/skills/<skill-name>` | Symlink → `../../.claude/skills/<actual-name>` (real content lives in `.claude/skills/`) |
+| `bundles/<bundle-name>/skills/<skill-name>` | Real copy of the skill content. Canonical source is `skills/<name>/` |
 | `.claude/skills/<name>/` | Canonical skill source — `SKILL.md` and supporting files |
+| `skills/<name>/` | Published copy of each skill (all bundles draw from here) |
 | `agents/` | Agent definition markdown files |
 | `commands/` | Claude Code slash commands |
 | `hooks/` | Claude Code hook scripts |
@@ -36,15 +37,16 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 1. Claude Code reads `.claude-plugin/marketplace.json` → finds bundle sources at `./bundles/<name>`
 2. On install, it copies `bundles/<bundle>/` to the plugin cache (`~/.claude/plugins/cache/`)
-3. Each `bundles/<bundle>/skills/<name>` is a **symlink** to the real skill in `.claude/skills/`
-4. This means editing `.claude/skills/<name>/SKILL.md` updates all bundles referencing it
+3. Each `bundles/<bundle>/skills/<name>` is a **real directory copy** of the skill content
+4. Canonical skill source lives in `.claude/skills/<name>/` and `skills/<name>/` (published copy)
 
 ## Adding a New Skill
 
 1. Create `.claude/skills/<namespace>:<name>/SKILL.md`
-2. Add an empty dir (then symlink) in the appropriate `bundles/<bundle>/skills/<name>`
-3. Update the bundle's `plugin.json` description if needed
-4. Commit and push — marketplace auto-updates for users with `autoUpdate: true`
+2. Copy the skill dir into the appropriate `bundles/<bundle>/skills/<name>` (no symlinks)
+3. Also copy it to `skills/<name>/` so it is published
+4. Update the bundle's `plugin.json` description if needed
+5. Commit and push — marketplace auto-updates for users with `autoUpdate: true`
 
 ## Local Development
 
@@ -53,4 +55,4 @@ The marketplace install location symlinks here:
 ~/.claude/plugins/marketplaces/thesolutionarchitect_marketplace → <this repo>
 ```
 
-To test changes locally, edit skills in `.claude/skills/` — they resolve immediately via symlinks.
+To test changes locally, edit skills in `.claude/skills/` then copy updated content to `bundles/` and `skills/`.

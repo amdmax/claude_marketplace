@@ -1,0 +1,24 @@
+# agent:backend-dev Configuration
+# Copy this file to config.yaml and fill in your project values.
+
+paths:
+  # Base directory for all agent coordination artifacts
+  # Override per-invocation with: /agent:backend-dev --workspace <path> "task"
+  workspace_dir: ".agile-dev-team/docs"
+
+  # Derived from workspace_dir at runtime:
+  #   active-story.json → workspace_dir/active-story.json
+
+commands:
+  test_integration: "npx jest --selectProjects integration --no-coverage"
+
+# File boundaries for backend implementation
+file_boundaries:
+  backend_dev:
+    writable:
+      - "infrastructure/**"
+      - "backend/**"
+      - "config.ts"
+
+required_skills:
+  - "/commit"
