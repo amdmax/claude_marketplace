@@ -1,0 +1,231 @@
+---
+name: cuda-remote-manager
+description: "Manage remote CUDA development machine (cuda-dev) with RTX 5090 GPU. Use when the user needs to: (1) Connect to or check status of the cuda-dev machine, (2) Start/stop/manage vLLM inference servers, (3) Check GPU status or CUDA environment, (4) Compile or run CUDA programs, (5) Manage LiteLLM proxy for AI coding assistants, (6) Shutdown/reboot the remote machine, or (7) Configure VS Code Remote SSH for CUDA development."
+---
+
+# CUDA Remote Manager
+
+Manage the remote CUDA development machine (cuda-dev) with RTX 5090 GPU for deep learning inference and CUDA programming.
+
+## Quick Reference
+
+**Connection**: `ssh cuda-dev` (alias for m@192.168.250.179)
+**GPU Check**: `bash scripts/check_cuda.sh`
+**Start vLLM**: `bash scripts/start_vllm.sh [MODEL] [MAX_LEN] [GPU_UTIL] [PORT]`
+**Power Management**: `bash scripts/manage_power.sh {shutdown|reboot|status}`
+
+## Machine Specifications
+
+See [references/machine_specs.md](references/machine_specs.md) for complete hardware specs, SSH config, and project directories.
+
+Key specs:
+- RTX 5090 (32GB VRAM, Blackwell architecture sm_120)
+- 96GB RAM, Debian OS
+- CUDA 13.1, Driver 580.82.07
+
+## Common Tasks
+
+### Check Machine Status
+
+Use the check script to see GPU status, CUDA toolkit, vLLM process, and disk space:
+
+```bash
+bash scripts/check_cuda.sh
+```
+
+Or manually:
+```bash
+ssh cuda-dev 'nvidia-smi'
+ssh cuda-dev 'ps aux | grep "[p]ython -m vllm"'
+```
+
+### Start vLLM Server
+
+Default (Qwen2.5-Coder-7B with 128K context):
+```bash
+bash scripts/start_vllm.sh
+```
+
+With custom parameters:
+```bash
+bash scripts/start_vllm.sh MODEL_NAME MAX_CONTEXT GPU_UTILIZATION PORT
+```
+
+Example - DeepSeek R1 with 32K context:
+```bash
+bash scripts/start_vllm.sh deepseek-ai/DeepSeek-R1-Distill-Qwen-32B 32768 0.85 8000
+```
+
+**Important**: Always use Flash Attention 2 for RTX 5090. The script handles this automatically.
+
+Monitor startup:
+```bash
+ssh cuda-dev 'tail -f ~/vllm-models/vllm-*.log'
+```
+
+### Stop vLLM Server
+
+```bash
+ssh cuda-dev 'pkill -f "python -m vllm"'
+```
+
+### Compile CUDA Programs
+
+Navigate to CUDA project on remote:
+```bash
+ssh cuda-dev 'cd ~/cuda-learning/01-hello-cuda && make clean && make'
+```
+
+Run compiled program:
+```bash
+ssh cuda-dev 'cd ~/cuda-learning/01-hello-cuda && ./hello_v2'
+```
+
+**Architecture flag**: Always use `-arch=sm_120` for RTX 5090 in Makefiles.
+
+### Power Management
+
+Check if machine is online:
+```bash
+bash scripts/manage_power.sh status
+```
+
+Shutdown for the night:
+```bash
+bash scripts/manage_power.sh shutdown
+```
+
+Reboot:
+```bash
+bash scripts/manage_power.sh reboot
+```
+
+## LiteLLM Proxy Setup
+
+LiteLLM runs locally and proxies to the remote vLLM server.
+
+### Start LiteLLM (Local Mac)
+
+```bash
+cd /Users/thesolutionarchitect/Documents/source/litellm
+source venv/bin/activate
+litellm --config cuda_vllm_config.yaml --port 4000
+```
+
+Or run in background:
+```bash
+nohup litellm --config cuda_vllm_config.yaml --port 4000 > litellm.log 2>&1 &
+```
+
+**Important**: Ensure `.env` file is renamed to `.env.backup` to avoid database errors.
+
+### Test LiteLLM
+
+```bash
+curl http://localhost:4000/v1/models -H "Authorization: Bearer sk-litellm-cuda"
+```
+
+### Update LiteLLM Config
+
+After changing vLLM model, update `/Users/thesolutionarchitect/Documents/source/litellm/cuda_vllm_config.yaml`:
+
+1. Update `model` field to match vLLM model
+2. Update `max_input_tokens` and `max_output_tokens` to match context window
+3. Restart LiteLLM: `pkill -f litellm && litellm --config cuda_vllm_config.yaml --port 4000`
+
+## VS Code Remote Development
+
+### Initial Setup
+
+1. Install extensions:
+   - Remote - SSH
+   - C/C++
+   - C/C++ Extension Pack
+   - Nsight Visual Studio Code Edition
+
+2. Grant Local Network permission (macOS):
+   - System Settings → Privacy & Security → Local Network
+   - Enable for Visual Studio Code
+
+3. Connect to cuda-dev:
+   - Cmd+Shift+P → "Remote-SSH: Connect to Host"
+   - Select `cuda-dev`
+
+4. Open workspace:
+   - File → Open Folder
+   - Navigate to: `/home/m/cuda-learning`
+
+### Workspace Configuration
+
+The workspace at `/home/m/cuda-learning/cuda-remote.code-workspace` is pre-configured with:
+- CUDA compiler path: `/usr/local/cuda-13.1/bin/nvcc`
+- CUDA includes: `/usr/local/cuda-13.1/include`
+- File associations for `.cu` and `.cuh`
+
+## Model Management
+
+See [references/vllm_models.md](references/vllm_models.md) for detailed model information, known issues, and troubleshooting.
+
+**Recommended Model**: Qwen/Qwen2.5-Coder-7B-Instruct (128K context)
+- Proven to work reliably on RTX 5090
+- Large context window for complex tasks
+- ~14GB VRAM usage
+
+**Known Issues**:
+- 14B+ models fail with negative KV cache on RTX 5090
+- Requires Flash Attention 2 (Flash Attention 3 incompatible with Blackwell)
+
+## Architecture Overview
+
+```
+┌─────────────┐         ┌──────────────┐         ┌─────────────┐         ┌──────────┐
+│ Kilo Code / │  HTTP   │  LiteLLM     │  HTTP   │   vLLM      │  CUDA   │ RTX 5090 │
+│  VS Code    │ ──────> │ (localhost:  │ ──────> │ (cuda-dev:  │ ──────> │  32GB    │
+│   (Local)   │         │    4000)     │         │    8000)    │         │  VRAM    │
+└─────────────┘         └──────────────┘         └─────────────┘         └──────────┘
+                             │                          │
+                             │                          │
+                        API Key:                   Model serving
+                     sk-litellm-cuda              (OpenAI-compatible)
+```
+
+## Troubleshooting
+
+### Cannot SSH to cuda-dev
+
+Check if machine is powered on:
+```bash
+ping 192.168.250.179
+```
+
+Verify SSH config at `~/.ssh/config` has the cuda-dev host entry.
+
+### vLLM Won't Start
+
+1. Check GPU memory: `ssh cuda-dev 'nvidia-smi'`
+2. Check logs: `ssh cuda-dev 'tail -100 ~/vllm-models/vllm-*.log'`
+3. Try lower GPU utilization: `bash scripts/start_vllm.sh MODEL 32768 0.75 8000`
+4. Verify Flash Attention 2 is set (script handles this)
+
+### LiteLLM Database Error
+
+Rename `.env` file:
+```bash
+cd /Users/thesolutionarchitect/Documents/source/litellm
+mv .env .env.backup
+```
+
+### VS Code Cannot Connect (macOS)
+
+Grant Local Network permission:
+1. System Settings → Privacy & Security → Local Network
+2. Find Visual Studio Code and enable it
+3. Restart VS Code
+
+### Model Download Slow/Fails
+
+Models download from HuggingFace on first use. Check internet connection on cuda-dev and disk space:
+```bash
+ssh cuda-dev 'df -h ~/vllm-models'
+ssh cuda-dev 'du -sh ~/.cache/huggingface/'
+```

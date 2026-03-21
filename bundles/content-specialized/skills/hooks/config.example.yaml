@@ -1,0 +1,56 @@
+# Claude Code Hooks Configuration - Example
+# Copy this to config.yaml and customize
+
+# Notification hooks
+notification:
+  enabled: true
+  types:
+    - permission_prompt
+    - idle_prompt
+
+# Stop hooks - validation before Claude stops
+stop_hooks:
+  enabled: true
+  run_tests: true
+  run_validation: true
+  test_command: "npm test"              # Or: "pytest", "cargo test"
+  validation_command: "npm run validate:all"  # Or: "ruff check ."
+  fail_on_test_error: false
+  fail_on_validation_error: true
+
+# PostToolUse hooks - auto-format after edits
+post_tool_use:
+  enabled: true
+  formatters:
+    prettier:
+      enabled: true
+      extensions: [js, ts, jsx, tsx, css, html, json, md]
+    black:
+      enabled: true                     # Python formatter
+      extensions: [py]
+    postcss:
+      enabled: false                    # CSS minification
+      files: [styles.css]
+      command: "npm run minify:css"
+
+# PreToolUse hooks - safety checks
+pre_tool_use:
+  enabled: true
+  safety_checks:
+    bash_safety:
+      enabled: true
+      blocked_patterns:
+        - "rm -rf /"
+        - "rm -rf ."
+        - "rm -rf ~"
+        - "dd if="
+        - "> /dev/sd"
+        - "mkfs."
+        - "fdisk"
+        - ":(){ :|:& };:"
+
+# Session loading
+session_load:
+  enabled: true
+  auto_load_active_story: true
+  auto_load_project_context: false
