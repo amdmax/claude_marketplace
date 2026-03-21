@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-21T02:31:01Z",
+  "generated_at": "2026-03-21T02:42:34Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -224,6 +224,16 @@
       ],
       "file_count": 1
     },
+    "gh:play-story": {
+      "type": "skill",
+      "path": "skills/gh:play-story/SKILL.md",
+      "description": "Put a story \"in play\" by fetching it from GitHub Projects, gathering NFRs, collecting context, and creating ADRs as needed. Invokable with /play-story.",
+      "hash": "sha256:eb124e36341aff4a035254cad702116daba1b8774e9268688a9aa683878cd62c",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
+    },
     "gh:pr": {
       "type": "skill",
       "path": "skills/gh:pr/SKILL.md",
@@ -269,16 +279,6 @@
       "path": "skills/performance-review/SKILL.md",
       "description": "Detect performance issues and inefficiencies",
       "hash": "sha256:99c952f127f713d64c5942db00362e4143b87eb71dba591518a92ddaac47882e",
-      "files": [
-        "SKILL.md"
-      ],
-      "file_count": 1
-    },
-    "play-story": {
-      "type": "skill",
-      "path": "skills/play-story/SKILL.md",
-      "description": "Put a story \"in play\" by fetching it from GitHub Projects, gathering NFRs, collecting context, and creating ADRs as needed. Invokable with /play-story.",
-      "hash": "sha256:eb124e36341aff4a035254cad702116daba1b8774e9268688a9aa683878cd62c",
       "files": [
         "SKILL.md"
       ],
