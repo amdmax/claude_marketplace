@@ -1,0 +1,28 @@
+# agent:pm Configuration
+# Copy this file to config.yaml and fill in your project values.
+
+project:
+  # Lowercase prefix used in branch names (e.g., "aigws" → feature/aigws-123-slug)
+  prefix_lower: "myapp"
+
+paths:
+  # Base directory for all agent coordination artifacts
+  # Override per-invocation with: /agent:pm --workspace <path> "task"
+  workspace_dir: ".agile-dev-team/docs"
+
+  # Derived from workspace_dir at runtime:
+  #   active-story.json → workspace_dir/active-story.json
+
+  # NFR registry (input file — not written by PM)
+  nfr_registry_file: ".claude/nfr-registry.json"
+  # Story workflow config
+  story_workflow_config: ".claude/story-workflow-config.json"
+
+commands:
+  # Full test suite command (used by PM for final verification)
+  test: "npm test"
+
+required_skills:
+  - "/fetch-story"
+  - "/check-story-quality"
+  - "/pr"
