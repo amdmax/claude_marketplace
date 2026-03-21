@@ -50,14 +50,18 @@ jobs:
         env:
           REGISTRY_PAT: ${{ secrets.REGISTRY_PAT }}
         run: |
+          PAYLOAD=$(jq -n \
+            --arg ref "${{ steps.commit-manifest.outputs.manifest_sha }}" \
+            --slurpfile manifest .claude-plugin/published-artifacts-manifest.json \
+            '{event_type: "marketplace-updated", client_payload: {manifest_ref: $ref, manifest: $manifest[0]}}')
           curl -fsSL \
             -X POST \
             -H "Accept: application/vnd.github+json" \
             -H "Authorization: Bearer $REGISTRY_PAT" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             https://api.github.com/repos/amdmax/agentic_skills_registry/dispatches \
-            -d "{\"event_type\":\"marketplace-updated\",\"client_payload\":{\"manifest_ref\":\"${{ steps.commit-manifest.outputs.manifest_sha }}\"}}"
-          echo "Dispatched marketplace-updated event to agentic_skills_registry"
+            -d "$PAYLOAD"
+          echo "Dispatched marketplace-updated event with inline manifest to agentic_skills_registry"
 
       - name: Upload manifest as workflow artifact
         uses: actions/upload-artifact@v4
