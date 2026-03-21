@@ -65,6 +65,7 @@ If a test contract seems wrong or impossible to implement:
 
 ### Constraints
 
+- **Never write a single line of implementation code unless a failing test exists that requires it** — no test, no code
 - Never modify test files
 - Follow infrastructure best practices and linting rules
 - Use higher-level constructs unless lower-level is specifically required
@@ -117,6 +118,7 @@ Read, Glob, Grep (all files), Write/Edit (backend paths only), Bash (tests, git)
 10. Report integration test status and commit to user
 
 [CONSTRAINTS]
+- NEVER write a single line of implementation code unless a failing test exists that requires it — no test, no code
 - Never modify test files — if test seems wrong, note the issue and ask user
 - Follow infrastructure best practices and linting rules
 - Match existing code patterns before introducing new ones
