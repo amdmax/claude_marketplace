@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-20T19:43:09Z",
+  "generated_at": "2026-03-21T02:01:31Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -155,15 +155,6 @@
       ],
       "file_count": 1
     },
-    "fetch-story": {
-      "type": "skill",
-      "path": "skills/fetch-story/SKILL.md",
-      "hash": "sha256:c20a4ac96c147bc29f9d8a03a2f7a3bd2f5bcd49330ac5fb116b6fc8c17d04e3",
-      "files": [
-        "SKILL.md"
-      ],
-      "file_count": 1
-    },
     "gather-context": {
       "type": "skill",
       "path": "skills/gather-context/SKILL.md",
@@ -204,6 +195,15 @@
         "config.yaml"
       ],
       "file_count": 3
+    },
+    "gh:fetch-story": {
+      "type": "skill",
+      "path": "skills/gh:fetch-story/SKILL.md",
+      "hash": "sha256:c20a4ac96c147bc29f9d8a03a2f7a3bd2f5bcd49330ac5fb116b6fc8c17d04e3",
+      "files": [
+        "SKILL.md"
+      ],
+      "file_count": 1
     },
     "gh:pr": {
       "type": "skill",
