@@ -55,6 +55,32 @@ def _sha256(canonical: str) -> str:
     return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+def _extract_description(entry_path: Path, entry_type: str) -> str:
+    """Extract description from YAML frontmatter of the primary file."""
+    if entry_type == "skill":
+        primary = entry_path / "SKILL.md"
+    else:
+        primary = entry_path
+    if not primary.is_file():
+        return ""
+    try:
+        content = primary.read_text(encoding="utf-8")
+    except Exception:
+        return ""
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    end = next((i for i, l in enumerate(lines[1:], 1) if l.strip() == "---"), None)
+    if end is None:
+        return ""
+    import yaml as _yaml
+    try:
+        data = _yaml.safe_load("\n".join(lines[1:end]))
+        return data.get("description", "") if isinstance(data, dict) else ""
+    except Exception:
+        return ""
+
+
 def hash_artifact(entry_path: Path, entry_type: str) -> dict:
     if entry_type == "skill":
         # Compute relative path once per file (used for skip check, sort key, and content)
@@ -136,6 +162,7 @@ def generate_manifest(output_path: Path) -> dict:
         artifacts[name] = {
             "type": artifact_type,
             "path": canonical_path,
+            "description": _extract_description(entry_path, artifact_type),
             **result,
         }
         print(f"  {artifact_type:8s}  {name}  ({result['file_count']} file(s))")
