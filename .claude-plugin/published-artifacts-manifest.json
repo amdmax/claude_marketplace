@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-21T02:42:34Z",
+  "generated_at": "2026-03-21T03:04:39Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -179,18 +179,6 @@
       ],
       "file_count": 1
     },
-    "gh-actions": {
-      "type": "skill",
-      "path": "skills/gh-actions/SKILL.md",
-      "description": "",
-      "hash": "sha256:4cee960c3a7e093e5af2d7e0258a919bf775112e373be5d62c8e4ff06f471454",
-      "files": [
-        "SKILL.md",
-        "config.yaml",
-        "validate-action.ts"
-      ],
-      "file_count": 3
-    },
     "gh-edit-workflow": {
       "type": "skill",
       "path": "skills/gh-edit-workflow/SKILL.md",
@@ -201,6 +189,18 @@
         "validate-workflow-output.sh"
       ],
       "file_count": 2
+    },
+    "gh:actions": {
+      "type": "skill",
+      "path": "skills/gh:actions/SKILL.md",
+      "description": "",
+      "hash": "sha256:4cee960c3a7e093e5af2d7e0258a919bf775112e373be5d62c8e4ff06f471454",
+      "files": [
+        "SKILL.md",
+        "config.yaml",
+        "validate-action.ts"
+      ],
+      "file_count": 3
     },
     "gh:commit": {
       "type": "skill",
