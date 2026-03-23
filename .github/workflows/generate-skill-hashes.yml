@@ -5,8 +5,10 @@ on:
     branches:
       - main
     paths:
-      - '.claude/skills/**'
-      - 'scripts/hash_skills.py'
+      - 'skills/**'
+      - 'commands/**'
+      - 'agents/**'
+      - 'scripts/hash_published_artifacts.py'
   workflow_dispatch:
 
 permissions:
@@ -14,7 +16,7 @@ permissions:
 
 jobs:
   generate-manifest:
-    name: Hash skills and publish manifest
+    name: Hash published artifacts and sync registry
     runs-on: ubuntu-latest
 
     steps:
@@ -26,21 +28,56 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Generate skills manifest
-        run: python scripts/hash_skills.py
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate artifacts manifest
+        run: python scripts/hash_published_artifacts.py
+
+      - name: Commit manifest to main
+        id: commit-manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git pull origin main
+          git add .claude-plugin/published-artifacts-manifest.json
+          if git diff --cached --exit-code; then
+            echo "No changes to manifest — skipping commit"
+          else
+            git commit -m "chore: regenerate published-artifacts-manifest.json [skip ci]"
+            git push origin main
+          fi
+          echo "manifest_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Dispatch sync to agentic_skills_registry
+        env:
+          REGISTRY_PAT: ${{ secrets.REGISTRY_PAT }}
+        run: |
+          PAYLOAD=$(jq -n \
+            --arg ref "${{ steps.commit-manifest.outputs.manifest_sha }}" \
+            --slurpfile manifest .claude-plugin/published-artifacts-manifest.json \
+            '{event_type: "marketplace-updated", client_payload: {manifest_ref: $ref, manifest: $manifest[0]}}')
+          curl -fsSL \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $REGISTRY_PAT" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/amdmax/agentic_skills_registry/dispatches \
+            -d "$PAYLOAD"
+          echo "Dispatched marketplace-updated event with inline manifest to agentic_skills_registry"
 
       - name: Upload manifest as workflow artifact
         uses: actions/upload-artifact@v4
         with:
-          name: skills-manifest
-          path: .claude-plugin/skills-manifest.json
+          name: published-artifacts-manifest
+          path: .claude-plugin/published-artifacts-manifest.json
           retention-days: 90
 
       - name: Publish manifest to GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          MANIFEST=".claude-plugin/skills-manifest.json"
+          MANIFEST=".claude-plugin/published-artifacts-manifest.json"
 
           # Find the latest release tag; create one if none exists
           LATEST_TAG=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' 2>/dev/null || true)
@@ -48,17 +85,17 @@ jobs:
           if [[ -z "$LATEST_TAG" ]]; then
             echo "No releases found — creating 'latest-manifest' release"
             gh release create latest-manifest \
-              --title "Latest Skill Manifest" \
-              --notes "Auto-generated release for skills-manifest.json asset. Do not delete."
+              --title "Latest Artifacts Manifest" \
+              --notes "Auto-generated release for published-artifacts-manifest.json asset. Do not delete."
             LATEST_TAG="latest-manifest"
           fi
 
           echo "Uploading manifest to release: $LATEST_TAG"
           gh release upload "$LATEST_TAG" "$MANIFEST" --clobber
 
-          echo "## Skill Manifest Published" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Artifacts Manifest Published" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Release tag**: \`$LATEST_TAG\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Download URL**: https://github.com/${{ github.repository }}/releases/download/$LATEST_TAG/skills-manifest.json" >> "$GITHUB_STEP_SUMMARY"
-          echo "- **Skills hashed**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(len(d['skills']))")" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Download URL**: https://github.com/${{ github.repository }}/releases/download/$LATEST_TAG/published-artifacts-manifest.json" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Artifacts hashed**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(len(d['artifacts']))")" >> "$GITHUB_STEP_SUMMARY"
           echo "- **Generated at**: $(python -c "import json; d=json.load(open('$MANIFEST')); print(d['generated_at'])")" >> "$GITHUB_STEP_SUMMARY"
