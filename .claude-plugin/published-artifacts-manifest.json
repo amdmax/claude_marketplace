@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-21T09:07:48Z",
+  "generated_at": "2026-03-25T14:57:55Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -705,6 +705,18 @@
         "config.example.yaml"
       ],
       "file_count": 2
+    },
+    "test-architect": {
+      "type": "skill",
+      "path": "skills/test-architect/SKILL.md",
+      "description": "",
+      "hash": "sha256:729e98f7b5ebb0d2537668bf4cbeacaee355a1cd0d850a122cf25837f15afd25",
+      "files": [
+        "SKILL.md",
+        "implement-tests.md",
+        "test-plan.md"
+      ],
+      "file_count": 3
     },
     "ux-professional": {
       "type": "skill",

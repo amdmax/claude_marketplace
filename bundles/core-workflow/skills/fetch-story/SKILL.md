@@ -16,30 +16,28 @@ This skill fetches the highest-priority "Ready" story from the configured GitHub
 
 ## Configuration
 
-This skill requires configuration in `.claude/story-workflow-config.json`:
+This skill requires configuration in `.agile-dev-team/story-workflow-config.json`:
 
 ```json
 {
-  "storyWorkflow": {
-    "projectId": "{{GITHUB_PROJECT_ID}}",
-    "fieldIds": {
-      "status": "{{FIELD_ID_STATUS}}",
-      "priority": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB4",
-      "size": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB8",
-      "itemType": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOqE",
-      "techSpecStatus": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOtI"
+  "projectId": "{{GITHUB_PROJECT_ID}}",
+  "fieldIds": {
+    "status": "{{FIELD_ID_STATUS}}",
+    "priority": "{{FIELD_ID_PRIORITY}}",
+    "size": "{{FIELD_ID_SIZE}}",
+    "itemType": "{{FIELD_ID_ITEM_TYPE}}",
+    "techSpecStatus": "{{FIELD_ID_TECH_SPEC_STATUS}}"
+  },
+  "optionIds": {
+    "status": {
+      "ready": "{{OPTION_ID_READY}}",
+      "inProgress": "{{OPTION_ID_IN_PROGRESS}}",
+      "backlog": "{{OPTION_ID_BACKLOG}}"
     },
-    "optionIds": {
-      "status": {
-        "ready": "61e4505c",
-        "inProgress": "47fc9ee4",
-        "backlog": "f75ad846"
-      },
-      "priority": {
-        "p0": "79628723",
-        "p1": "0a877460",
-        "p2": "da944a9c"
-      }
+    "priority": {
+      "p0": "{{OPTION_ID_P0}}",
+      "p1": "{{OPTION_ID_P1}}",
+      "p2": "da944a9c"
     }
   }
 }
@@ -68,17 +66,17 @@ This skill uses JSON Schema validation for data integrity:
 
 ```bash
 # Check settings file exists
-if [ ! -f "$CLAUDE_PROJECT_DIR/.claude/story-workflow-config.json" ]; then
+if [ ! -f "$CLAUDE_PROJECT_DIR/.agile-dev-team/story-workflow-config.json" ]; then
   echo "❌ Configuration missing"
-  echo "   Expected: $CLAUDE_PROJECT_DIR/.claude/story-workflow-config.json"
-  echo "   Please create .claude/story-workflow-config.json with storyWorkflow configuration"
+  echo "   Expected: $CLAUDE_PROJECT_DIR/.agile-dev-team/story-workflow-config.json"
+  echo "   Please create .agile-dev-team/story-workflow-config.json with projectId, fieldIds, optionIds"
   exit 1
 fi
 ```
 
 **Read configuration:**
-- Load `.claude/story-workflow-config.json`
-- Extract `storyWorkflow.projectId`, `fieldIds`, and `optionIds`
+- Load `.agile-dev-team/story-workflow-config.json`
+- Extract `projectId`, `fieldIds`, and `optionIds` (keys are at root — no wrapper)
 - Validate all required fields are present
 
 ### Step 2: Authenticate with GitHub
@@ -112,7 +110,7 @@ fi
 query GetReadyStories($projectId: ID!) {
   node(id: $projectId) {
     ... on ProjectV2 {
-      items(first: 20) {
+      items(first: 100) {
         nodes {
           id
           content {
@@ -163,7 +161,7 @@ gh api graphql -F query=@query.graphql -f projectId="$PROJECT_ID" > /tmp/project
 ```
 
 **Query explanation:**
-- `items(first: 20)`: Fetch up to 20 project items (reduced from 50 - most projects have <10 Ready stories)
+- `items(first: 100)`: Fetch up to 100 project items — projects can have many backlog items, 20 is insufficient
 - `content ... on Issue`: Get issue metadata (number, title, url, labels) **without body field**
 - `fieldValues`: Get all custom field values (Status, Priority, Size, etc.)
 - `optionId`: The ID used to identify field option values (e.g., "Ready", "P0")
@@ -359,10 +357,10 @@ gh api graphql -f query='...' \
 ```
 
 **Parameters:**
-- `projectId`: From configuration (`storyWorkflow.projectId`)
+- `projectId`: From configuration (`.projectId`)
 - `itemId`: Story's project item ID (`projectItemId` from parsed data)
-- `fieldId`: Status field ID (`storyWorkflow.fieldIds.status`)
-- `optionId`: "In Progress" option ID (`storyWorkflow.optionIds.status.inProgress`)
+- `fieldId`: Status field ID (`.fieldIds.status`)
+- `optionId`: "In Progress" option ID (`.optionIds.status.inProgress`)
 
 ### Step 8: Report Success
 
@@ -392,7 +390,7 @@ Next steps:
 
 **Detection:**
 ```bash
-if [ ! -f "$CLAUDE_PROJECT_DIR/.claude/story-workflow-config.json" ]; then
+if [ ! -f "$CLAUDE_PROJECT_DIR/.agile-dev-team/story-workflow-config.json" ]; then
   # Configuration file doesn't exist
 fi
 ```
@@ -401,42 +399,38 @@ fi
 ```
 ❌ Configuration file not found
 
-Please create .claude/story-workflow-config.json with the following structure:
+Please create .agile-dev-team/story-workflow-config.json with the following structure:
 
 {
-  "storyWorkflow": {
-    "projectId": "PVT_...",
-    "fieldIds": { ... },
-    "optionIds": { ... }
-  }
+  "projectId": "PVT_...",
+  "fieldIds": { ... },
+  "optionIds": { ... }
 }
 
 See the skill documentation for the complete configuration schema.
 ```
 
-### Missing storyWorkflow Configuration
+### Missing Required Config Fields
 
 **Detection:**
 ```javascript
 const config = JSON.parse(settingsContent);
-if (!config.storyWorkflow) {
-  // Missing storyWorkflow key
+if (!config.projectId || !config.fieldIds || !config.optionIds) {
+  // Missing required top-level keys
 }
 ```
 
 **Error message:**
 ```
-❌ storyWorkflow configuration missing
+❌ Configuration incomplete
 
-.claude/story-workflow-config.json exists but doesn't contain the storyWorkflow section.
+.agile-dev-team/story-workflow-config.json is missing required fields.
 
-Please add:
+Expected structure:
 {
-  "storyWorkflow": {
-    "projectId": "{{GITHUB_PROJECT_ID}}",
-    "fieldIds": { ... },
-    "optionIds": { ... }
-  }
+  "projectId": "{{GITHUB_PROJECT_ID}}",
+  "fieldIds": { ... },
+  "optionIds": { ... }
 }
 ```
 
@@ -493,20 +487,29 @@ if (readyStories.length === 0) {
 }
 ```
 
-**Error message:**
+**Recovery flow — show top Backlog items:**
+
+Instead of just reporting failure, query the top 5 Backlog items by priority and present them:
+
 ```
 ℹ️  No Ready stories found
 
-There are no stories with Status='Ready' in the project.
+Top Backlog items (by priority):
+  [1] #130 [P0] Epic 2: Referral Tracking & Analytics
+  [2] #114 [P1] Epic 0: Admin & Operations Tools
+  [3] #122 [P1] Epic 1: Payment System Integration
+  [4] #137 [P2] Epic 3: Tiered Pricing & Access Levels
+  [5] #148 [P2] Epic 4: Google OAuth Integration
 
-Suggestions:
-1. Create new stories in GitHub Issues
-2. Add them to the project
-3. Set their Status to 'Ready'
-4. Run /fetch-story again
+Options:
+  Enter a number to promote that story to Ready and fetch it
+  [n] Create a new story instead
+  [q] Quit
 
-View project: https://github.com/orgs/aigensa/projects/...
+Choice:
 ```
+
+If user picks a number, update that story's status to "Ready" then proceed with the normal fetch flow (which will select it).
 
 ### Active Story Already Exists
 
@@ -514,11 +517,26 @@ View project: https://github.com/orgs/aigensa/projects/...
 ```bash
 STORY_FILE="$CLAUDE_PROJECT_DIR/.claude/active-story.json"
 if [ -f "$STORY_FILE" ]; then
-  # Active story file exists
+  # Active story file exists — check if the issue is still open
 fi
 ```
 
-**Warning message:**
+**First: check if the issue is closed (stale story)**
+
+Before prompting, verify the issue state via GitHub:
+
+```bash
+ISSUE_NUMBER=$(jq -r '.issueNumber' "$STORY_FILE")
+ISSUE_STATE=$(gh issue view "$ISSUE_NUMBER" --json state --jq '.state')
+
+if [ "$ISSUE_STATE" = "CLOSED" ]; then
+  echo "ℹ️  Active story #$ISSUE_NUMBER is already closed. Clearing stale story."
+  rm "$STORY_FILE"
+  # Continue with fetch — no prompt needed
+fi
+```
+
+**Only if issue is still open — warn and prompt:**
 ```
 ⚠️  Active story already exists
 
@@ -538,7 +556,6 @@ Choice:
 
 **If user selects [3]:**
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.claude/active-story.json"
 cat "$STORY_FILE" | jq '.'
 # Then re-prompt with options [1] and [2]
 ```
@@ -570,60 +587,66 @@ To update status manually:
 
 ## Implementation Details
 
-### Bash Implementation
+### Implementation Notes
+
+**⚠️ Avoid inline jq with `//` alternative operator** — it causes shell syntax errors inside single-quoted strings. Instead:
+1. Write the GraphQL response to `/tmp/project-data.json` first
+2. Process it with `python3 -c` (available on macOS/Linux without extra deps)
 
 ```bash
-#!/bin/bash
+# Step 1: Fetch to file (avoids jq quoting issues)
+gh api graphql -f query='...' -f projectId="$PROJECT_ID" > /tmp/project-data.json
 
-# Load configuration
-CONFIG_FILE="$CLAUDE_PROJECT_DIR/.claude/story-workflow-config.json"
+# Step 2: Process with python3
+python3 -c "
+import json, sys
+data = json.load(open('/tmp/project-data.json'))
+items = data['data']['node']['items']['nodes']
+STATUS_FIELD = '$STATUS_FIELD_ID'
+PRIORITY_FIELD = '$PRIORITY_FIELD_ID'
+READY_OPT = '$READY_OPTION_ID'
+PRIORITY_ORDER = {'$P0_OPTION_ID': 0, '$P1_OPTION_ID': 1, '$P2_OPTION_ID': 2}
 
-if [ ! -f "$CONFIG_FILE" ]; then
-  echo "❌ Configuration file not found"
-  echo "   Expected: $CLAUDE_PROJECT_DIR/.claude/story-workflow-config.json"
-  exit 1
-fi
+ready = []
+for item in items:
+    if not item.get('content') or not item['content'].get('number'):
+        continue
+    fvs = item['fieldValues']['nodes']
+    status = next((fv for fv in fvs if fv.get('field', {}).get('id') == STATUS_FIELD), None)
+    if not status or status.get('optionId') != READY_OPT:
+        continue
+    pf = next((fv for fv in fvs if fv.get('field', {}).get('id') == PRIORITY_FIELD), None)
+    ready.append({
+        'number': item['content']['number'],
+        'title': item['content']['title'],
+        'id': item['content']['id'],
+        'projectItemId': item['id'],
+        'priority': pf.get('name', 'None') if pf else 'None',
+        'priorityOrder': PRIORITY_ORDER.get(pf.get('optionId', '') if pf else '', 99)
+    })
 
-# Extract configuration using jq
-PROJECT_ID=$(jq -r '.storyWorkflow.projectId' "$CONFIG_FILE")
-STATUS_FIELD_ID=$(jq -r '.storyWorkflow.fieldIds.status' "$CONFIG_FILE")
-PRIORITY_FIELD_ID=$(jq -r '.storyWorkflow.fieldIds.priority' "$CONFIG_FILE")
-SIZE_FIELD_ID=$(jq -r '.storyWorkflow.fieldIds.size' "$CONFIG_FILE")
+ready.sort(key=lambda x: x['priorityOrder'])
+if ready:
+    import json
+    print(json.dumps(ready[0]))
+else:
+    print('NO_READY_STORIES')
+"
+```
 
-READY_OPTION_ID=$(jq -r '.storyWorkflow.optionIds.status.ready' "$CONFIG_FILE")
-IN_PROGRESS_OPTION_ID=$(jq -r '.storyWorkflow.optionIds.status.inProgress' "$CONFIG_FILE")
+**Config loading:**
 
-P0_OPTION_ID=$(jq -r '.storyWorkflow.optionIds.priority.p0' "$CONFIG_FILE")
-P1_OPTION_ID=$(jq -r '.storyWorkflow.optionIds.priority.p1' "$CONFIG_FILE")
-P2_OPTION_ID=$(jq -r '.storyWorkflow.optionIds.priority.p2' "$CONFIG_FILE")
+```bash
+CONFIG_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/story-workflow-config.json"
 
-# Authenticate
-GITHUB_TOKEN=$(gh auth token)
-if [ -z "$GITHUB_TOKEN" ]; then
-  echo "❌ GitHub authentication failed"
-  exit 1
-fi
-
-# Query GitHub Projects
-QUERY='query GetReadyStories($projectId: ID!) { ... }'
-
-RESULT=$(gh api graphql -f query="$QUERY" -f projectId="$PROJECT_ID" 2>&1)
-if [ $? -ne 0 ]; then
-  echo "❌ Failed to query GitHub Projects"
-  echo "$RESULT"
-  exit 1
-fi
-
-# Parse and filter stories (use jq)
-# Filter for Status='Ready', sort by Priority, select first
-
-# Extract story data
-# Write to .claude/active-story.json
-
-# Update GitHub status
-# Execute mutation
-
-echo "✓ Story Fetched: #$ISSUE_NUMBER"
+PROJECT_ID=$(jq -r '.projectId' "$CONFIG_FILE")
+STATUS_FIELD_ID=$(jq -r '.fieldIds.status' "$CONFIG_FILE")
+PRIORITY_FIELD_ID=$(jq -r '.fieldIds.priority' "$CONFIG_FILE")
+READY_OPTION_ID=$(jq -r '.optionIds.status.ready' "$CONFIG_FILE")
+IN_PROGRESS_OPTION_ID=$(jq -r '.optionIds.status.inProgress' "$CONFIG_FILE")
+P0_OPTION_ID=$(jq -r '.optionIds.priority.p0' "$CONFIG_FILE")
+P1_OPTION_ID=$(jq -r '.optionIds.priority.p1' "$CONFIG_FILE")
+P2_OPTION_ID=$(jq -r '.optionIds.priority.p2' "$CONFIG_FILE")
 ```
 
 ### Alternative: Node.js/TypeScript Implementation
@@ -777,7 +800,7 @@ gh api graphql -f query='query($projectId: ID!) {
   }
 }' -f projectId="{{GITHUB_PROJECT_ID}}"
 ```
-2. Update `.claude/story-workflow-config.json` with correct IDs
+2. Update `.agile-dev-team/story-workflow-config.json` with correct IDs
 
 ### Issue: "Story has no priority"
 
