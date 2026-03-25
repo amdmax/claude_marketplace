@@ -123,7 +123,7 @@ If MAX_ITER exceeded without green:
    All checks passed after N iteration(s).
 ```
 
-If `behavior.auto_finalize_story: true` in config.yaml, invoke `/finalize-story`.
+Invoke `/finalize-story <prUrl>` to close the loop: update the issue body, add PR cross-reference, apply labels, assign, and add to the project board.
 
 ---
 
@@ -219,6 +219,6 @@ No manual configuration needed — this is handled by `/commit`'s PR-based group
 
 - **`/commit`** — invoked in Phase 2 and after each fix in Phase 4
 - **`/gh:pr`** — invoked in Phase 3
-- **`/finalize-story`** — optional post-green cleanup (config-driven)
+- **`/finalize-story`** — always invoked post-green to close the issue loop
 - **`gh pr checks`** — native gh CLI for polling CI status
 - **`gh run view --log-failed`** — native gh CLI for fetching failure logs

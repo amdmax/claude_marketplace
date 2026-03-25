@@ -30,8 +30,9 @@ git add .
 3. Checks for existing PR → exits if open, creates new branch if merged/closed
 4. Gets active story or creates issue from commits
 5. Generates PR title and body from issue
-6. Creates pull request with proper formatting
-7. Polls GitHub mergeability → auto-resolves conflicts if needed, pushes clean branch
+6. Collects metadata: assignee, labels (inferred from domains), project
+7. Creates pull request with all metadata set at creation time
+8. Polls GitHub mergeability → auto-resolves conflicts if needed, pushes clean branch
 
 ## Core Workflow
 
@@ -303,16 +304,74 @@ EOF
 - No verbose test plan (CI enforces this)
 - Story alignment warning included only when gaps are detected
 
-### Step 7: Create Pull Request
+### Step 7: Collect PR Metadata
 
-Creates the PR and displays confirmation:
+Before creating the PR, gather all available context to enrich the PR fields:
 
 ```bash
+# Assignee — always self
+PR_ASSIGNEE="@me"
+
+# Labels — infer from changed domains (create labels if they don't exist)
+PR_LABELS=""
+if echo "$CHANGED_FILES" | grep -q '^content/'; then
+  gh label create "course materials" --color "#0075ca" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}course materials,"
+fi
+if echo "$CHANGED_FILES" | grep -q '^infrastructure/'; then
+  gh label create "infrastructure" --color "#e4e669" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}infrastructure,"
+fi
+if echo "$CHANGED_FILES" | grep -q '^lambda/'; then
+  gh label create "lambda" --color "#d93f0b" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}lambda,"
+fi
+if echo "$CHANGED_FILES" | grep -q '^src/'; then
+  gh label create "platform" --color "#0052cc" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}platform,"
+fi
+if echo "$CHANGED_FILES" | grep -q '^\\.github/'; then
+  gh label create "ci/cd" --color "#bfd4f2" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}ci/cd,"
+fi
+if echo "$CHANGED_FILES" | grep -q '^docs/'; then
+  gh label create "documentation" --color "#0075ca" --force 2>/dev/null
+  PR_LABELS="${PR_LABELS}documentation,"
+fi
+# Trim trailing comma
+PR_LABELS="${PR_LABELS%,}"
+
+# Project — default aigensa project #1
+PR_PROJECT="aigensa/1"
+
+echo "✓ Metadata collected:"
+echo "  Assignee: $PR_ASSIGNEE"
+echo "  Labels:   ${PR_LABELS:-none}"
+echo "  Project:  $PR_PROJECT"
+```
+
+### Step 8: Create Pull Request
+
+Build the `gh pr create` command with all available metadata:
+
+```bash
+# Assemble flags dynamically
+LABEL_FLAGS=""
+if [ -n "$PR_LABELS" ]; then
+  IFS=',' read -ra LABEL_ARRAY <<< "$PR_LABELS"
+  for LABEL in "${LABEL_ARRAY[@]}"; do
+    LABEL_FLAGS="$LABEL_FLAGS --label \"$LABEL\""
+  done
+fi
+
 # Create PR using gh CLI
-PR_URL=$(gh pr create \
+PR_URL=$(eval gh pr create \
   --title "$PR_TITLE" \
   --body "$PR_BODY" \
-  --base master)
+  --base master \
+  --assignee "$PR_ASSIGNEE" \
+  --project "$PR_PROJECT" \
+  $LABEL_FLAGS)
 
 if [ $? -ne 0 ] || [ -z "$PR_URL" ]; then
   echo "❌ Failed to create pull request"
@@ -327,26 +386,29 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "✓ Pull Request Created: #$PR_NUMBER"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
-echo "**URL:** $PR_URL"
-echo "**Story:** $ISSUE_TITLE (#$ISSUE_NUMBER)"
-echo "**Branch:** $CURRENT_BRANCH"
-echo "**Commits:** $COMMITS_AHEAD ahead of master"
-echo ""
-echo "Next steps:"
-echo "  • Review PR in GitHub"
-echo "  • Wait for CI/CD validation"
-echo "  • Request reviews if needed"
+echo "**URL:**      $PR_URL"
+echo "**Story:**    $ISSUE_TITLE (#$ISSUE_NUMBER)"
+echo "**Branch:**   $CURRENT_BRANCH"
+echo "**Commits:**  $COMMITS_AHEAD ahead of master"
+echo "**Assignee:** $PR_ASSIGNEE"
+echo "**Labels:**   ${PR_LABELS:-none}"
+echo "**Project:**  $PR_PROJECT"
 echo ""
 ```
+
+**What gets set at creation time:**
+- `--assignee "@me"` — always self-assigned
+- `--label` — one or more labels inferred from changed file paths; labels auto-created if missing
+- `--project` — added to project board immediately (default: `aigensa/1`)
+- `Closes #N` in body — GitHub auto-links the issue
 
 **Output includes:**
 - PR number and URL
 - Linked issue information
-- Branch name
-- Commit count
-- Next steps guidance
+- Branch name, commit count
+- Assignee, labels, project confirmation
 
-### Step 8: Resolve Merge Conflicts Automatically
+### Step 9: Resolve Merge Conflicts Automatically
 
 After PR creation, poll GitHub mergeability and resolve conflicts if detected:
 

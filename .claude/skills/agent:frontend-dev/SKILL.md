@@ -77,6 +77,7 @@ If a test contract seems wrong or impossible to implement:
 
 ### Constraints
 
+- **Never write a single line of implementation code unless a failing test exists that requires it** — no test, no code
 - Never modify test files
 - Follow existing CSS architecture patterns
 - Preserve existing DOM structure — add IDs/classes, don't restructure
@@ -131,6 +132,7 @@ Read, Glob, Grep (all files), Write/Edit (frontend paths only), Bash (tests, bui
 11. Report unit + e2e test status and commit to user
 
 [CONSTRAINTS]
+- NEVER write a single line of implementation code unless a failing test exists that requires it — no test, no code
 - Never modify test files — if test seems wrong, note the issue and ask user
 - Follow existing CSS architecture patterns
 - Preserve existing DOM structure — add IDs/classes, don't restructure
