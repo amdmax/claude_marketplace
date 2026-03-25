@@ -1,6 +1,6 @@
 ---
 name: test-architect:test-plan
-description: Generate a structured per-story YAML test plan from the active story's implementation brief. Output path is .agile-dev-team/testing/{story_id}/test-plan.yaml. Clusters tests by level (unit, integration, api, ui, e2e) with Given/When/Then cases. All entries start with status: red.
+description: Generate a structured per-story YAML test plan from the active story's implementation brief. Output path is .agile-dev-team/testing/{story_id}/test-plan.yaml. Clusters tests by level (unit, integration, api, ui, e2e). Each entry is one atomic test with a single scenario sentence. All entries start with status: red.
 ---
 
 # test-plan
@@ -31,63 +31,47 @@ test_plan:
         description: "what behavior is tested"
         file: "tests/unit/<feature>.test.ts"
         subject: "FunctionName or module"
-        cases:
-          - scenario: "happy path"
-            given: "..."
-            when: "..."
-            then: "..."
-          - scenario: "error path"
-            given: "..."
-            when: "..."
-            then: "..."
+        scenario: "given ..., when ..., then ..."
+        status: red
+      - id: "UT-002"
+        description: "what behavior is tested"
+        file: "tests/unit/<feature>.test.ts"
+        subject: "FunctionName or module"
+        scenario: "given ..., when ..., then ..."
         status: red
     integration:
       - id: "IT-001"
         description: "what behavior is tested"
         file: "tests/integration/<feature>.test.ts"
         subject: "FunctionName or module"
-        cases:
-          - scenario: "happy path"
-            given: "..."
-            when: "..."
-            then: "..."
+        scenario: "given ..., when ..., then ..."
         status: red
     api:
       - id: "API-001"
         description: "what endpoint behavior is tested"
         file: "tests/integration/<endpoint>.test.ts"
         subject: "HTTP method + path"
-        cases:
-          - scenario: "success response"
-            given: "..."
-            when: "..."
-            then: "..."
-          - scenario: "error response"
-            given: "..."
-            when: "..."
-            then: "..."
+        scenario: "given ..., when ..., then ..."
+        status: red
+      - id: "API-002"
+        description: "what endpoint behavior is tested"
+        file: "tests/integration/<endpoint>.test.ts"
+        subject: "HTTP method + path"
+        scenario: "given ..., when ..., then ..."
         status: red
     ui:
       - id: "UI-001"
         description: "what component behavior is tested"
         file: "tests/unit/<component>.test.ts"
         subject: "ComponentName"
-        cases:
-          - scenario: "renders correctly"
-            given: "..."
-            when: "..."
-            then: "..."
+        scenario: "given ..., when ..., then ..."
         status: red
     e2e:
       - id: "E2E-001"
         description: "what user journey is tested"
         file: "tests/e2e/<journey>.test.ts"
         subject: "user flow description"
-        cases:
-          - scenario: "complete flow"
-            given: "..."
-            when: "..."
-            then: "..."
+        scenario: "given ..., when ..., then ..."
         status: red
 ```
 
@@ -101,7 +85,7 @@ test_plan:
    - API → `API-NNN`
    - UI → `UI-NNN`
    - E2E → `E2E-NNN`
-4. **Every test case must follow Given/When/Then format**
+4. **Each entry is one atomic test** — one `scenario` field per entry, no nested `cases`. The `scenario` value is a single sentence: `"given <precondition>, when <action>, then <outcome>"`. This ensures a 1:1 mapping between plan entries and `test()` blocks in `implement-tests`.
 5. **File paths must match `jest.config.ts` `testMatch` globs:**
    - `unit` → `tests/unit/**/*.test.ts`
    - `integration` → `tests/integration/**/*.test.ts`
