@@ -3,7 +3,15 @@ name: github:story-create
 description: "Quick GitHub issue creation for commit workflow. Creates minimal issues with project prefix and stores in .claude/active-story.json. Different from /fetch-story (planned work from Projects)."
 author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com
+hooks:
+  PreToolUse:
+    matcher: "Skill"
+    command: |
+      npx --yes tsx "$(dirname "$0")/preamble.ts"
 ---
+
+<!-- {{PREAMBLE}} — fulfilled by hooks.PreToolUse → preamble.ts at invocation time -->
+> Pre-flight checks were injected before this skill loaded. If you reached this point, the preamble passed.
 
 # Create Story Skill
 
@@ -23,20 +31,7 @@ Creates GitHub issues on-the-fly for commit workflow. When `/commit` detects no 
 
 ## How It Works
 
-### Step 1: Check Authentication
-
-```bash
-# Verify GitHub CLI is authenticated
-if ! gh auth status &>/dev/null; then
-  echo "❌ GitHub CLI not authenticated"
-  echo "Run: gh auth login"
-  exit 2
-fi
-```
-
-**See:** @references/github-api.md for auth patterns
-
-### Step 2: Analyze Staged Changes (Optional)
+### Step 1: Analyze Staged Changes (Optional)
 
 ```bash
 # Get list of staged files
@@ -70,7 +65,7 @@ else
 fi
 ```
 
-### Step 3: Prompt for Issue Title
+### Step 2: Prompt for Issue Title
 
 ```bash
 # Show suggestion if available
@@ -95,7 +90,7 @@ if [ -z "$ISSUE_TITLE" ]; then
 fi
 ```
 
-### Step 4: Generate Issue Body (Optional)
+### Step 3: Generate Issue Body (Optional)
 
 ```bash
 # Auto-generate body from diff if enabled
@@ -118,7 +113,7 @@ else
 fi
 ```
 
-### Step 5: Create GitHub Issue
+### Step 4: Create GitHub Issue
 
 ```bash
 # Get repository slug from config
@@ -153,7 +148,7 @@ echo "✓ Created issue #${ISSUE_NUMBER}: $ISSUE_TITLE"
 
 **See:** @references/github-api.md for API details
 
-### Step 6: Save Minimal Active Story
+### Step 5: Save Minimal Active Story
 
 ```bash
 # Store only 4 fields needed by /commit
