@@ -17,9 +17,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 |------|---------|
 | `.claude-plugin/marketplace.json` | Marketplace manifest — lists all bundles and their `./bundles/<name>` paths |
 | `bundles/<bundle-name>/` | Each installable plugin: has `.claude-plugin/plugin.json` + `skills/` |
-| `bundles/<bundle-name>/skills/<skill-name>` | Real copy of the skill content. Canonical source is `skills/<name>/` |
-| `.claude/skills/<name>/` | Canonical skill source — `SKILL.md` and supporting files |
-| `skills/<name>/` | Published copy of each skill (all bundles draw from here) |
+| `bundles/<bundle-name>/skills/<skill-name>` | **Single source of truth** for skill content — no other copies exist |
 | `agents/` | Agent definition markdown files |
 | `commands/` | Claude Code slash commands |
 | `hooks/` | Claude Code hook scripts |
@@ -28,10 +26,12 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 | Bundle | Skills | Description |
 |--------|--------|-------------|
-| `github` | commit, create-story, fetch-story, mr, play-story | Git + GitHub workflow automation |
-| `development-tools` | bug-fix, gather-context, refactor-skill, skill-creator, sync-skills | Dev utilities |
-| `architecture-quality` | aws-architect, cdk-scripting, fitness-function-architect, overall-review, performance-review, security-review | Architecture + code quality |
-| `content-specialized` | add-content-image, arch:create-adr, creative-writing, css-architecture, cuda-remote-manager, editor-in-chief, gather-nfr, github-runner-setup, hooks, mermaid-diagram, regenerate-course-content, reveal-pdf-export, ux-professional | Content + specialized tools |
+| `git` | `git:commit` | Local git operations — commit with configurable numbering and message conventions |
+| `github` | `github:actions`, `github:create-issue`, `github:edit-workflow`, `github:pull-request`, `github:story-create`, `github:story-fetch`, `github:story-finalize`, `github:story-play`, `github:story-quality`, `github:tidy-board`, `github:until-green`, `ready-for-dev-scout` | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, and board management |
+| `development-tools` | `anthropic:skill-creator`, `bug-fix`, `claude:plugin-scaffold`, `claude:refactor-skill`, `claude:skill-creator`, `claude:sync-skills`, `claude:validate-skills`, `debug`, `experimentator`, `gather-context`, `jupyter-remote` | Developer utilities — debugging, skill authoring, refactoring, context gathering, experimentation, remote notebooks |
+| `architecture-quality` | `arch:adr-render`, `arch:adr-yaml`, `arch:fitness-function`, `arch:maintain-constraints-registry`, `arch:maintain-nfr-registry`, `arch:maintain-risk-registry`, `aws:architect`, `aws:cdk`, `aws:cdk-validate`, `review:code`, `review:compliance`, `review:overall`, `review:performance`, `review:security` | Architecture guidance and code quality — ADRs, AWS/CDK, reviews, fitness functions, NFR/risk/constraints registries |
+| `content-specialized` | `add-content-image`, `android:mobile-test`, `arch:create-adr`, `claude:hooks`, `creative-writing`, `css-architecture`, `cuda-remote-manager`, `design-system`, `editor-in-chief`, `gather-nfr`, `github:runner-setup`, `ios:mobile-test`, `mermaid-diagram`, `regenerate-course-content`, `reveal-pdf-export`, `ux-professional` | Content creation and specialized tools — writing, diagrams, CSS, UX, design systems, mobile testing, documentation |
+| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev`, `test-architect` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
 
 ## How Skill Resolution Works
 
@@ -40,12 +40,27 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 3. Each `bundles/<bundle>/skills/<name>` is a **real directory copy** of the skill content
 4. Canonical skill source lives in `.claude/skills/<name>/` and `skills/<name>/` (published copy)
 
+## Skill Authoring Rules
+
+**Least privilege is mandatory.** Every skill must declare its allowed tools explicitly in the SKILL.md frontmatter. Never use a wildcard or omit the tools list. Grant only the tools the skill actually needs.
+
+```yaml
+---
+tools:
+  - Read
+  - Grep
+  - Bash
+---
+```
+
+If a skill requires broader access, justify it in a comment inside the frontmatter block.
+
 ## Adding a New Skill
 
-1. Create `.claude/skills/<namespace>:<name>/SKILL.md`
-2. Copy the skill dir into the appropriate `bundles/<bundle>/skills/<name>` (no symlinks)
-3. Also copy it to `skills/<name>/` so it is published
-4. Update the bundle's `plugin.json` description if needed
+1. Create `bundles/<bundle>/skills/<namespace>:<name>/SKILL.md` directly in the appropriate bundle
+2. Declare allowed tools explicitly (least privilege — no wildcards)
+3. Update the bundle's `plugin.json` description and skill count
+4. Update `CLAUDE.md` bundles table
 5. Commit and push — marketplace auto-updates for users with `autoUpdate: true`
 
 ## Local Development
@@ -55,4 +70,4 @@ The marketplace install location symlinks here:
 ~/.claude/plugins/marketplaces/thesolutionarchitect_marketplace → <this repo>
 ```
 
-To test changes locally, edit skills in `.claude/skills/` then copy updated content to `bundles/` and `skills/`.
+To test changes locally, edit skills directly in `bundles/<bundle>/skills/<name>/`. No sync step needed — bundles are the single source of truth.

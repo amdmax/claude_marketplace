@@ -8,9 +8,20 @@
   },
   "plugins": [
     {
+      "name": "git",
+      "source": "./bundles/git",
+      "description": "Git workflow automation (1 skill): git:commit with configurable numbering and conventions",
+      "version": "1.0.0",
+      "category": "workflow",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
       "name": "github",
       "source": "./bundles/github",
-      "description": "Essential git and workflow automation (5 skills): commit, PR creation, GitHub issue management",
+      "description": "GitHub workflow automation (12 skills): story lifecycle, PRs, CI loops, issue management, board tidy",
       "version": "1.0.0",
       "category": "workflow",
       "author": {
@@ -21,7 +32,7 @@
     {
       "name": "development-tools",
       "source": "./bundles/development-tools",
-      "description": "Development utilities (5 skills): bug fixes, skill creation, refactoring, code exploration",
+      "description": "Development utilities (11 skills): bug fixing, debugging, skill authoring, refactoring, context gathering, experimentation, remote notebooks",
       "version": "1.0.0",
       "category": "development",
       "author": {
@@ -32,7 +43,7 @@
     {
       "name": "architecture-quality",
       "source": "./bundles/architecture-quality",
-      "description": "Architecture and quality reviews (6 skills): AWS, CDK, security, performance, fitness functions",
+      "description": "Architecture guidance and quality (14 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries",
       "version": "1.0.0",
       "category": "architecture",
       "author": {
@@ -43,7 +54,7 @@
     {
       "name": "content-specialized",
       "source": "./bundles/content-specialized",
-      "description": "Content and specialized tools (12 skills): CSS, UX, writing, diagrams, documentation, CUDA, GitHub runners",
+      "description": "Content creation and specialized tools (16 skills): CSS, UX, writing, diagrams, documentation, design systems, mobile testing, CUDA, ADR creation",
       "version": "1.0.0",
       "category": "content",
       "author": {
@@ -54,7 +65,7 @@
     {
       "name": "agile-team",
       "source": "./bundles/agile-team",
-      "description": "Agile dev team (6 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
+      "description": "Agile dev team (7 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
       "version": "1.0.0",
       "category": "workflow",
       "author": {

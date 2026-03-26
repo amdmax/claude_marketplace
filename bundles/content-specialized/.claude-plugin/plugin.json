@@ -1,6 +1,6 @@
 {
   "name": "content-specialized",
-  "description": "Content creation and specialized tools: CSS, UX, writing, diagrams, documentation, and configuration",
+  "description": "Content creation and specialized tools (16 skills): CSS, UX, writing, diagrams, documentation, design systems, mobile testing, CUDA, ADR creation",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
