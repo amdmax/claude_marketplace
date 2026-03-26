@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-26T13:40:05Z",
+  "generated_at": "2026-03-26T16:11:25Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -456,8 +456,8 @@
     "github:pull-request": {
       "type": "skill",
       "path": "skills/github:pull-request/SKILL.md",
-      "description": "Create pull requests with automatic commit handling, story integration, and merge conflict resolution. Use when user wants to create a PR for current changes. Auto-commits uncommitted changes via /commit skill, prevents duplicate PRs, links to active GitHub issue from .claude/active-story.json, creates new issues if needed, and automatically resolves merge conflicts (polls GitHub mergeability, merges origin/master, resolves conflicts, pushes clean branch).",
-      "hash": "sha256:2790b83d51a0daedea1c280129b9efe1cb27c14bb03713e653e45f2da27098a4",
+      "description": "Create or update a PR coupled to the active story in .agile-dev-team/active-story.json. Auto-commits uncommitted changes via /git:commit. Checks for an existing open PR on the current branch \u2014 creates one if absent, updates it if present. Mirrors labels, assignees, and project from the linked GitHub issue. PR body is minimal: Closes #N plus changed domains only. Auto-resolves merge conflicts after creation.",
+      "hash": "sha256:570426935848a0408179b8ed439d44cee5983eaf5b1416edc58efc313412d99a",
       "files": [
         "SKILL.md"
       ],
