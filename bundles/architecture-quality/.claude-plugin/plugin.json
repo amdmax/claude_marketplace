@@ -1,6 +1,6 @@
 {
   "name": "architecture-quality",
-  "description": "Architecture guidance and code quality (14 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries",
+  "description": "Architecture guidance and code quality (16 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/aigensa/claude_marketplace",
   "repository": "https://github.com/aigensa/claude_marketplace",
   "license": "MIT",
-  "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality"]
+  "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality", "mermaid", "adr", "diagrams"]
 }
