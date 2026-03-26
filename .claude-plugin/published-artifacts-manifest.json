@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-03-25T18:40:04Z",
+  "generated_at": "2026-03-26T13:40:05Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "add-content-image": {
@@ -481,13 +481,14 @@
       "type": "skill",
       "path": "skills/github:story-create/SKILL.md",
       "description": "Quick GitHub issue creation for commit workflow. Creates minimal issues with project prefix and stores in .claude/active-story.json. Different from /fetch-story (planned work from Projects).",
-      "hash": "sha256:82c3748263b36f27fe9d8c64febeba745aa86724709b077aca696c9c71985346",
+      "hash": "sha256:48e70a4b383fcdb82f2bb07d8c9da346b789a587208a7ef612ad208a65763a28",
       "files": [
         "SKILL.md",
         "config.example.yaml",
-        "config.yaml"
+        "config.yaml",
+        "preamble.ts"
       ],
-      "file_count": 3
+      "file_count": 4
     },
     "github:story-fetch": {
       "type": "skill",
