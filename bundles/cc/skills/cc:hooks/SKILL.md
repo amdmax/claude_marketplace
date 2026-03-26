@@ -1,5 +1,5 @@
 ---
-name: claude:hooks
+name: cc:hooks
 description: Comprehensive Claude Code hooks configuration for notifications, validation, auto-formatting, safety checks, and context loading.
 author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com

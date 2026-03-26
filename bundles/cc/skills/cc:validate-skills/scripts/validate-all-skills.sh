@@ -26,7 +26,7 @@ while IFS= read -r SKILL_FILE; do
   ((TOTAL++))
 
   # Skip validation skill itself and documentation files
-  if [[ "$SKILL_FILE" =~ claude:validate-skills ]] || \
+  if [[ "$SKILL_FILE" =~ cc:validate-skills ]] || \
      [[ "$SKILL_FILE" =~ /references/ ]] || \
      [[ "$SKILL_FILE" =~ ^[A-Z] ]]; then
     ((SKIPPED++))

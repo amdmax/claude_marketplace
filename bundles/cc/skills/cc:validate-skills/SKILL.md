@@ -1,5 +1,5 @@
 ---
-name: claude:validate-skills
+name: cc:validate-skills
 description: Validate skill files for proper YAML frontmatter format and valid Claude Code skill options
 version: 1.0.0
 author: Claude
@@ -43,12 +43,12 @@ Validating skills...
 
 Run validation script directly:
 ```bash
-bash .claude/skills/claude:validate-skills/scripts/validate-all-skills.sh
+bash .claude/skills/cc:validate-skills/scripts/validate-all-skills.sh
 ```
 
 Validate single skill:
 ```bash
-bash .claude/skills/claude:validate-skills/scripts/validate-skill.sh path/to/SKILL.md
+bash .claude/skills/cc:validate-skills/scripts/validate-skill.sh path/to/SKILL.md
 ```
 
 ## Validation Rules
@@ -160,8 +160,8 @@ custom-skill/SKILL.md:
 ## Integration
 
 Works with:
-- **/claude:refactor-skill** - Validates after refactoring
-- **/claude:skill-creator** - Validates newly created skills
+- **/cc:refactor-skill** - Validates after refactoring
+- **/cc:skill-creator** - Validates newly created skills
 - **Stop hook** - Auto-validates before session ends
 
 ## Configuration

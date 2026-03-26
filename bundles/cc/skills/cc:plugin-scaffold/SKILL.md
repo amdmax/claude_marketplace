@@ -1,5 +1,5 @@
 ---
-name: claude:plugin-scaffold
+name: cc:plugin-scaffold
 description: Scaffold a new Claude Code plugin following the official Anthropic plugin structure (anthropics/claude-plugins-official). Use when the user wants to create a Claude Code plugin, scaffold a plugin project, or asks about the official plugin structure, plugin.json, slash commands, or how to submit a plugin to the marketplace.
 ---
 
