@@ -32,7 +32,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | `cc` | `cc:hooks`, `cc:plugin-scaffold`, `cc:refactor-skill`, `cc:skill-creator`, `cc:sync-skills`, `cc:validate-skills` | Claude Code meta-skills — hooks, plugin scaffolding, skill creation, refactoring, syncing, and validation |
 | `architecture-quality` | `arch:adr-render`, `arch:adr-yaml`, `arch:create-adr`, `arch:fitness-function`, `arch:maintain-constraints-registry`, `arch:maintain-nfr-registry`, `arch:maintain-risk-registry`, `aws:architect`, `aws:cdk`, `aws:cdk-validate`, `mermaid-diagram`, `review:code`, `review:compliance`, `review:overall`, `review:performance`, `review:security` | Architecture guidance and code quality — ADRs, AWS/CDK, reviews, fitness functions, NFR/risk/constraints registries, diagrams |
 | `content-specialized` | `add-content-image`, `android:mobile-test`, `creative-writing`, `css-architecture`, `cuda-remote-manager`, `design-system`, `editor-in-chief`, `gather-nfr`, `github:runner-setup`, `ios:mobile-test`, `regenerate-course-content`, `reveal-pdf-export`, `ux-professional` | Content creation and specialized tools — writing, CSS, UX, design systems, mobile testing, documentation |
-| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev`, `test-architect` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
+| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
 
 ## How Skill Resolution Works
 
