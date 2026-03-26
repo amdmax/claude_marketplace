@@ -22,17 +22,17 @@ Install all bundles or choose specific ones:
 /plugin marketplace add aigensa/claude_marketplace
 
 # Install all bundles
-/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install github@thesolutionarchitect_marketplace
 /plugin install development-tools@thesolutionarchitect_marketplace
 /plugin install architecture-quality@thesolutionarchitect_marketplace
 /plugin install content-specialized@thesolutionarchitect_marketplace
 
 # Or install just what you need
-/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install github@thesolutionarchitect_marketplace
 ```
 
 **Available Bundles:**
-- **core-workflow** (5 skills) - git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
+- **github** (5 skills) - git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
 - **development-tools** (5 skills) - bug-fix, claude:skill-creator, claude:refactor-skill, claude:sync-skills, gather-context
 - **architecture-quality** (6 skills) - aws:architect, aws:cdk, review:security, review:performance, review:overall, arch:fitness-function
 - **content-specialized** (12 skills) - css-architecture, ux-professional, creative-writing, editor-in-chief, mermaid-diagram, and more

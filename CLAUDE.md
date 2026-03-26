@@ -8,7 +8,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 ```bash
 /plugin marketplace add amdmax/claude_marketplace
-/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install github@thesolutionarchitect_marketplace
 ```
 
 ## Repo Structure
@@ -28,7 +28,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 | Bundle | Skills | Description |
 |--------|--------|-------------|
-| `core-workflow` | commit, create-story, fetch-story, mr, play-story | Git + GitHub workflow automation |
+| `github` | commit, create-story, fetch-story, mr, play-story | Git + GitHub workflow automation |
 | `development-tools` | bug-fix, gather-context, refactor-skill, skill-creator, sync-skills | Dev utilities |
 | `architecture-quality` | aws-architect, cdk-scripting, fitness-function-architect, overall-review, performance-review, security-review | Architecture + code quality |
 | `content-specialized` | add-content-image, arch:create-adr, creative-writing, css-architecture, cuda-remote-manager, editor-in-chief, gather-nfr, github-runner-setup, hooks, mermaid-diagram, regenerate-course-content, reveal-pdf-export, ux-professional | Content + specialized tools |

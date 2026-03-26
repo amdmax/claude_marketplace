@@ -5,7 +5,10 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Skill(mr)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(git log:*)",
+      "Bash(python3 -m json.tool)",
+      "Bash(cd:*)"
     ]
   },
   "hooks": {
