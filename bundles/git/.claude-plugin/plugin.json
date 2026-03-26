@@ -1,6 +1,6 @@
 {
-  "name": "github",
-  "description": "GitHub workflow automation (12 skills): story lifecycle, PRs, CI loops, issue management, board tidy",
+  "name": "git",
+  "description": "Git workflow automation (1 skill): git:commit — commit with configurable numbering and message conventions",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/aigensa/claude_marketplace",
   "repository": "https://github.com/aigensa/claude_marketplace",
   "license": "MIT",
-  "keywords": ["github", "pull-request", "issues", "ci", "story", "workflow"]
+  "keywords": ["git", "commit", "workflow", "version-control"]
 }

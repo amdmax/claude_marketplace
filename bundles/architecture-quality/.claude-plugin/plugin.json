@@ -1,6 +1,6 @@
 {
   "name": "architecture-quality",
-  "description": "Architecture guidance and code quality reviews: AWS, CDK, security, performance, fitness functions, and ADR YAML authoring",
+  "description": "Architecture guidance and code quality (14 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
