@@ -1,5 +1,5 @@
 {
-  "name": "core-workflow",
+  "name": "github",
   "description": "Essential git and workflow automation skills: commit, PR creation, and GitHub issue management",
   "version": "1.0.0",
   "author": {

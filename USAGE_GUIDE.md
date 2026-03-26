@@ -29,13 +29,13 @@ Install all bundles or just the ones you need:
 
 ```bash
 # Option A: Install everything
-/plugin install core-workflow@thesolutionarchitect_marketplace
+/plugin install github@thesolutionarchitect_marketplace
 /plugin install development-tools@thesolutionarchitect_marketplace
 /plugin install architecture-quality@thesolutionarchitect_marketplace
 /plugin install content-specialized@thesolutionarchitect_marketplace
 
 # Option B: Install only what you need
-/plugin install core-workflow@thesolutionarchitect_marketplace  # Just git workflow skills
+/plugin install github@thesolutionarchitect_marketplace  # Just git workflow skills
 ```
 
 #### Step 3: Use the Skills
@@ -43,14 +43,14 @@ Install all bundles or just the ones you need:
 All installed skills are immediately available:
 
 ```bash
-/commit              # From core-workflow bundle
+/commit              # From github bundle
 /aws-architect       # From architecture-quality bundle
 /mermaid-diagram     # From content-specialized bundle
 ```
 
 #### Bundle Details
 
-- **core-workflow** - Essential git workflow automation
+- **github** - Essential git workflow automation
   - Skills: git:commit, github:pull-request, github:story-create, github:story-fetch, github:story-play
   - Use when: Managing git commits, PRs, and GitHub issues
 
