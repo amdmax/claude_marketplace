@@ -4,7 +4,7 @@
       "Bash(tree:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Skill(mr)",
+      "Skill(pull-request)",
       "Bash(git mv:*)",
       "Bash(git log:*)",
       "Bash(python3 -m json.tool)",
