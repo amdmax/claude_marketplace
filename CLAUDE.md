@@ -19,7 +19,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | `bundles/<bundle-name>/` | Each installable plugin: has `.claude-plugin/plugin.json` + `skills/` |
 | `bundles/<bundle-name>/skills/<skill-name>` | **Single source of truth** for skill content — no other copies exist |
 | `agents/` | Agent definition markdown files |
-| `commands/` | Claude Code slash commands |
+| `.claude/commands/` | Claude Code slash commands |
 | `hooks/` | Claude Code hook scripts |
 
 ## Bundles
