@@ -1,5 +1,5 @@
 {
-  "name": "architecture-quality",
+  "name": "architect",
   "description": "Architecture guidance and code quality (14 skills): security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
   "version": "1.0.0",
   "author": {
