@@ -19,7 +19,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | `bundles/<bundle-name>/` | Each installable plugin: has `.claude-plugin/plugin.json` + `skills/` |
 | `bundles/<bundle-name>/skills/<skill-name>` | **Single source of truth** for skill content — no other copies exist |
 | `agents/` | Agent definition markdown files |
-| `commands/` | Claude Code slash commands |
+| `.claude/commands/` | Claude Code slash commands |
 | `hooks/` | Claude Code hook scripts |
 
 ## Bundles
@@ -27,12 +27,12 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | Bundle | Skills | Description |
 |--------|--------|-------------|
 | `git` | `git:commit` | Local git operations — commit with configurable numbering and message conventions |
-| `github` | `github:actions`, `github:create-issue`, `github:edit-workflow`, `github:pull-request`, `github:story-create`, `github:story-fetch`, `github:story-finalize`, `github:story-play`, `github:story-quality`, `github:tidy-board`, `github:until-green`, `ready-for-dev-scout` | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, and board management |
+| `github` | `github:actions`, `github:create-issue`, `github:edit-workflow`, `github:pull-request`, `github:runner-setup`, `github:story-create`, `github:story-fetch`, `github:story-finalize`, `github:story-play`, `github:story-quality`, `github:tidy-board`, `github:until-green`, `ready-for-dev-scout` | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, board management, and runner setup |
 | `development-tools` | `anthropic:skill-creator`, `bug-fix`, `debug`, `experimentator`, `gather-context`, `jupyter-remote` | Developer utilities — debugging, context gathering, experimentation, remote notebooks, skill creation |
 | `cc` | `cc:hooks`, `cc:plugin-scaffold`, `cc:refactor-skill`, `cc:skill-creator`, `cc:sync-skills`, `cc:validate-skills` | Claude Code meta-skills — hooks, plugin scaffolding, skill creation, refactoring, syncing, and validation |
 | `architecture-quality` | `arch:adr-render`, `arch:adr-yaml`, `arch:create-adr`, `arch:fitness-function`, `arch:maintain-constraints-registry`, `arch:maintain-nfr-registry`, `arch:maintain-risk-registry`, `aws:architect`, `aws:cdk`, `aws:cdk-validate`, `mermaid-diagram`, `review:code`, `review:compliance`, `review:overall`, `review:performance`, `review:security` | Architecture guidance and code quality — ADRs, AWS/CDK, reviews, fitness functions, NFR/risk/constraints registries, diagrams |
-| `content-specialized` | `add-content-image`, `android:mobile-test`, `creative-writing`, `css-architecture`, `cuda-remote-manager`, `design-system`, `editor-in-chief`, `gather-nfr`, `github:runner-setup`, `ios:mobile-test`, `regenerate-course-content`, `reveal-pdf-export`, `ux-professional` | Content creation and specialized tools — writing, CSS, UX, design systems, mobile testing, documentation |
-| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev`, `test-architect` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
+| `content-specialized` | `add-content-image`, `android:mobile-test`, `creative-writing`, `css-architecture`, `cuda-remote-manager`, `design-system`, `editor-in-chief`, `gather-nfr`, `ios:mobile-test`, `regenerate-course-content`, `reveal-pdf-export`, `ux-professional` | Content creation and specialized tools — writing, CSS, UX, design systems, mobile testing, documentation |
+| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
 
 ## How Skill Resolution Works
 

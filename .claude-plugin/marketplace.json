@@ -76,7 +76,7 @@
     {
       "name": "agile-team",
       "source": "./bundles/agile-team",
-      "description": "Agile dev team (7 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
+      "description": "Agile dev team (6 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
       "version": "1.0.0",
       "category": "workflow",
       "author": {
