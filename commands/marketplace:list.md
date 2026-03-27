@@ -5,19 +5,19 @@ description: List all skills across every bundle in this marketplace, formatted 
 
 ## Execution
 
-Run the following command and display the output:
+1. Use the Glob tool with pattern `bundles/*/skills/*/SKILL.md` to find all skills.
+2. For each result, extract:
+   - **plugin**: the second path segment (e.g. `bundles/github/...` → `github`)
+   - **skill dir**: the fourth path segment (e.g. `github:story-fetch`)
+   - **namespace**: everything before the first `:` in the skill dir, or `-` if no `:`
+   - **skill**: everything after the first `:`, or the full skill dir if no `:`
+3. Sort by plugin, then skill dir.
+4. Output as a markdown table:
 
-```bash
-python3 -c "
-import os, glob
-print(f'{\"plugin\":<25} | {\"namespace\":<15} | skill')
-print(f'{chr(45)*25}-+-{chr(45)*15}-+-------')
-for path in sorted(glob.glob('bundles/*/skills/*/')) :
-    parts = path.rstrip('/').split('/')
-    bundle, skill_dir = parts[1], parts[3]
-    ns, name = skill_dir.split(':', 1) if ':' in skill_dir else ('-', skill_dir)
-    print(f'{bundle:<25} | {ns:<15} | {name}')
-"
+```
+| plugin | namespace | skill |
+|--------|-----------|-------|
+| ...    | ...       | ...   |
 ```
 
-Output the results as-is — no additional formatting or commentary.
+No additional commentary — table only.
