@@ -1,5 +1,5 @@
 ---
-name: mermaid-diagram
+name: arch:mermaid-diagram
 description: Generate theme-aware Mermaid diagrams for educational content. Creates flowcharts, sequence diagrams, and graph diagrams using project's color scheme with automatic light/dark mode support. Invokable with /mermaid-diagram or /mermaid.
 ---
 
