@@ -1,6 +1,6 @@
 {
   "name": "development-tools",
-  "description": "Development utilities (6 skills): bug fixing, debugging, context gathering, experimentation, remote notebooks, skill creation",
+  "description": "Development utilities (5 skills): bug fixing, debugging, context gathering, experimentation, remote notebooks",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
