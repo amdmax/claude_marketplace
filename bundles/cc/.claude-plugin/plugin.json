@@ -1,6 +1,6 @@
 {
   "name": "cc",
-  "description": "Claude Code meta-skills (6 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, and validation",
+  "description": "Claude Code meta-skills (7 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, validation, and output styles",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",

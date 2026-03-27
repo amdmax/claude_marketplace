@@ -1,6 +1,6 @@
 {
-  "name": "architecture-quality",
-  "description": "Architecture guidance and code quality (16 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
+  "name": "architect",
+  "description": "Architecture guidance and code quality (14 skills): security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",

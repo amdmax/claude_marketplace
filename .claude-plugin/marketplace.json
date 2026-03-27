@@ -52,9 +52,9 @@
       }
     },
     {
-      "name": "architecture-quality",
-      "source": "./bundles/architecture-quality",
-      "description": "Architecture guidance and quality (16 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
+      "name": "architect",
+      "source": "./bundles/architect",
+      "description": "Architecture guidance and quality (14 skills): security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
       "version": "1.0.0",
       "category": "architecture",
       "author": {
@@ -63,11 +63,33 @@
       }
     },
     {
+      "name": "aws",
+      "source": "./bundles/aws",
+      "description": "AWS skills (3 skills): architect, CDK, CDK validation",
+      "version": "1.0.0",
+      "category": "infrastructure",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
       "name": "content-specialized",
       "source": "./bundles/content-specialized",
-      "description": "Content creation and specialized tools (13 skills): CSS, UX, writing, documentation, design systems, mobile testing, CUDA",
+      "description": "Content creation and specialized tools (10 skills): CSS, UX, writing, documentation, design systems, CUDA",
       "version": "1.0.0",
       "category": "content",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
+      "name": "mobile",
+      "source": "./bundles/mobile",
+      "description": "Mobile testing (2 skills): Android (Chromium) and iOS (WebKit) layout test automation",
+      "version": "1.0.0",
+      "category": "testing",
       "author": {
         "name": "AIGENSA",
         "email": "thesolutionarchitect@aigensa.com"

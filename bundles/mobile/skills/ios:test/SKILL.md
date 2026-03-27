@@ -1,10 +1,10 @@
 ---
-name: android:mobile-test
+name: mobile:ios:test
 version: 1.0.0
 description: |
-  Run, add, or debug Android (chromium) mobile layout tests for the aigensa landing page.
+  Run, add, or debug iOS (webkit) mobile layout tests for the aigensa landing page.
   Uses raw playwright + Jest (jest project: mobile). Trigger when the user wants to
-  run mobile tests on Android/Pixel, add a new page test, or debug a chromium test failure.
+  run mobile tests, add a new page test for iOS, or debug a webkit test failure.
 allowed-tools:
   - Read
   - Write
@@ -15,10 +15,10 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# Android Mobile Test Skill
+# iOS Mobile Test Skill
 
 Stack: `playwright` (raw) + Jest. Test files live in `tests/playwright/*.mobile.test.ts`.
-Device: Chromium simulating a Pixel 8 (Android).
+Device: WebKit (Safari engine) simulating iPhone 17 Pro.
 
 ## Commands that WORK
 
@@ -56,34 +56,29 @@ npm run build:astro          # build site into dist/
 npm run test:playwright      # run all mobile tests
 ```
 
-## Device config
-
-Add the Pixel 8 device to `tests/playwright/device.ts`:
+## Device config (`tests/playwright/device.ts`)
 
 ```typescript
-export const PIXEL_8 = {
-  name: 'Pixel 8',
-  width: 412,
-  height: 915,
-  deviceScaleFactor: 2.625,
+export const IPHONE_17_PRO = {
+  name: 'iPhone 17 Pro',
+  width: 393,
+  height: 852,
+  deviceScaleFactor: 3,
   isMobile: true,
   hasTouch: true,
 };
 ```
 
-Note: `IPHONE_17_PRO` (webkit) is already in `device.ts`. Add `PIXEL_8` alongside it.
-
 ## Step-by-step: Add a new page test
 
-1. Add `PIXEL_8` to `tests/playwright/device.ts` if not already present (see above)
-2. Create `tests/playwright/<page-name>.android.mobile.test.ts`
-3. Use this template:
+1. Create `tests/playwright/<page-name>.mobile.test.ts`
+2. Use this template:
 
 ```typescript
 /** @jest-environment node */
-import { chromium, Browser, BrowserContext, Page } from 'playwright';
+import { webkit, Browser, BrowserContext, Page } from 'playwright';
 import { spawn, ChildProcess } from 'child_process';
-import { PIXEL_8 } from './device';
+import { IPHONE_17_PRO } from './device';
 
 jest.setTimeout(60000);
 
@@ -101,12 +96,12 @@ beforeAll(async () => {
     server.on('error', (err) => reject(err));
     setTimeout(resolve, 2000);
   });
-  browser = await chromium.launch({ headless: true });
+  browser = await webkit.launch({ headless: true });
   context = await browser.newContext({
-    viewport: { width: PIXEL_8.width, height: PIXEL_8.height },
-    deviceScaleFactor: PIXEL_8.deviceScaleFactor,
-    isMobile: PIXEL_8.isMobile,
-    hasTouch: PIXEL_8.hasTouch,
+    viewport: { width: IPHONE_17_PRO.width, height: IPHONE_17_PRO.height },
+    deviceScaleFactor: IPHONE_17_PRO.deviceScaleFactor,
+    isMobile: IPHONE_17_PRO.isMobile,
+    hasTouch: IPHONE_17_PRO.hasTouch,
   });
   page = await context.newPage();
 });
@@ -117,7 +112,7 @@ afterAll(async () => {
   server?.kill();
 });
 
-describe('<Page name> — Android mobile layout', () => {
+describe('<Page name> — mobile layout', () => {
   beforeEach(async () => {
     await page.goto(`${BASE_URL}/en/<path>`, { waitUntil: 'networkidle' });
   });
@@ -135,23 +130,14 @@ describe('<Page name> — Android mobile layout', () => {
 
   it('screenshot', async () => {
     await page.screenshot({
-      path: `tests/playwright/screenshots/<page-name>-${PIXEL_8.name.replace(/\s/g, '-').toLowerCase()}.png`,
+      path: `tests/playwright/screenshots/<page-name>-${IPHONE_17_PRO.name.replace(/\s/g, '-').toLowerCase()}.png`,
       fullPage: true,
     });
   });
 });
 ```
 
-4. Run `npm run test:playwright` to verify.
-
-## Key difference vs iOS
-
-| | iOS | Android |
-|--|-----|---------|
-| Browser engine | `webkit` | `chromium` |
-| Import | `import { webkit } from 'playwright'` | `import { chromium } from 'playwright'` |
-| Device config | `IPHONE_17_PRO` (already in `device.ts`) | `PIXEL_8` (add to `device.ts`) |
-| File naming | `*.mobile.test.ts` | `*.android.mobile.test.ts` (convention) |
+3. Run `npm run test:playwright` to verify.
 
 ## Screenshots
 
@@ -160,6 +146,5 @@ Screenshots are saved to `tests/playwright/screenshots/` (gitignored). Safe to w
 ## Debugging tips
 
 - If the server fails to start: check port 8001 is free (`lsof -ti :8001 | xargs kill -9 || true`)
-- If chromium is missing: run `npx playwright install chromium`
+- If webkit is missing: run `npx playwright install webkit`
 - Timeout errors usually mean `dist/` is stale — re-run `npm run build:astro`
-- Both iOS and Android tests share port 8001 — run them in the same `jest --selectProjects mobile` call, not separately in parallel

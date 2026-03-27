@@ -1,5 +1,5 @@
 ---
-name: gather-nfr
+name: arch:gather-nfr
 description: Collect non-functional requirements through interactive Q&A. Asks targeted questions about performance, scalability, security, reliability, and cost constraints. Invokable with /gather-nfr.
 ---
 
