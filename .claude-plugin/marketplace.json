@@ -54,9 +54,20 @@
     {
       "name": "architecture-quality",
       "source": "./bundles/architecture-quality",
-      "description": "Architecture guidance and quality (16 skills): AWS/CDK, security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
+      "description": "Architecture guidance and quality (13 skills): security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
       "version": "1.0.0",
       "category": "architecture",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
+      "name": "aws",
+      "source": "./bundles/aws",
+      "description": "AWS skills (3 skills): architect, CDK, CDK validation",
+      "version": "1.0.0",
+      "category": "infrastructure",
       "author": {
         "name": "AIGENSA",
         "email": "thesolutionarchitect@aigensa.com"

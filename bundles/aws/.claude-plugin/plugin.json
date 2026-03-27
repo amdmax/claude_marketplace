@@ -1,0 +1,13 @@
+{
+  "name": "aws",
+  "description": "AWS skills (3 skills): architect, CDK, CDK validation",
+  "version": "1.0.0",
+  "author": {
+    "name": "AIGENSA",
+    "email": "thesolutionarchitect@aigensa.com"
+  },
+  "homepage": "https://github.com/aigensa/claude_marketplace",
+  "repository": "https://github.com/aigensa/claude_marketplace",
+  "license": "MIT",
+  "keywords": ["aws", "cdk", "cloud", "infrastructure"]
+}
