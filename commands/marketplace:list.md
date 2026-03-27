@@ -1,6 +1,6 @@
 ---
-name: marketplace:list
-description: List all skills across every bundle in this marketplace, formatted as plugin | namespace | skill.
+name: "marketplace:list"
+description: "List all skills across every bundle in this marketplace, formatted as plugin | namespace | skill."
 ---
 
 ## Execution
