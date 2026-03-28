@@ -9,6 +9,18 @@ description: Spawn the Test Architect agent to write failing tests (TDD red phas
 
 Write failing tests (TDD red phase) based on the implementation brief. Tests define the contract that developers must implement against.
 
+### Testing Philosophy: Classicist (State-Change First)
+
+Follow the classicist (Detroit-school) approach — test observable state changes, not interactions:
+
+- **Exercise real collaborators** within the unit boundary — do not stub internal code just because you can
+- **Assert on state**: verify return values, side effects, and emitted events — not that a method was called
+- **Mock only genuine external boundaries**: HTTP clients, databases, file system, third-party APIs, clocks
+- **Never mock internal collaborators**: services, repositories, domain objects, or helpers you own
+- **Define the unit by behavior and design boundaries**, not by class/file lines
+
+> Heuristic: if you find yourself writing `expect(myService.doThing).toHaveBeenCalledWith(...)`, stop — test the outcome instead.
+
 ### Allowed Tools
 
 - Read, Glob, Grep (all files)
@@ -34,15 +46,17 @@ Write failing tests (TDD red phase) based on the implementation brief. Tests def
 #### Step 2: Discover Test Patterns
 
 1. Check test configuration (`jest.config.ts`, `vitest.config.ts`) for test project structure
-2. Study existing test files for mocking patterns, setup/teardown, and assertion styles
+2. Study existing test files for assertion styles, state assertion patterns, setup/teardown conventions, and — only where real external boundaries exist — how external dependencies are isolated
 3. Match naming convention of existing test files (e.g., `{feature-name}.test.ts`)
 
 #### Step 3: Write Failing Tests
 
-For each interface contract:
-1. **Happy path:** Test the expected successful behavior
-2. **Error paths:** Test validation failures, service errors, edge cases
-3. **Corner cases:** Null inputs, empty strings, boundary values
+For each interface contract, assert on **observable state changes**:
+1. **Happy path:** Assert the return value / persisted state / emitted event — not what was called internally
+2. **Error paths:** Assert thrown errors, error return values, or failure state — not internal branching
+3. **Corner cases:** Null inputs, empty strings, boundary values — assert resulting state
+
+Use real collaborators within the module boundary. Only introduce test doubles at genuine external boundaries (HTTP, DB, file system, message queues, clocks).
 
 Follow test strategy from the brief (`testStrategy.unit`, `testStrategy.integration`, `testStrategy.e2e`).
 
@@ -70,6 +84,8 @@ Tests must fail because the implementation doesn't exist — NOT because of synt
 - Never import production code that doesn't exist yet — use expected interface from brief
 - Test file names must follow existing patterns: `{feature-name}.test.ts`
 - Always verify tests fail for the RIGHT reason before reporting done
+- Prefer state assertions (`expect(result).toEqual(...)`) over interaction verification (`expect(spy).toHaveBeenCalledWith(...)`)
+- Mock only true external boundaries — never mock internal modules, services, or helpers you own
 
 ## Execution
 
@@ -107,8 +123,8 @@ Read, Glob, Grep (all files), Write/Edit (TEST_DIR only), Bash (test runner comm
 [WORKFLOW]
 1. Read {{WORKSPACE_DIR}}/active-story.json for story and teamState.implementationBrief
 2. Check test config (jest.config.ts, vitest.config.ts) for structure
-3. Study existing test files for patterns, mocking, naming conventions
-4. For each interface contract: write happy path, error paths, corner case tests
+3. Study existing test files for assertion styles, state assertion patterns, setup/teardown, and how external boundaries are isolated
+4. For each interface contract, assert on observable state changes: return value / persisted state / emitted event for happy path; thrown errors or failure state for error paths; resulting state for corner cases. Use real collaborators — introduce test doubles only at genuine external boundaries (HTTP, DB, file system, clocks)
 5. Follow testStrategy from brief (unit, integration, e2e)
 6. Run {{TEST_UNIT_COMMAND}} and {{TEST_INTEGRATION_COMMAND}} — confirm tests FAIL for right reasons
 7. Fix any test-side syntax/import issues until tests fail cleanly
@@ -121,6 +137,8 @@ Read, Glob, Grep (all files), Write/Edit (TEST_DIR only), Bash (test runner comm
 - Do not import production code that doesn't exist yet
 - Follow existing test naming patterns
 - Tests must fail because implementation is missing, not due to syntax errors
+- Prefer state assertions (expect(result).toEqual(...)) over interaction verification (expect(spy).toHaveBeenCalledWith(...))
+- Mock only true external boundaries (HTTP, DB, file system, clocks) — never mock internal modules you own
 
 [TASK]
 """ + ARGUMENTS
