@@ -1,6 +1,12 @@
 ---
 name: agent:pm
 description: Spawn the PM agent (Team Lead) to fetch stories, enrich with ACs and NFRs, manage story lifecycle, and create PRs. Use for standalone PM tasks without the full agile team.
+hooks:
+  PostToolUse:
+    - matcher: Write
+      hooks:
+        - type: command
+          command: python3 $SKILL_DIR/scripts/validate-story-yaml.py
 ---
 
 # Agent: PM (Team Lead)
