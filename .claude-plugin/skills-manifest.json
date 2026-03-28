@@ -347,7 +347,7 @@
       ],
       "file_count": 1
     },
-    "ready-for-dev-scout": {
+    "scout:prepare-for-dev": {
       "hash": "sha256:e274242d7c8d79f7da7fabc36868d2d6b75c3f0c9abad475fbd84b70befe917b",
       "files": [
         "SKILL.md"
