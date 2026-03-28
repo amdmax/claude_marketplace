@@ -35,7 +35,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | `content-specialized` | `creative-writing`, `cuda-remote-manager`, `editor-in-chief`, `regenerate-course-content`, `reveal-pdf-export` | Content creation and specialized tools — writing, documentation, CUDA |
 | `design` | `add-content-image`, `css-architecture`, `design-system`, `ux-professional` | Design tools — CSS architecture, design systems, UX, content images |
 | `mobile` | `mobile:android:test`, `mobile:ios:test` | Mobile testing — Android (Chromium) and iOS (WebKit) layout test automation |
-| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
+| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:frontend-dev`, `agent:pm`, `agent:test-architect`, `team:agile-dev`, `pm` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation |
 
 ## How Skill Resolution Works
 
