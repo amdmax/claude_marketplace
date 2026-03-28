@@ -1,6 +1,12 @@
 ---
 name: agent:pm
 description: Spawn the PM agent (Team Lead) to fetch stories, enrich with ACs and NFRs, manage story lifecycle, and create PRs. Use for standalone PM tasks without the full agile team.
+hooks:
+  PostToolUse:
+    - matcher: Write
+      hooks:
+        - type: command
+          command: python3 $SKILL_DIR/scripts/validate-story-yaml.py
 ---
 
 # Agent: PM (Team Lead)
@@ -78,6 +84,21 @@ Fetch stories from GitHub Projects, enrich with acceptance criteria and NFRs, ma
 - If `{{TEST_COMMAND}}` fails: report failing tests to user
 
 ## Execution
+
+### Subcommand Dispatch
+
+Check the first word of ARGUMENTS before anything else:
+
+| Subcommand | Action |
+|---|---|
+| `story-extract` | Read active story body, parse template fields, write `.agile-dev-team/story-extract.yaml` (see `commands/story-extract.md`) |
+| `story-validate` | Run `python3 $SKILL_DIR/scripts/validate-story-yaml.py` against `.agile-dev-team/story-extract.yaml`; report results (see `commands/story-validate.md`) |
+| _(anything else)_ | Proceed to Workspace Resolution and spawn the PM subagent |
+
+Example invocations:
+- `/agent:pm story-extract` → extract story to YAML
+- `/agent:pm story-validate` → validate the extracted YAML
+- `/agent:pm` → run the full PM workflow
 
 ### Workspace Resolution
 

@@ -48,8 +48,12 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 **Least privilege is mandatory.** Every skill must declare its allowed tools explicitly in the SKILL.md frontmatter. Never use a wildcard or omit the tools list. Grant only the tools the skill actually needs.
 
+`name` and `description` are required in every skill frontmatter.
+
 ```yaml
 ---
+name: "namespace:skill-name"
+description: "One-sentence description of what this skill does."
 tools:
   - Read
   - Grep
