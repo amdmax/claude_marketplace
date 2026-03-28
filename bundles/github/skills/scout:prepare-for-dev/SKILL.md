@@ -2,6 +2,7 @@
 name: scout:prepare-for-dev
 author: "@amdmax"
 description: Pre-implementation scout agent. Analyzes a "Ready for Dev" GitHub story in read-only mode — blast radius, architecture review, ADR check, task list, infra question resolution. Writes YAML report to docs/stories/{id}/. Invokable with /scout:prepare-for-dev [issue_number].
+argument-hint: "[issue_number]"
 ---
 
 # Ready for Dev Scout
@@ -28,10 +29,13 @@ Runs read-only reconnaissance on a story before implementation starts. Produces 
 
 ```bash
 # From argument
-ISSUE_NUMBER=460
+if [ -n "$ARGUMENT" ]; then
+  ISSUE_NUMBER="$ARGUMENT"
+else
+  # Fall back to active story
+  ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json)
+fi
 
-# Or from active story
-ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json)
 REPOSITORY=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
 OUTPUT_DIR="docs/stories/${ISSUE_NUMBER}"
 mkdir -p "$OUTPUT_DIR"
