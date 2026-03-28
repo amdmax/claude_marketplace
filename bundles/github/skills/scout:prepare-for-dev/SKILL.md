@@ -1,7 +1,7 @@
 ---
-name: ready-for-dev-scout
+name: scout:prepare-for-dev
 author: "@amdmax"
-description: Pre-implementation scout agent. Analyzes a "Ready for Dev" GitHub story in read-only mode — blast radius, architecture review, ADR check, open questions. Writes output to docs/story-scouts/. Invokable with /ready-for-dev-scout [issue_number].
+description: Pre-implementation scout agent. Analyzes a "Ready for Dev" GitHub story in read-only mode — blast radius, architecture review, ADR check, open questions. Writes output to docs/story-scouts/. Invokable with /scout:prepare-for-dev [issue_number].
 ---
 
 # Ready for Dev Scout
@@ -10,8 +10,8 @@ Runs read-only reconnaissance on a story before implementation starts. Produces 
 
 **Invocation:**
 ```bash
-/ready-for-dev-scout 460    # Scout a specific issue
-/ready-for-dev-scout        # Uses active-story.json issue number
+/scout:prepare-for-dev 460    # Scout a specific issue
+/scout:prepare-for-dev        # Uses active-story.json issue number
 ```
 
 ## Constraints
