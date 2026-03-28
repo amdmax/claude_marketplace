@@ -1,12 +1,12 @@
 ---
 name: scout:prepare-for-dev
 author: "@amdmax"
-description: Pre-implementation scout agent. Analyzes a "Ready for Dev" GitHub story in read-only mode — blast radius, architecture review, ADR check, open questions. Writes output to docs/story-scouts/. Invokable with /scout:prepare-for-dev [issue_number].
+description: Pre-implementation scout agent. Analyzes a "Ready for Dev" GitHub story in read-only mode — blast radius, architecture review, ADR check, task list, infra question resolution. Writes YAML report to docs/stories/{id}/. Invokable with /scout:prepare-for-dev [issue_number].
 ---
 
 # Ready for Dev Scout
 
-Runs read-only reconnaissance on a story before implementation starts. Produces a structured report answering: what files change, what architecture governs the work, and what questions must be resolved first.
+Runs read-only reconnaissance on a story before implementation starts. Produces a structured report answering: what files change, what architecture governs the work, what tasks need doing and in what order, and what open questions can be resolved now.
 
 **Invocation:**
 ```bash
@@ -17,12 +17,12 @@ Runs read-only reconnaissance on a story before implementation starts. Produces 
 ## Constraints
 
 - **Read-only** for all source code, tests, infrastructure, and config
-- Write only under `docs/story-scouts/` and `docs/adr/`
+- Write only under `docs/stories/{id}/` and `docs/adr/`
 - Do not change issue status to In Progress
 - Do not create implementation branches
 - If a bug is found during recon, record it in Open Questions — do not fix it
 
-## Workflow (10 Steps)
+## Workflow (11 Steps)
 
 ### Step 1 — Resolve issue number
 
@@ -33,6 +33,8 @@ ISSUE_NUMBER=460
 # Or from active story
 ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json)
 REPOSITORY=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
+OUTPUT_DIR="docs/stories/${ISSUE_NUMBER}"
+mkdir -p "$OUTPUT_DIR"
 ```
 
 Then fetch:
@@ -113,52 +115,89 @@ File: `docs/adr/{NNNN}-{slug}.md` with `status: proposed`.
 
 If no ADR is needed, record the governing document reference instead.
 
-### Step 8 — Write scout report
+### Step 8 — Resolve infrastructure open questions
 
+After collecting open questions from Steps 2–7, identify any that relate to infrastructure or cloud resources.
+
+**Detect infra stack:**
 ```bash
-mkdir -p docs/story-scouts
-# Write: docs/story-scouts/story-<N>-scout.md
+# AWS
+aws sts get-caller-identity 2>/dev/null && INFRA=aws
+# GCP
+gcloud config get-value project 2>/dev/null && INFRA=gcp
+# Check IaC files
+ls infrastructure/ cdk.json terraform/ 2>/dev/null
 ```
 
-Required structure:
+**For each infra open question**, attempt to answer it using the detected CLI:
 
-```markdown
-# Scout Report: Story #<N>
+| Stack | Example resolution commands |
+|---|---|
+| AWS | `aws lambda list-functions`, `aws s3 ls`, `aws cloudformation describe-stacks`, `aws ssm get-parameter`, `aws iam get-role` |
+| GCP | `gcloud functions list`, `gcloud run services list`, `gcloud projects describe` |
+| Generic | Read `infrastructure/` CDK/Terraform files for resource definitions |
 
-**Issue:** <title>
-**Scouted:** <YYYY-MM-DD>
+For each question:
+- Run the relevant CLI command(s) read-only
+- If answered: record the answer inline and mark resolved
+- If unanswerable (permissions, missing resource): keep in Open Questions with the attempted command and error
 
-## A. Change List
+### Step 9 — Write scout report
 
-| File | Tier | Reason |
-|------|------|--------|
-| path/to/file.ts | Directly Affected | why it must change |
-| path/to/test.ts | Likely Affected   | why it may need updates |
-| path/to/stack.ts | Validate Only    | what to verify |
+Write `docs/stories/<N>/scout.yaml` in YAML format (compact, token-efficient):
 
-## B. Dependency Findings
+```yaml
+scout:
+  issue: <N>
+  title: "<issue title>"
+  scouted: "<YYYY-MM-DD>"
 
-For each key symbol, module, or service traversed:
-- Name and file path
-- How the story reaches it
-- Confidence: High / Medium / Low
+  change_list:
+    - file: path/to/file.ts
+      tier: directly_affected   # directly_affected | likely_affected | validate_only
+      reason: "why it must change"
 
-## C. Architecture Findings
+  dependencies:
+    - name: "SymbolOrService"
+      path: path/to/file.ts
+      reached_via: "brief description"
+      confidence: high   # high | medium | low
 
-- Governing ADRs: [list with file paths, or "None found"]
-- Sufficiency: [are they sufficient for implementation?]
-- New ADR: [Created: docs/adr/NNNN-slug.md] or [Not required: reason]
+  architecture:
+    governing_adrs:
+      - docs/adr/0001-slug.md
+    sufficient: true
+    new_adr: null   # or: docs/adr/NNNN-slug.md
 
-## D. Open Questions
+  tasks:
+    - id: 1
+      task: "description"
+      status: pending   # pending | done | blocked
+      depends_on: []
+    - id: 2
+      task: "description"
+      status: blocked
+      depends_on: [1]
 
-1. [Question] — Owner: Product / Architecture / Implementer
+  open_questions:
+    - id: 1
+      question: "question text"
+      owner: product   # product | architecture | implementer
+      infra_resolution: null
+    - id: 2
+      question: "infra question"
+      owner: implementer
+      infra_resolution:
+        command: "aws lambda list-functions"
+        result: "resolved answer or permission denied"
+        resolved: true
 
-## E. Suggested Next Actions
-
-1. [First step for the implementer, in priority order]
+  next_actions:
+    - "First step for the implementer"
+    - "Second step"
 ```
 
-### Step 9 — Post GitHub comment
+### Step 10 — Post GitHub comment
 
 Check for existing `<!-- scout-report -->` comment; update if found, create if not:
 
@@ -168,31 +207,14 @@ gh issue view $ISSUE_NUMBER --json comments
 gh issue comment $ISSUE_NUMBER --body "<!-- scout-report -->
 ## Scout Report Summary
 
-**Directly affected:** N files | **Likely affected:** N files | **Open questions:** N
+**Directly affected:** N files | **Likely affected:** N files | **Tasks:** N | **Open questions:** N
 
-Full report: docs/story-scouts/story-<N>-scout.md
+Full report: docs/stories/<N>/scout.yaml
 [**ADR draft:** docs/adr/NNNN-slug.md]          # include if proposed
 [**Architecture review needed** before coding.]   # include if applicable"
 ```
 
-### Step 10 — Write scout-result.json and apply labels
-
-**scout-result.json** (raw JSON, no markdown wrapper):
-
-```json
-{
-  "issue_number": 460,
-  "report_path": "docs/story-scouts/story-460-scout.md",
-  "adr_proposed": false,
-  "adr_path": null,
-  "architecture_review_needed": false,
-  "directly_affected_count": 3,
-  "likely_affected_count": 5,
-  "open_questions_count": 2,
-  "scout_blocked": false,
-  "blocked_reason": null
-}
-```
+### Step 11 — Apply labels
 
 **Labels to apply:**
 
@@ -207,9 +229,8 @@ gh issue edit $ISSUE_NUMBER --add-label "adr-proposed"                # if true
 
 | File | Description |
 |------|-------------|
-| `docs/story-scouts/story-<N>-scout.md` | Full scout report (sections A-E) |
+| `docs/stories/<N>/scout.yaml` | Full scout report (YAML, token-efficient) |
 | `docs/adr/{NNNN}-{slug}.md` | ADR draft (only if warranted) |
-| `scout-result.json` | Machine-readable result summary |
 
 ## Scout Blocked Conditions
 
