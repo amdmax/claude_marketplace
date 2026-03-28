@@ -219,6 +219,13 @@ When architect flags a blocking decision:
 3. Format: Question (1 sentence) | Option A vs B (1 line each) | Recommendation (1 line)
 4. Document the decision in `teamState.risks` with `type: "decision"`
 
+## Subcommands
+
+| Subcommand | Invocation | Action |
+|---|---|---|
+| story-extract | `/agent:pm story-extract` | Parse active story body → `.agile-dev-team/story-extract.yaml` |
+| story-validate | `/agent:pm story-validate` | Validate `story-extract.yaml`; report errors + warnings |
+
 ## Communication Protocol
 
 - 2 lines max per expectation
