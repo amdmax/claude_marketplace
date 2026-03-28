@@ -49,6 +49,17 @@ On **warnings** — note them but do not block:
 | `hypothesis` missing "As a" / "I want" | Rewrite in user story format for clarity |
 | AC items missing Given/When/Then | Rewrite ACs as testable statements |
 
+### Step 4: Apply "ready for dev" label (no errors only)
+
+If validation produced **zero errors** (warnings are allowed):
+
+```bash
+ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json)
+gh issue edit "$ISSUE_NUMBER" --add-label "ready for dev"
+```
+
+If `active-story.json` is missing or `issueNumber` is null, skip silently.
+
 ---
 
 ## Validation Rules
