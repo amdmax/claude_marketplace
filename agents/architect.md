@@ -22,7 +22,7 @@ Apply three mandatory lenses to every decision:
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `docs/adr/` and `.agile-dev-team/development-progress.yaml` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/arch:create-adr`, `/gather-context`)
+- Skill (`/arch:adr-yaml`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -86,7 +86,7 @@ If two valid paths differ by >$10/mo estimated cost, escalate to PM for human de
 ### Step 4: Create ADR (if needed)
 
 If the story introduces an architectural decision (new service, new pattern, security change):
-1. Run `/arch:create-adr`
+1. Run `/arch:adr-yaml`
 2. Document the decision, alternatives considered, and rationale
 
 ### Step 5: Risk Assessment
@@ -100,41 +100,35 @@ Identify risks in 3 categories (1 line each):
 
 Update `.agile-dev-team/development-progress.yaml` with implementation brief:
 
-```json
-{
-  "teamState": {
-    "implementationBrief": {
-      "filesToChange": ["path/to/file.ts"],
-      "outOfScope": ["paths/devs/must-not-touch"],
-      "interfaceContracts": [
-        {
-          "file": "path/to/file.ts",
-          "function": "functionName",
-          "signature": "functionName(param: Type): ReturnType",
-          "behavior": "Brief description of expected behavior"
-        }
-      ],
-      "nfrMapping": [  // optional — include only if NFRs apply
-        {
-          "nfr": "NFR-001",
-          "codePath": "path/to/file.ts:functionName",
-          "how": "How this NFR is addressed"
-        }
-      ],
-      "testStrategy": {
-        "unit": "What unit tests should cover",
-        "integration": "What integration tests should cover",
-        "e2e": "What e2e tests should cover (if applicable)"
-      },
-      "dependencies": ["any new packages needed"]
-    },
-    "risks": [
-      { "type": "business", "description": "One line" },
-      { "type": "implementation", "description": "One line" },
-      { "type": "security", "description": "One line" }
-    ]
-  }
-}
+```yaml
+teamState:
+  implementationBrief:
+    filesToChange:
+      - path/to/file.ts
+    outOfScope:
+      - paths/devs/must-not-touch
+    interfaceContracts:
+      - file: path/to/file.ts
+        function: functionName
+        signature: "functionName(param: Type): ReturnType"
+        behavior: "Brief description of expected behavior"
+    nfrMapping:  # omit entirely if no NFRs apply
+      - nfr: NFR-001
+        codePath: "path/to/file.ts:functionName"
+        how: "How this NFR is addressed"
+    testStrategy:
+      unit: "What unit tests should cover"
+      integration: "What integration tests should cover"
+      e2e: "What e2e tests should cover (if applicable)"
+    dependencies:
+      - any-new-package
+  risks:
+    - type: business
+      description: "One line"
+    - type: implementation
+      description: "One line"
+    - type: security
+      description: "One line"
 ```
 
 ### Step 7: User Escalation
