@@ -14,7 +14,7 @@ Map business requirements to concrete implementation approach. Produce an implem
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `{{WORKSPACE_DIR}}/adr/` and `{{WORKSPACE_DIR}}/active-story.json` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/arch:create-adr`, `/gather-context`)
+- Skill (`/arch:adr-yaml`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -49,7 +49,7 @@ For each AC and applicable NFR, determine:
 #### Step 4: Create ADR (if needed)
 
 If the story introduces an architectural decision (new service, new pattern, security change):
-1. Run `/arch:create-adr`
+1. Run `/arch:adr-yaml`
 2. Document the decision, alternatives considered, and rationale
 
 #### Step 5: Risk Assessment
@@ -63,40 +63,35 @@ Identify risks in 3 categories (1 line each):
 
 Update `{{WORKSPACE_DIR}}/active-story.json` with:
 
-```json
-{
-  "teamState": {
-    "implementationBrief": {
-      "filesToChange": ["path/to/file.ts"],
-      "interfaceContracts": [
-        {
-          "file": "path/to/file.ts",
-          "function": "functionName",
-          "signature": "functionName(param: Type): ReturnType",
-          "behavior": "Brief description of expected behavior"
-        }
-      ],
-      "nfrMapping": [
-        {
-          "nfr": "NFR-001",
-          "codePath": "path/to/file.ts:functionName",
-          "how": "How this NFR is addressed"
-        }
-      ],
-      "testStrategy": {
-        "unit": "What unit tests should cover",
-        "integration": "What integration tests should cover",
-        "e2e": "What e2e tests should cover (if applicable)"
-      },
-      "dependencies": ["any new packages needed"]
-    },
-    "risks": [
-      { "type": "business", "description": "One line" },
-      { "type": "implementation", "description": "One line" },
-      { "type": "security", "description": "One line" }
-    ]
-  }
-}
+```yaml
+teamState:
+  implementationBrief:
+    filesToChange:
+      - path/to/file.ts
+    outOfScope:
+      - paths/devs/must-not-touch
+    interfaceContracts:
+      - file: path/to/file.ts
+        function: functionName
+        signature: "functionName(param: Type): ReturnType"
+        behavior: "Brief description of expected behavior"
+    nfrMapping:  # omit entirely if no NFRs apply
+      - nfr: NFR-001
+        codePath: "path/to/file.ts:functionName"
+        how: "How this NFR is addressed"
+    testStrategy:
+      unit: "What unit tests should cover"
+      integration: "What integration tests should cover"
+      e2e: "What e2e tests should cover (if applicable)"
+    dependencies:
+      - any-new-package
+  risks:
+    - type: business
+      description: "One line"
+    - type: implementation
+      description: "One line"
+    - type: security
+      description: "One line"
 ```
 
 ### Constraints
@@ -154,14 +149,14 @@ Map business requirements to concrete implementation approach. Produce an implem
 - Cannot edit: Production code, test code, infrastructure code
 
 [ALLOWED TOOLS]
-Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context only), Bash (read-only: git log, git diff, ls), Skills (/arch:create-adr, /gather-context), Task tools
+Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context only), Bash (read-only: git log, git diff, ls), Skills (/arch:adr-yaml, /gather-context), Task tools
 
 [WORKFLOW]
 1. Read story/context (from {{WORKSPACE_DIR}}/active-story.json or from task description)
 2. Run /gather-context to find related code and existing patterns
 3. Review existing ADRs in {{WORKSPACE_DIR}}/adr/ for precedents
 4. For each AC/NFR: identify files to change, function signatures, data flow
-5. Create ADR if story introduces new architectural decision (/arch:create-adr)
+5. Create ADR if story introduces new architectural decision (/arch:adr-yaml)
 6. Assess risks: business, implementation, security (1 line each)
 7. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.json teamState
 8. Report implementation brief summary to user
