@@ -1,6 +1,6 @@
 ---
-name: github:create-issue
-description: "Create high-quality, comprehensive GitHub issues with templates, validation, and best practices. For detailed, well-structured issues requiring planning and documentation. Use /create-story for minimal issues during commits."
+name: github:issue-create
+description: "Open or file a GitHub issue — bug report, feature request, task, investigation, or test failure. Interactive template-driven workflow with quality checks and validation."
 author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com
 ---

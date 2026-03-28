@@ -27,7 +27,7 @@ Write failing tests (TDD red phase) based on the Architect's implementation brie
 
 Discover and follow existing test patterns in the project:
 - Check the test configuration file (e.g., `jest.config.ts`, `vitest.config.ts`) for test project structure
-- Study existing test files for mocking patterns, setup/teardown conventions, and assertion styles
+- Study existing test files for assertion styles, state assertion patterns, setup/teardown conventions, and — only where real external boundaries exist — how external dependencies are isolated
 - Match the naming convention of existing test files (e.g., `{feature-name}.test.ts`)
 
 ## Workflow
@@ -40,11 +40,13 @@ Discover and follow existing test patterns in the project:
 
 ### Step 2: Write Failing Tests
 
-For each interface contract in the implementation brief:
+For each interface contract in the implementation brief, assert on **observable state changes**:
 
-1. **Happy path:** Test the expected successful behavior
-2. **Error paths:** Test validation failures, service errors, edge cases
-3. **Corner cases:** Null inputs, empty strings, boundary values
+1. **Happy path:** Assert the return value / persisted state / emitted event — not what was called internally
+2. **Error paths:** Assert thrown errors, error return values, or failure state — not internal branching
+3. **Corner cases:** Null inputs, empty strings, boundary values — assert resulting state
+
+Use real collaborators within the module boundary. Only introduce test doubles at genuine external boundaries (HTTP, DB, file system, message queues, clocks).
 
 Follow the test strategy from the implementation brief (`testStrategy.unit`, `testStrategy.integration`, `testStrategy.e2e`).
 
@@ -73,7 +75,7 @@ Tests must fail because the implementation doesn't exist yet — NOT because of 
 
 ```
 Test file: {{TEST_DIR}}/integration/handler.test.ts. handler(event) must return 400 for missing email.
-Assumption: handler exported from backend/handler.ts. Constraint: node env, mock external services.
+Assumption: handler exported from backend/handler.ts. Constraint: node env. Mock only external I/O (HTTP, DB). Assert return value / state change — not internal call sequences.
 ```
 
 #### To Frontend Developer (example)
@@ -102,3 +104,5 @@ If a developer disputes a test contract:
 - Never import production code that doesn't exist yet — use the expected interface from the brief
 - Ensure test file names follow existing patterns: `{feature-name}.test.ts`
 - Always verify tests fail for the RIGHT reason before handing off
+- Prefer state assertions (`expect(result).toEqual(...)`) over interaction verification (`expect(spy).toHaveBeenCalledWith(...)`)
+- Mock only true external boundaries — never mock internal modules, services, or helpers you own
