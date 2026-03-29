@@ -12,3 +12,4 @@ Invoke the `agent:pm` skill, passing all ARGUMENTS through unchanged.
 - `/pm` → full PM workflow
 - `/pm story-extract` → extract active story to YAML
 - `/pm story-validate` → validate story-extract.yaml
+- `/pm build [issue]` → fleet build — spawn devops/backend/frontend agents per implementation plan
