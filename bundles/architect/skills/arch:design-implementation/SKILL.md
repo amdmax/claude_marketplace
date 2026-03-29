@@ -2,9 +2,10 @@
 name: arch:design-implementation
 argument-hint: "[issue_number]"
 description: >
-  Post-scout design phase. Reads scout.yaml, story, NFRs, constraints, risks.
-  Produces ADRs, C4/ERD/flow diagrams, OpenAPI/AsyncAPI contracts. Posts each
-  to GitHub for reviewer approval, then marks story ready-for-dev.
+  Orchestrates the post-scout design phase. Determines required artefacts, generates
+  ADRs and diagrams, then delegates to arch:openapi-contract, arch:asyncapi-contract,
+  arch:implementation-plan, and arch:design-review. Marks story ready-for-dev once
+  all artefacts are approved.
 context: fork
 allowed-tools:
   - Read
@@ -158,267 +159,71 @@ For each triggered diagram type, invoke `/arch:mermaid-diagram`. No inline style
 
 ---
 
-### Step 7 — Generate API contracts [conditional]
+### Step 7 — Generate OpenAPI contract [conditional]
 
-**OpenAPI 3.1.0** → `docs/stories/{id}/design/api-{slug}.openapi.yaml`
+Triggered when `change_list` has a handler/route/controller file AND an HTTP endpoint
+is detectable. Delegate entirely to the sub-skill:
 
-Produce a minimal but complete spec covering only new/changed endpoints:
-- `info.title`, `info.version` (`0.1.0-design`), `info.description`
-- `paths` for each affected endpoint with full request/response schemas
-- `components.schemas` for all request/response bodies
-- `components.securitySchemes` if auth is required
-- Explicit error responses: 400, 401, 403, 404, 500
+```
+invoke /arch:openapi-contract {issue_number}
+```
 
-**AsyncAPI 2.6** → `docs/stories/{id}/design/async-{slug}.asyncapi.yaml`
-
-Produce a minimal spec covering only new/changed channels:
-- `info`, `channels`, `components.messages`, `components.schemas`
-- Channel bindings for the specific broker (SQS, SNS, EventBridge, etc.)
+The sub-skill writes `docs/stories/{id}/design/api-{slug}.openapi.yaml` and exits.
+If no endpoints are detected it exits 0 silently — the orchestrator continues.
 
 ---
 
-### Step 8 — Produce phased implementation plan
+### Step 8 — Generate AsyncAPI contract [conditional]
 
-Count the total implementation tasks: all tasks in `scout.yaml > tasks` plus any new tasks implied by the design artefacts (schema migrations, API versioning, feature flag wiring, infra provisioning).
+Triggered when `change_list` or `dependencies` reference SQS, SNS, EventBridge,
+Kafka, RabbitMQ, or any event bus. Delegate entirely to the sub-skill:
 
-**If total tasks ≤ 20:** produce a single-phase plan.
-**If total tasks > 20:** mandatory multi-phase plan. Splitting into a single oversized phase is not acceptable.
-
-#### Phase rules
-
-**Annotation** — every phase must be labelled with one or more of:
-- `infrastructure` — IaC, resource provisioning (CDK/Terraform), schema provisioning, DNS, certs
-- `backend` — Lambda/service logic, API handlers, migrations, event processors, background jobs
-- `frontend` — UI components, client-side logic, CSS, frontend build changes
-
-**Sequencing constraints:**
-- Infrastructure phases precede backend phases that depend on the provisioned resources.
-- Backend API phases precede frontend phases that consume those APIs.
-- Independent phases within the same layer may be executed in parallel by different developers.
-
-**Deployability contract — each phase must:**
-1. Leave the system in a fully working state at the end (no half-built features in production).
-2. Not break existing behaviour: all current tests and integrations must still pass after deploying the phase.
-3. Use expand-before-contract for schema changes: add new columns/tables as nullable before removing old ones.
-4. Use backward-compatible API changes within a phase: add new fields/endpoints; deprecate don't delete.
-5. Gate partially-complete features with a feature flag if a phase delivers infrastructure or backend without a frontend.
-
-#### Plan structure
-
-For each phase:
-- `id`: `phase-N` (1-indexed)
-- `name`: short descriptive title
-- `type`: one or more of `infrastructure | backend | frontend`
-- `depends_on`: list of phase ids that must be deployed first (empty for first phase)
-- `tasks`: list of task objects (from scout tasks + design-derived tasks)
-- `deployment_gate`: what to verify before marking the phase done and deploying the next
-- `feature_flag`: name of flag if partial feature gating is needed (null if not needed)
-- `rollback`: one-line rollback procedure
-
-Write the plan to `docs/stories/{id}/design/implementation-plan.yaml`.
-Add it to `design.yaml` artefacts list with `type: implementation_plan`.
-
-#### Phase schema
-
-```yaml
-implementation_plan:
-  issue: <N>
-  total_tasks: <count>
-  multi_phase: true|false
-  phases:
-    - id: phase-1
-      name: "Provision DynamoDB table and SQS queue"
-      type: [infrastructure]
-      depends_on: []
-      tasks:
-        - id: 1
-          task: "Add OrderTable CDK construct"
-          tier: directly_affected
-        - id: 2
-          task: "Add OrderCreated SQS queue CDK construct"
-          tier: directly_affected
-      deployment_gate: "CDK deploy succeeds; table and queue visible in AWS console"
-      feature_flag: null
-      rollback: "cdk destroy OrderTable OrderCreatedQueue"
-    - id: phase-2
-      name: "Order creation Lambda and API handler"
-      type: [backend]
-      depends_on: [phase-1]
-      tasks:
-        - id: 3
-          task: "Implement createOrder Lambda"
-          tier: directly_affected
-        - id: 4
-          task: "Wire POST /orders endpoint in API Gateway"
-          tier: directly_affected
-      deployment_gate: "POST /orders returns 201; unit + integration tests green"
-      feature_flag: "orders-api-enabled"
-      rollback: "disable feature flag; redeploy previous Lambda version"
-    - id: phase-3
-      name: "Order list UI"
-      type: [frontend]
-      depends_on: [phase-2]
-      tasks:
-        - id: 5
-          task: "Add OrderList component"
-          tier: directly_affected
-      deployment_gate: "E2E test for order list passes; feature flag enabled in staging"
-      feature_flag: "orders-api-enabled"
-      rollback: "disable feature flag"
 ```
+invoke /arch:asyncapi-contract {issue_number}
+```
+
+The sub-skill writes `docs/stories/{id}/design/async-{slug}.asyncapi.yaml` and exits.
+If no event channels are detected it exits 0 silently.
 
 ---
 
-### Step 9 — Write design.yaml and post GitHub comments
+### Step 9 — Produce phased implementation plan
 
-**9a.** Create `docs/stories/{id}/design/` if it does not exist.
+Always runs (every story needs a plan). Delegate to the sub-skill:
 
-**9b.** Write `design.yaml` with all artefacts listed (including `implementation_plan`), `comment_id: null`, `approval_status: pending` for each.
-
-**9c.** For each artefact, post a GitHub comment in this format, then update `design.yaml` with the returned `comment_id`:
-
-```bash
-COMMENT_URL=$(gh issue comment $ISSUE_NUMBER \
-  --repo $REPOSITORY \
-  --body "COMMENT_BODY_HERE" \
-  --json url --jq '.url')
-# Extract numeric ID from URL: echo $COMMENT_URL | grep -oE '[0-9]+$'
+```
+invoke /arch:implementation-plan {issue_number}
 ```
 
-Comment template:
-```
-<!-- design-approval-{artefact_id} -->
-## Design Review: {type} — {artefact_id}
-
-**Story:** #{issue_number} | **File:** `{file_path}`
-**Rationale:** {why this artefact was produced}
+The sub-skill reads `scout.yaml` tasks plus any design artefacts written in Steps 5–8,
+builds the phased plan (multi-phase mandatory when total tasks > 20), and writes
+`docs/stories/{id}/design/implementation-plan.yaml`.
 
 ---
 
-{full file content inline:
-  - Mermaid fence block for diagrams
-  - YAML code block for API specs and ADR YAML
-  - Link + key decisions summary for rendered ADR markdown}
+### Step 10 — Write design.yaml and run design review
 
----
+**10a.** Create `docs/stories/{id}/design/` if it does not exist.
 
-Reply **`approved`** to approve, or **`rejected: <reason>`** to request changes.
+**10b.** Collect all artefact paths written by Steps 5–9:
+- ADRs from Step 5 (YAML + rendered MD paths)
+- Diagrams from Step 6 (`.mmd` paths)
+- OpenAPI spec from Step 7 (if produced)
+- AsyncAPI spec from Step 8 (if produced)
+- Implementation plan from Step 9
 
-_Generated by /arch:design-implementation on {YYYY-MM-DD}_
-```
+**10c.** Write `docs/stories/{id}/design.yaml` with all artefacts listed,
+`comment_id: null`, `approval_status: pending` for each.
 
-**9d.** Post a summary comment listing all artefacts and review instructions:
-
-```
-<!-- design-implementation-summary -->
-## Architecture Design Summary — Issue #{issue_number}
-
-**{N} artefact(s) require approval before development can start.**
-
-| # | Type | File | Status |
-|---|------|------|--------|
-| 1 | ADR | docs/adr/NNNN-slug.md | Pending |
-| 2 | C4 Diagram | docs/stories/{id}/design/c4-container.mmd | Pending |
-| 3 | Implementation Plan | docs/stories/{id}/design/implementation-plan.yaml | Pending |
-
-**Reviewers:** reply `approved` or `rejected: reason` on each artefact comment above.
-
-Re-run `/arch:design-implementation {id}` after posting approvals to check status.
-```
-
-**9e.** Apply label `architecture-in-review`:
-```bash
-gh label create "architecture-in-review" --color "0075ca" --repo $REPOSITORY 2>/dev/null || true
-gh issue edit $ISSUE_NUMBER --repo $REPOSITORY --add-label "architecture-in-review"
-```
-
----
-
-### Step 10 — Poll approval state [resume path]
-
-Read `design.yaml`. For each artefact with `approval_status: pending` and non-null `comment_id`:
-
-```bash
-COMMENTS=$(gh issue view $ISSUE_NUMBER --repo $REPOSITORY \
-  --json comments --jq '.comments')
-
-ISSUE_AUTHOR=$(gh issue view $ISSUE_NUMBER --repo $REPOSITORY \
-  --json author --jq '.author.login')
-
-BOT_USER=$(gh api user --jq '.login' 2>/dev/null || echo "")
-```
-
-For each pending artefact, scan all comments posted after the artefact comment's timestamp (use `comment_id` to find the artefact comment's `createdAt` first):
-
-**Approval detection:**
-Comment body (trimmed) matches `^(approved|lgtm|yes)\b` (case-insensitive), AND author is not `$ISSUE_AUTHOR` or `$BOT_USER`.
-
-**Rejection detection:**
-Comment body matches `^(rejected|changes requested|nack|no)[:\s.]` (case-insensitive).
-
-**On approval:** Set `approval_status: approved`, `approved_by`, `approved_at` in `design.yaml`.
-
-**On rejection:** Set `approval_status: rejected`. Post a clarification comment:
+**10d.** Delegate posting, polling, and label management to the sub-skill:
 
 ```
-<!-- design-clarification-{artefact_id} -->
-## Design Clarification Needed — {artefact_id}
-
-Feedback received:
-> {rejection_reason}
-
-**Next steps:**
-1. Revise `{file_path}` based on feedback
-2. Re-run `/arch:design-implementation {id}` to repost the updated artefact for re-review
+invoke /arch:design-review {issue_number}
 ```
 
----
-
-### Step 11 — Complete or loop
-
-**If all artefacts are `approved`:**
-
-```bash
-gh label create "ready-for-dev" --color "0e8a16" --repo $REPOSITORY 2>/dev/null || true
-gh issue edit $ISSUE_NUMBER --repo $REPOSITORY \
-  --add-label "ready-for-dev" \
-  --remove-label "architecture-in-review"
-```
-
-Post final summary comment:
-```
-<!-- design-approved -->
-## All Design Artefacts Approved — Issue #{issue_number}
-
-All {N} design artefacts have been approved. Story is ready for development.
-
-| Artefact | Approved By | At |
-|----------|-------------|----|
-| {id} | {reviewer} | {timestamp} |
-
-Next: assign the story and start implementation.
-```
-
-Update `design.yaml`:
-```yaml
-status: approved
-approval_summary:
-  ready_for_dev: true
-```
-
-**If any artefacts remain pending:** Print a status table and exit with instructions:
-
-```
-Architecture Design: Awaiting Approval
-
-Issue #{id} — {title}
-
-  [x] adr-0014        — approved by alice (2026-03-29 14:03)
-  [ ] c4-container    — pending (comment posted)
-  [ ] api-payments    — pending (comment posted)
-
-Re-run /arch:design-implementation {id} after reviewers respond.
-```
+`/arch:design-review` owns the full GitHub approval loop and applies `ready-for-dev`
+when all artefacts are approved. Re-invoke `/arch:design-review {id}` directly after
+reviewers post approvals — no need to re-run the full orchestrator.
 
 ---
 
@@ -506,9 +311,13 @@ ready-for-dev
 | Skill | Role |
 |-------|------|
 | `/scout:prepare-for-dev` | Must run before this skill; writes `scout.yaml` |
-| `/arch:adr-yaml` | Called to produce ADR YAML |
-| `/arch:adr-render` | Called to render ADR to Markdown |
-| `/arch:mermaid-diagram` | Called to produce diagrams |
-| `/arch:maintain-nfr-registry` | Read to get applicable NFRs |
-| `/arch:maintain-constraints-registry` | Read to get hard/soft constraints |
-| `/arch:maintain-risk-registry` | Read to get open risks; update if new risks found during design |
+| `/arch:adr-yaml` | Called in Step 5 to produce ADR YAML |
+| `/arch:adr-render` | Called in Step 5 to render ADR to Markdown |
+| `/arch:mermaid-diagram` | Called in Step 6 to produce diagrams |
+| `/arch:openapi-contract` | Called in Step 7 — generates OpenAPI 3.1.0 spec |
+| `/arch:asyncapi-contract` | Called in Step 8 — generates AsyncAPI 2.6 spec |
+| `/arch:implementation-plan` | Called in Step 9 — produces phased plan |
+| `/arch:design-review` | Called in Step 10 — GitHub approval loop; also callable standalone |
+| `/arch:maintain-nfr-registry` | Read in Step 3 to get applicable NFRs |
+| `/arch:maintain-constraints-registry` | Read in Step 3 to get hard/soft constraints |
+| `/arch:maintain-risk-registry` | Read in Step 3 to get open risks |
