@@ -5,12 +5,15 @@ description: >
   Post-scout design phase. Reads scout.yaml, story, NFRs, constraints, risks.
   Produces ADRs, C4/ERD/flow diagrams, OpenAPI/AsyncAPI contracts. Posts each
   to GitHub for reviewer approval, then marks story ready-for-dev.
-tools:
+context: fork
+allowed-tools:
   - Read
-  - Write
-  - Bash
   - Glob
   - Grep
+  - Bash
+  - Write
+write-paths:
+  - docs/
 ---
 
 # Architecture Design Implementation
@@ -29,8 +32,8 @@ the story `ready-for-dev` once all artefacts are approved.
 
 ## Constraints
 
-- Read-only for all source code, tests, and infrastructure
-- Write only to `docs/stories/{id}/design/`, `docs/stories/{id}/design.yaml`, `docs/adr/`
+- **Write**: `docs/` only (all subdirectories) — declared in frontmatter `write-paths`
+- **Read**: everything else (source, tests, infrastructure, config) — read-only
 - Do not change issue status to In Progress
 - Do not create implementation branches
 - Do not modify an accepted ADR — supersede it with a new one if there is strong evidence
