@@ -1,6 +1,7 @@
 ---
 name: agent:architect
 description: Spawn the Architect agent to map business requirements to implementation details, produce implementation briefs, assess risks, and create ADRs. Use for standalone architecture tasks without the full agile team.
+argument-hint: "[issue_number]"
 ---
 
 # Agent: Architect
