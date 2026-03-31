@@ -91,8 +91,8 @@ Check the first word of ARGUMENTS before anything else:
 
 | Subcommand | Action |
 |---|---|
-| `story-extract` | Read active story body, parse template fields, write `.agile-dev-team/story-extract.yaml` (see `commands/story-extract.md`) |
-| `story-validate` | Run `python3 $SKILL_DIR/scripts/validate-story-yaml.py` against `.agile-dev-team/story-extract.yaml`; report results (see `commands/story-validate.md`) |
+| `story-extract` | Create story branch, parse issue body, write `docs/stories/{issue}/extract.yaml` (see `commands/story-extract.md`) |
+| `story-validate` | Validate `docs/stories/{issue}/extract.yaml`; apply or remove `ready-for-development` label (see `commands/story-validate.md`) |
 | `build` | Invoke `/pm:build` passing the remainder of ARGUMENTS (e.g. issue number) |
 | _(anything else)_ | Proceed to Workspace Resolution and spawn the PM subagent |
 

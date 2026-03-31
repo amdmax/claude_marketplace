@@ -24,10 +24,18 @@ Validate `.agile-dev-team/story-extract.yaml` against story requirements. Report
 
 If missing: tell the user to run `story-extract` first.
 
-### Step 2: Run validation script
+### Step 2: Resolve extract path and run validation script
 
 ```bash
-echo '{"tool_input":{"file_path":".agile-dev-team/story-extract.yaml"}}' \
+if [ -n "$ARGUMENT" ]; then
+  ISSUE_NUMBER="$ARGUMENT"
+else
+  ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json 2>/dev/null)
+fi
+
+EXTRACT_FILE="docs/stories/${ISSUE_NUMBER}/extract.yaml"
+
+echo "{\"tool_input\":{\"file_path\":\"${EXTRACT_FILE}\"}}" \
   | python3 "$(dirname "$0")/../scripts/validate-story-yaml.py"
 ```
 
@@ -49,16 +57,21 @@ On **warnings** — note them but do not block:
 | `hypothesis` missing "As a" / "I want" | Rewrite in user story format for clarity |
 | AC items missing Given/When/Then | Rewrite ACs as testable statements |
 
-### Step 4: Apply "ready for dev" label (no errors only)
+### Step 4: Apply or remove "ready-for-development" label
 
 If validation produced **zero errors** (warnings are allowed):
 
 ```bash
-ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json)
-gh issue edit "$ISSUE_NUMBER" --add-label "ready for dev"
+gh issue edit "$ISSUE_NUMBER" --add-label "ready-for-development"
 ```
 
-If `active-story.json` is missing or `issueNumber` is null, skip silently.
+If validation produced **one or more errors**:
+
+```bash
+gh issue edit "$ISSUE_NUMBER" --remove-label "ready-for-development" 2>/dev/null || true
+```
+
+If `ISSUE_NUMBER` is empty or null, skip silently.
 
 ---
 

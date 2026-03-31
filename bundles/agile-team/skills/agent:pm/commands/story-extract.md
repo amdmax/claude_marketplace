@@ -26,17 +26,41 @@ Based on the `feature-story.yml` template (`academy/.github/ISSUE_TEMPLATE/featu
 
 ## Workflow
 
-### Step 1: Resolve Story Body
+### Step 1: Resolve Issue Number and Story Body
 
-If an issue number argument was provided:
 ```bash
-BODY=$(gh issue view <N> --json body -q '.body')
+if [ -n "$ARGUMENT" ]; then
+  ISSUE_NUMBER="$ARGUMENT"
+  BODY=$(gh issue view "$ARGUMENT" --json body -q '.body')
+else
+  ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json 2>/dev/null)
+  BODY=$(jq -r '.body' .agile-dev-team/active-story.json)
+fi
+
+if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then
+  echo "ERROR  No issue number. Pass one or run /github:story-fetch first."
+  exit 1
+fi
 ```
 
-Otherwise:
+### Step 1b: Create Story Branch
+
+Ensure a feature branch exists for this story, branching off `master` (or `main` if `master` does not exist):
+
 ```bash
-BODY=$(jq -r '.body' .agile-dev-team/active-story.json)
+BASE=$(git rev-parse --verify master &>/dev/null && echo master || echo main)
+BRANCH="feature/${ISSUE_NUMBER}"
+
+# If branch already exists locally or remotely, check it out; otherwise create it
+if git show-ref --verify --quiet "refs/heads/${BRANCH}" || \
+   git ls-remote --exit-code origin "${BRANCH}" &>/dev/null; then
+  git checkout "${BRANCH}"
+else
+  git checkout -b "${BRANCH}" "origin/${BASE}"
+fi
 ```
+
+Print the branch name that is now active.
 
 ### Step 2: Parse Template Sections
 
@@ -67,7 +91,12 @@ Warn (do not fail) if:
 
 ### Step 4: Write Output
 
-Write to `.agile-dev-team/story-extract.yaml`.
+```bash
+mkdir -p "docs/stories/${ISSUE_NUMBER}"
+OUTPUT="docs/stories/${ISSUE_NUMBER}/extract.yaml"
+```
+
+Write to `$OUTPUT`.
 
 ---
 
@@ -92,7 +121,7 @@ story:
 ## Validation
 
 After writing, confirm:
-- File `.agile-dev-team/story-extract.yaml` exists
+- File `docs/stories/${ISSUE_NUMBER}/extract.yaml` exists
 - `story.acceptanceCriteria` is a non-empty array
 - `story.description` and `story.hypothesis` are non-empty strings
 - `story.milestones` key is absent (not null) when no milestones were found

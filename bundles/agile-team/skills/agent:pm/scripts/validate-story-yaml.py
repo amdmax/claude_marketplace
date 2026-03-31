@@ -97,7 +97,7 @@ def main() -> None:
         sys.exit(0)
 
     file_path = (hook_input.get("tool_input") or {}).get("file_path", "")
-    if not file_path or not file_path.endswith("story-extract.yaml"):
+    if not file_path or not file_path.endswith("extract.yaml"):
         sys.exit(0)
 
     try:
