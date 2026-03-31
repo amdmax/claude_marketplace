@@ -146,6 +146,8 @@ For each triggered diagram type, invoke `/arch:mermaid-diagram`. No inline style
 - Use `graph TB` with subgraphs per bounded context.
 - Show containers only (services, databases, queues) — not components or code.
 - Highlight new/changed containers with `stroke-width:3px`.
+- Labels: logical names only — no IDs, ARNs, PK/SK patterns, or schema detail.
+- Multi-line labels: use `<br/>` not `\n` — `\n` causes a GitHub mermaid parse error in `graph` diagrams.
 
 **ERD Diagram** → `docs/stories/{id}/design/erd.mmd`
 - Use `erDiagram` syntax.

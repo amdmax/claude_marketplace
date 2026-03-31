@@ -182,6 +182,16 @@ sequenceDiagram
 - Network topology
 - Service dependencies
 
+> **CRITICAL — multi-line labels in `graph`/`graph TB`/`graph TD`:**
+> Use `<br/>` for line breaks inside node labels. `\n` is NOT supported in `graph` diagrams — GitHub's mermaid parser treats `\n` as a literal newline escape which splits the source line and causes a parse error.
+>
+> ```
+> ✓ CF[CloudFront<br/>Distribution]
+> ✗ CF[CloudFront\nDistribution]   ← parse error on GitHub
+> ```
+>
+> **C4 container diagram labels:** show logical names only. Never embed IDs, ARNs, PK/SK patterns, or schema details in a label — those belong in the ERD or implementation notes.
+
 **Basic syntax:**
 ```mermaid
 graph TB
