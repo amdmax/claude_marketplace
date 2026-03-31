@@ -78,9 +78,11 @@ arch:design-review: all artefacts already approved — nothing to do
 ```
 Exit 0.
 
-### Step 3 — Post unposted artefacts (comment_id: null)
+### Step 3 — Post the next unposted artefact (one at a time)
 
-For each artefact where `comment_id` is null:
+**Gate:** Only post the next artefact if every previously posted artefact has `approval_status: approved`. If any artefact is `pending` or `rejected`, skip this step entirely — the skill does not post ahead of approvals.
+
+Find the **first** artefact in `design.artefacts[]` order where `comment_id` is null and `approval_status` is not `rejected`. If none exists, skip to Step 5.
 
 **3a.** Read the artefact file content.
 
@@ -122,6 +124,8 @@ COMMENT_ID=$(echo "$COMMENT_URL" | grep -oE '[0-9]+$')
 ```
 
 **3d.** Update `design.yaml` — set `comment_id: {COMMENT_ID}` for the artefact.
+
+Post exactly one artefact per run — do not loop back to post the next one.
 
 ### Step 4 — Post summary comment (first run only)
 
@@ -253,15 +257,15 @@ Update `design.yaml`:
 status: approved
 ```
 
-**If pending or rejected artefacts remain:** Print status table and exit:
+**If pending or rejected artefacts remain:** Print status table and exit. Do NOT post the next unposted artefact — wait for the current one to be approved first.
 
 ```
 arch:design-review: issue #{id} — awaiting approval
 
   [x] adr-0014          — approved by alice (2026-03-29 14:03)
-  [ ] c4-container      — pending  (comment #{id})
-  [!] api-payments      — rejected (clarification posted)
-  [ ] implementation-plan — pending (comment #{id})
+  [ ] c4-container      — pending  (comment #{id})           ← waiting for approval
+  [ ] api-payments      — queued   (not yet posted)
+  [ ] implementation-plan — queued (not yet posted)
 
 {N} of {total} artefacts approved. Re-run /arch:design-review {id} after reviewers respond.
 ```
