@@ -1,6 +1,6 @@
 {
   "name": "github",
-  "description": "GitHub workflow automation (14 skills): story lifecycle, PRs, CI loops, issue management, board tidy, runner setup, merge-chores",
+  "description": "GitHub workflow automation (13 skills): story lifecycle, PRs, CI loops, issue management, board tidy, runner setup, merge-chores",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",

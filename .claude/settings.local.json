@@ -8,7 +8,9 @@
       "Bash(git mv:*)",
       "Bash(git log:*)",
       "Bash(python3 -m json.tool)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(mkdir -p bundles/aws/.claude-plugin bundles/aws/skills)",
+      "Bash(mv \"bundles/architecture-quality/skills/aws:architect\" \"bundles/architecture-quality/skills/aws:cdk\" \"bundles/architecture-quality/skills/aws:cdk-validate\" bundles/aws/skills/)"
     ]
   },
   "hooks": {
