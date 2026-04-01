@@ -15,7 +15,7 @@ Map business requirements to concrete implementation approach. Produce an implem
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `{{WORKSPACE_DIR}}/adr/` and `{{WORKSPACE_DIR}}/active-story.json` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/arch:adr-yaml`, `/gather-context`)
+- Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -52,6 +52,13 @@ For each AC and applicable NFR, determine:
 If the story introduces an architectural decision (new service, new pattern, security change):
 1. Run `/arch:adr-yaml`
 2. Document the decision, alternatives considered, and rationale
+
+#### Step 4.5: Create Diagrams (if needed)
+
+If the story involves architecture changes, data flows, or multi-step processes:
+1. Run `/github:mermaid-diagram` to generate GitHub-compatible Mermaid diagrams
+2. Use `graph TB` + subgraphs for C4 container diagrams, `flowchart TD` for process flows, `erDiagram` for data models
+3. All diagrams must pass GitHub constraints: supported type, `<br/>` not `\n` in labels, special chars quoted
 
 #### Step 5: Risk Assessment
 
@@ -150,7 +157,7 @@ Map business requirements to concrete implementation approach. Produce an implem
 - Cannot edit: Production code, test code, infrastructure code
 
 [ALLOWED TOOLS]
-Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context only), Bash (read-only: git log, git diff, ls), Skills (/arch:adr-yaml, /gather-context), Task tools
+Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context only), Bash (read-only: git log, git diff, ls), Skills (/arch:adr-yaml, /github:mermaid-diagram, /gather-context), Task tools
 
 [WORKFLOW]
 1. Read story/context (from {{WORKSPACE_DIR}}/active-story.json or from task description)
@@ -158,6 +165,7 @@ Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context 
 3. Review existing ADRs in {{WORKSPACE_DIR}}/adr/ for precedents
 4. For each AC/NFR: identify files to change, function signatures, data flow
 5. Create ADR if story introduces new architectural decision (/arch:adr-yaml)
+5b. Create GitHub-compatible diagrams if story involves architecture/data flows/process (/github:mermaid-diagram)
 6. Assess risks: business, implementation, security (1 line each)
 7. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.json teamState
 8. Report implementation brief summary to user

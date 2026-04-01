@@ -140,7 +140,7 @@ For each ADR warranted by Step 4:
 
 ### Step 6 — Generate diagrams [conditional]
 
-For each triggered diagram type, invoke `/arch:mermaid-diagram`. No inline styles unless emphasising a new or changed node — let the project theme handle colours.
+For each triggered diagram type, invoke `/github:mermaid-diagram`. No inline styles unless emphasising a new or changed node — let the project theme handle colours.
 
 **C4 Container Diagram** → `docs/stories/{id}/design/c4-container.mmd`
 - Use `graph TB` with subgraphs per bounded context.
@@ -315,7 +315,7 @@ ready-for-dev
 | `/scout:prepare-for-dev` | Must run before this skill; writes `scout.yaml` |
 | `/arch:adr-yaml` | Called in Step 5 to produce ADR YAML |
 | `/arch:adr-render` | Called in Step 5 to render ADR to Markdown |
-| `/arch:mermaid-diagram` | Called in Step 6 to produce diagrams |
+| `/github:mermaid-diagram` | Called in Step 6 to produce diagrams |
 | `/arch:openapi-contract` | Called in Step 7 — generates OpenAPI 3.1.0 spec |
 | `/arch:asyncapi-contract` | Called in Step 8 — generates AsyncAPI 2.6 spec |
 | `/arch:implementation-plan` | Called in Step 9 — produces phased plan |
