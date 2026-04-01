@@ -9,6 +9,12 @@ tools:
   - Glob
   - Grep
   - Bash
+hooks:
+  PostToolUse:
+    - matcher: Write|Edit
+      hooks:
+        - type: command
+          command: python3 $SKILL_DIR/scripts/validate-mermaid.py
 ---
 
 # Mermaid Diagram Generator — GitHub-Compatible
@@ -42,12 +48,14 @@ GitHub renders a fixed set of Mermaid diagram types. Use only:
 
 ### 2. Line Breaks in Labels
 
-- **NEVER** use `\n` inside node labels — GitHub's Mermaid parser treats it as a literal escape and breaks parsing.
+- **NEVER** use `
+` inside node labels — GitHub's Mermaid parser treats it as a literal escape and breaks parsing.
 - **ALWAYS** use `<br/>` for multi-line labels in `graph` and `flowchart` diagrams.
 
 ```
 ✓  CF[CloudFront<br/>Distribution]
-✗  CF[CloudFront\nDistribution]   ← parse error on GitHub
+✗  CF[CloudFront
+Distribution]   ← parse error on GitHub
 ```
 
 ### 3. Special Characters in Labels
@@ -159,7 +167,8 @@ graph TB
 ```
 
 **Critical rules for `graph` / `graph TB` / `graph TD`:**
-- Use `<br/>` for multi-line labels — `\n` causes parse errors on GitHub
+- Use `<br/>` for multi-line labels — `
+` causes parse errors on GitHub
 - Labels: logical names only — no IDs, ARNs, PK/SK patterns, or schema detail
 - Show containers/services only — not internal code structure
 
@@ -256,7 +265,8 @@ When asked to create a diagram:
 1. **Identify type** — flowchart, sequence, graph, ERD, state, or other?
 2. **Choose direction** — TD for processes, LR for timelines/pipelines, TB for architecture
 3. **Draft structure** — keep under 25 nodes
-4. **Apply GitHub constraints** — `<br/>` not `\n`, quote special chars, supported type only
+4. **Apply GitHub constraints** — `<br/>` not `
+`, quote special chars, supported type only
 5. **Add emphasis sparingly** — only nodes that need to stand out
 6. **Write to file** — `.mmd` extension (e.g., `docs/stories/{id}/design/c4-container.mmd`)
 
@@ -366,7 +376,8 @@ erDiagram
 
 After generating a diagram, verify:
 - [ ] Diagram type is in the GitHub-supported list
-- [ ] No `\n` in labels (use `<br/>`)
+- [ ] No `
+` in labels (use `<br/>`)
 - [ ] Special chars in labels are quoted with `"`
 - [ ] Node count ≤ 25
 - [ ] No `%%{init}%%` theme overrides
