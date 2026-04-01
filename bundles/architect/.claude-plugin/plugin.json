@@ -1,6 +1,6 @@
 {
   "name": "architect",
-  "description": "Architecture guidance and code quality (19 skills): security, performance, compliance, fitness functions, ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR/risk/constraints registries, diagrams",
+  "description": "Architecture guidance and code quality (18 skills): security, performance, compliance, fitness functions, ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR/risk/constraints registries",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/aigensa/claude_marketplace",
   "repository": "https://github.com/aigensa/claude_marketplace",
   "license": "MIT",
-  "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality", "mermaid", "adr", "diagrams"]
+  "keywords": ["architecture", "aws", "cdk", "security", "performance", "code-review", "quality", "adr"]
 }

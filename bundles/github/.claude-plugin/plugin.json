@@ -1,6 +1,6 @@
 {
   "name": "github",
-  "description": "GitHub workflow automation (13 skills): story lifecycle, PRs, CI loops, issue management, board tidy, runner setup, merge-chores",
+  "description": "GitHub workflow automation (14 skills): story lifecycle, PRs, CI loops, issue management, board tidy, runner setup, merge-chores, mermaid diagrams",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
@@ -9,5 +9,5 @@
   "homepage": "https://github.com/aigensa/claude_marketplace",
   "repository": "https://github.com/aigensa/claude_marketplace",
   "license": "MIT",
-  "keywords": ["github", "pull-request", "issues", "ci", "story", "workflow"]
+  "keywords": ["github", "pull-request", "issues", "ci", "story", "workflow", "mermaid", "diagrams"]
 }

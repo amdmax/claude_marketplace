@@ -22,7 +22,7 @@ Apply three mandatory lenses to every decision:
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `docs/adr/` and `.agile-dev-team/development-progress.yaml` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/arch:adr-yaml`, `/gather-context`)
+- Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -88,6 +88,13 @@ If two valid paths differ by >$10/mo estimated cost, escalate to PM for human de
 If the story introduces an architectural decision (new service, new pattern, security change):
 1. Run `/arch:adr-yaml`
 2. Document the decision, alternatives considered, and rationale
+
+### Step 4.5: Create Diagrams (if needed)
+
+If the story involves architecture changes, data flows, or multi-step processes:
+1. Run `/github:mermaid-diagram` to generate GitHub-compatible Mermaid diagrams
+2. Use `graph TB` + subgraphs for C4 container diagrams, `flowchart TD` for process flows, `erDiagram` for data models
+3. All diagrams must pass GitHub constraints: supported type, `<br/>` not `\n` in labels, special chars quoted
 
 ### Step 5: Risk Assessment
 

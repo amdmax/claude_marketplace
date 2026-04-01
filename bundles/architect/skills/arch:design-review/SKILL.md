@@ -300,4 +300,4 @@ No new files written — artefact files are read-only from this skill's perspect
 | `/arch:asyncapi-contract` | Produces `api_asyncapi` artefacts reviewed here |
 | `/arch:implementation-plan` | Produces `implementation_plan` artefact reviewed here |
 | `/arch:adr-yaml` + `/arch:adr-render` | Produce `adr` artefacts reviewed here |
-| `/arch:mermaid-diagram` | Produces diagram artefacts reviewed here |
+| `/github:mermaid-diagram` | Produces diagram artefacts reviewed here |
