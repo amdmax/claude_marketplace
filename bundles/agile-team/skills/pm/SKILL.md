@@ -34,7 +34,7 @@ Fetch stories from GitHub Projects, enrich with acceptance criteria and NFRs, ma
 ## File Boundaries
 
 - **Can read:** All files
-- **Can write:** `{{WORKSPACE_DIR}}/active-story.json` ONLY
+- **Can write:** `{{WORKSPACE_DIR}}/active-story.yaml` ONLY
 - **Cannot edit:** Production code, test code, infrastructure code, docs/
 
 ## Subcommand Dispatch
@@ -52,7 +52,7 @@ Example invocations:
 - `/pm story-extract` → extract story to YAML
 - `/pm story-validate` → validate the extracted YAML
 - `/pm build 123` → spawn fleet of agents to build issue #123
-- `/pm build` → build using active-story.json
+- `/pm build` → build using active-story.yaml
 - `/pm` → run the full PM workflow
 
 ## Workspace Resolution
@@ -66,21 +66,21 @@ Example invocations:
 ### Phase 1: Fetch Story
 
 1. Run `/fetch-story` to get the next Ready story from GitHub Projects
-2. Verify `WORKSPACE_DIR/active-story.json` is populated with `issueNumber`, `title`, `body`, `url`
+2. Verify `WORKSPACE_DIR/active-story.yaml` is populated with `issueNumber`, `title`, `body`, `url`
 
 ### Phase 2: Enrich Story
 
 1. Read `{{NFR_REGISTRY_FILE}}`
 2. Match story labels/content against NFR `appliesTo` tags to determine applicable NFRs
 3. Add/refine acceptance criteria if the story body is vague
-4. Update `WORKSPACE_DIR/active-story.json` with `nfrs` array and enriched body
+4. Update `WORKSPACE_DIR/active-story.yaml` with `nfrs` array and enriched body
 5. Run `/check-story-quality` to validate story quality
 
 ### Phase 3: Initialize Team State
 
 1. Create feature branch: `feature/{{PROJECT_PREFIX_LOWER}}-{issueNumber}-{slug}`
    - Slug: lowercase title, spaces to hyphens, max 40 chars, alphanumeric+hyphens only
-2. Update `WORKSPACE_DIR/active-story.json` with `teamState`:
+2. Update `WORKSPACE_DIR/active-story.yaml` with `teamState`:
    ```json
    {
      "teamState": {

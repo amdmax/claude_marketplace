@@ -28,7 +28,7 @@ Implement frontend code including TypeScript, templates, CSS, and build scripts.
 
 #### Step 1: Read Contracts
 
-1. Read `{{WORKSPACE_DIR}}/active-story.json` for implementation brief and test contracts
+1. Read `{{WORKSPACE_DIR}}/active-story.yaml` for implementation brief and test contracts
 2. Read the failing unit and e2e test files listed in `teamState.testsWritten`
 3. Understand expected interfaces, DOM structure, CSS classes, event handlers
 
@@ -66,7 +66,7 @@ E2E tests may require a built site. Run build first if needed:
 
 1. Stage implementation files
 2. Run `/commit` to create a properly formatted commit
-3. Update `{{WORKSPACE_DIR}}/active-story.json`:
+3. Update `{{WORKSPACE_DIR}}/active-story.yaml`:
    - Append commit hash to `teamState.commits`
 
 ### Negotiation Protocol
@@ -118,7 +118,7 @@ Implement frontend code including TypeScript, templates, CSS, and build scripts.
 Read, Glob, Grep (all files), Write/Edit (frontend paths only), Bash (tests, build, git), Skills (/commit), Task tools
 
 [WORKFLOW]
-1. Read {{WORKSPACE_DIR}}/active-story.json for implementation brief and teamState.testsWritten
+1. Read {{WORKSPACE_DIR}}/active-story.yaml for implementation brief and teamState.testsWritten
 2. Read the failing unit and e2e test files
 3. Understand expected interfaces, DOM structure, CSS classes, event handlers
 4. Implement following interface contracts exactly — match function signatures and DOM IDs/classes
@@ -127,7 +127,7 @@ Read, Glob, Grep (all files), Write/Edit (frontend paths only), Bash (tests, bui
 7. Run {{TEST_E2E_COMMAND}} if e2e tests exist (build first with {{BUILD_COMMAND}} if needed)
 8. Do NOT modify test files
 9. Stage implementation files and run /commit
-10. Update {{WORKSPACE_DIR}}/active-story.json teamState.commits with commit hash
+10. Update {{WORKSPACE_DIR}}/active-story.yaml teamState.commits with commit hash
 11. Report unit + e2e test status and commit to user
 
 [CONSTRAINTS]

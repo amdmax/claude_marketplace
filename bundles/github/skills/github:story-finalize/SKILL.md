@@ -1,6 +1,6 @@
 ---
 name: github:story-finalize
-description: "Close the loop on any completed GitHub issue (story, bug, task, or chore): update the issue body with actual work done, link the PR, apply type and domain labels, assign to self, and add to the GitHub Project board. Use after implementation is merged or verified complete. Accepts a GitHub issue URL or number as argument; falls back to .agile-dev-team/active-story.json. Invokable with /gh:story-finalize."
+description: "Close the loop on any completed GitHub issue (story, bug, task, or chore): update the issue body with actual work done, link the PR, apply type and domain labels, assign to self, and add to the GitHub Project board. Use after implementation is merged or verified complete. Accepts a GitHub issue URL or number as argument; falls back to .agile-dev-team/active-story.yaml. Invokable with /gh:story-finalize."
 ---
 
 # Finalize Story
@@ -11,10 +11,10 @@ Closes the loop on a completed story: updates the issue, links the PR, labels it
 
 **From active story file (preferred):**
 ```bash
-STORY_FILE=".agile-dev-team/active-story.json"
+STORY_FILE=".agile-dev-team/active-story.yaml"
 if [ -f "$STORY_FILE" ]; then
-  ISSUE_NUMBER=$(jq -r '.issueNumber' "$STORY_FILE")
-  ISSUE_URL=$(jq -r '.url' "$STORY_FILE")
+  ISSUE_NUMBER=$(yq e '.issueNumber' "$STORY_FILE")
+  ISSUE_URL=$(yq e '.url' "$STORY_FILE")
 fi
 ```
 

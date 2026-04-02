@@ -29,7 +29,7 @@ description: "Implement a scope of work end-to-end — writes code, commits, cre
 ### Phase 2 — Commit
 
 Invoke `/commit`:
-- Auto-links to active story (reads `.agile-dev-team/active-story.json`)
+- Auto-links to active story (reads `.agile-dev-team/active-story.yaml`)
 - Creates a GitHub issue if no active story exists
 - Produces `AIGCODE-###: <description>` formatted commit
 

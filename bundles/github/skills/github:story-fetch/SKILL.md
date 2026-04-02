@@ -1,7 +1,7 @@
 ---
 name: fetch-story
 description: >
-  Populate .agile-dev-team/active-story.json from a GitHub issue.
+  Populate .agile-dev-team/active-story.yaml from a GitHub issue.
   Accepts an issue number or URL as an optional argument.
   Falls back to the highest-priority Ready story from GitHub Projects
   when no argument is provided. Invokable with /fetch-story [number|url].
@@ -11,7 +11,7 @@ description: >
 
 ## Purpose
 
-Write `.agile-dev-team/active-story.json` from a GitHub issue so downstream
+Write `.agile-dev-team/active-story.yaml` from a GitHub issue so downstream
 skills (`/git:commit`, `/github:pull-request`, etc.) have story context.
 
 ## Workflow
@@ -100,7 +100,7 @@ ISSUE_DATA=$(gh issue view "$ISSUE_NUMBER" \
 [ -z "$ISSUE_DATA" ] && echo "❌ Issue #$ISSUE_NUMBER not found." && exit 1
 ```
 
-### Step 3 — Write active-story.json
+### Step 3 — Write active-story.yaml
 
 ```bash
 mkdir -p .agile-dev-team
@@ -112,9 +112,9 @@ echo "$ISSUE_DATA" | jq '{
   url:         .url,
   labels:      [.labels[].name],
   assignees:   [.assignees[].login]
-}' > .agile-dev-team/active-story.json
+}' > .agile-dev-team/active-story.yaml
 
-echo "✓ Active story set: #$(jq -r '.issueNumber' .agile-dev-team/active-story.json) — $(jq -r '.title' .agile-dev-team/active-story.json)"
+echo "✓ Active story set: #$(yq e '.issueNumber' .agile-dev-team/active-story.yaml) — $(yq e '.title' .agile-dev-team/active-story.yaml)"
 ```
 
 ## Exceptions

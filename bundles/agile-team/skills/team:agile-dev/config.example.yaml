@@ -11,7 +11,7 @@ paths:
   workspace_dir: ".agile-dev-team/docs"
 
   # Derived from workspace_dir at runtime:
-  #   active-story.json → workspace_dir/active-story.json
+  #   active-story.yaml → workspace_dir/active-story.yaml
   #   ADRs              → workspace_dir/adr/
 
   # NFR registry (input file — not written by agents)
@@ -51,11 +51,11 @@ agents:
 file_boundaries:
   pm:
     writable:
-      - ".agile-dev-team/docs/active-story.json"  # = workspace_dir/active-story.json
+      - ".agile-dev-team/active-story.yaml"  # = workspace_dir/active-story.yaml
   architect:
     writable:
       - ".agile-dev-team/docs/adr/*.md"            # = workspace_dir/adr/*.md
-      - ".agile-dev-team/docs/active-story.json"   # = workspace_dir/active-story.json
+      - ".agile-dev-team/active-story.yaml"   # = workspace_dir/active-story.yaml
   test_architect:
     writable:
       - "tests/**"

@@ -67,7 +67,7 @@ OpenAPI Generation → Contract Tests → Coverage Analysis → PRD Validation
 **See:** @references/quality-architect-mode.md for detailed guide
 
 **Process:**
-1. Read active story from `.agile-dev-team/active-story.json`
+1. Read active story from `.agile-dev-team/active-story.yaml`
 2. Extract or generate acceptance criteria (from story body or title + NFRs)
 3. Search codebase for implementation (keyword-based Grep)
 4. Search test files for AC coverage (keyword + similarity scoring)

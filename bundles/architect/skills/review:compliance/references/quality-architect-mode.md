@@ -17,7 +17,7 @@ Active Story → Extract/Generate ACs → Link to Tests → Validate P0 Coverage
 ### Step 1: Read Active Story
 
 ```typescript
-const story = JSON.parse(await readFile('.agile-dev-team/active-story.json'));
+const story = yaml.load(await readFile('.agile-dev-team/active-story.yaml', 'utf-8'));
 
 // Expected structure:
 {
@@ -410,7 +410,7 @@ acceptance:
 ```bash
 /gh:commit
   ↓
-Check .agile-dev-team/active-story.json exists
+Check .agile-dev-team/active-story.yaml exists
   ↓
 Run /compliance --phase 0
   ↓

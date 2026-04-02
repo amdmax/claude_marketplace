@@ -203,10 +203,10 @@ Chosen option: "[Option 1]", because [justification considering decision drivers
 
 ```bash
 # Check active story exists
-STORY_FILE="$CLAUDE_PROJECT_DIR/.claude/active-story.json"
+STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found"
-  echo "   Expected: $CLAUDE_PROJECT_DIR/.claude/active-story.json"
+  echo "   Expected: $CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
   exit 1
 fi
 
@@ -217,7 +217,7 @@ fi
 ### Step 2: Load Story Data
 
 ```javascript
-const story = JSON.parse(fs.readFileSync('.claude/active-story.json', 'utf-8'));
+const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
 
 // Extract data
 const { issueNumber, title, body, nfrs, context, labels } = story;
@@ -658,7 +658,8 @@ story.adr = {
   createdAt: new Date().toISOString()
 };
 
-fs.writeFileSync('.claude/active-story.json', JSON.stringify(story, null, 2));
+const yaml = require('js-yaml');
+fs.writeFileSync('.agile-dev-team/active-story.yaml', yaml.dump(story));
 ```
 
 ### Step 14: Report Success
@@ -692,7 +693,7 @@ Next Steps:
   3. Reference ADR in implementation PR
   4. Run /dev-story to begin implementation
 
-✓ ADR reference saved to .claude/active-story.json
+✓ ADR reference saved to .agile-dev-team/active-story.yaml
 ```
 
 ## Error Handling

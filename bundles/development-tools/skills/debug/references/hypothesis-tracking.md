@@ -351,7 +351,7 @@ COMPLETE → Archive session
 
 ## Integration with /commit Skill
 
-The debug skill creates `.agile-dev-team/active-story.json` for `/commit` integration:
+The debug skill creates `.agile-dev-team/active-story.yaml` for `/commit` integration:
 
 ```json
 {

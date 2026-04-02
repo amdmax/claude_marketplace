@@ -193,7 +193,7 @@ fi
 
 **Check NFRs:**
 ```javascript
-const story = JSON.parse(fs.readFileSync('{{ACTIVE_STORY_FILE}}', 'utf-8'));
+const story = yaml.load(fs.readFileSync('{{ACTIVE_STORY_FILE}}', 'utf-8'));
 
 if (!story.nfrs || Object.keys(story.nfrs).length === 0) {
   console.log('⚠️  NFRs not yet collected');
@@ -583,7 +583,7 @@ const establishedDecisions = extractDecisions(relatedADRs);
 
 **Read existing story:**
 ```javascript
-const story = JSON.parse(fs.readFileSync('{{ACTIVE_STORY_FILE}}', 'utf-8'));
+const story = yaml.load(fs.readFileSync('{{ACTIVE_STORY_FILE}}', 'utf-8'));
 ```
 
 **Merge context:**
@@ -603,7 +603,7 @@ story.context = {
 
 **Write updated story:**
 ```javascript
-fs.writeFileSync('{{ACTIVE_STORY_FILE}}', JSON.stringify(story, null, 2));
+fs.writeFileSync('{{ACTIVE_STORY_FILE}}', yaml.dump(story));
 ```
 
 ### Step 10: Report Summary

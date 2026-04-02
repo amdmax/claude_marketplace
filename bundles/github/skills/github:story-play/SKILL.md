@@ -80,7 +80,7 @@ echo "✓ Master branch updated"
 **Read active story file:**
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.claude/active-story.json"
+STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
 if [ -f "$STORY_FILE" ]; then
   # Active story exists
   ACTIVE_STORY_EXISTS=true
@@ -113,7 +113,7 @@ Choice:
 |--------|--------|
 | 1 - Continue | Skip to summary, show current story status |
 | 2 - Switch | Archive current story, fetch new one |
-| 3 - View details | Display full `.claude/active-story.json`, then re-prompt |
+| 3 - View details | Display full `.agile-dev-team/active-story.yaml`, then re-prompt |
 | 4 - Cancel | Exit workflow |
 
 **Archive current story (if switching):**
@@ -121,10 +121,10 @@ Choice:
 ```bash
 # Move active story to archive
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-mv "$CLAUDE_PROJECT_DIR/.claude/active-story.json" \
-   "$CLAUDE_PROJECT_DIR/.claude/active-story-${TIMESTAMP}.json"
+mv "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml" \
+   "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-${TIMESTAMP}.yaml"
 
-echo "✓ Previous story archived to .claude/active-story-${TIMESTAMP}.json"
+echo "✓ Previous story archived to .agile-dev-team/active-story-${TIMESTAMP}.yaml"
 ```
 
 ### Step 3: Fetch Next Ready Story
@@ -144,7 +144,7 @@ Skill: "fetch-story"
 ```
 
 **Expected output:**
-- `.claude/active-story.json` created with story data
+- `.agile-dev-team/active-story.yaml` created with story data
 - GitHub status updated to "In Progress"
 - Story summary displayed
 
@@ -194,7 +194,7 @@ Skill: "gather-nfr"
 
 **Expected output:**
 - Interactive Q&A session with user
-- NFRs appended to `.claude/active-story.json`
+- NFRs appended to `.agile-dev-team/active-story.yaml`
 - NFR summary displayed
 
 **Error handling:**
@@ -245,7 +245,7 @@ Skill: "gather-context"
 - Codebase analysis (via Explore agent)
 - Architecture doc review
 - User clarification questions
-- Context appended to `.claude/active-story.json`
+- Context appended to `.agile-dev-team/active-story.yaml`
 
 **Error handling:**
 
@@ -284,7 +284,7 @@ Choice:
 
 ```javascript
 // Read story data
-const story = JSON.parse(fs.readFileSync('.claude/active-story.json', 'utf-8'));
+const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
 
 // Check if ADR is recommended
 const needsADR = shouldCreateADR(story);
@@ -310,7 +310,7 @@ Skill: "create-adr"
 
 **Expected output:**
 - ADR file created in `docs/adr/`
-- ADR reference added to `.claude/active-story.json`
+- ADR reference added to `.agile-dev-team/active-story.yaml`
 - ADR summary displayed
 
 **Error handling:**
@@ -443,7 +443,7 @@ Next Steps
 4. Reference story #123 and ADR-0012 in commits
 5. Create PR when ready: /mr
 
-Story data saved to: .claude/active-story.json
+Story data saved to: .agile-dev-team/active-story.yaml
 ADR location: docs/adr/0012-stripe-payment-integration.md
 
 ═══════════════════════════════════════════════════════════════
@@ -532,7 +532,7 @@ Alternatively, you can manually select a story from:
 ```
 ⚠️  Workflow cancelled by user
 
-Partial progress saved to .claude/active-story.json
+Partial progress saved to .agile-dev-team/active-story.yaml
 
 Completed:
   ✓ Story fetched
@@ -560,7 +560,7 @@ Troubleshooting:
 - Try running /[skill-name] directly to diagnose
 - Report issue if error persists
 
-Partial progress saved to .claude/active-story.json
+Partial progress saved to .agile-dev-team/active-story.yaml
 ```
 
 ## Configuration
@@ -690,10 +690,10 @@ Users can also run helper skills individually:
 
 ```bash
 # List archived stories
-ls "$CLAUDE_PROJECT_DIR/.claude/active-story-"*.json
+ls "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-"*.yaml
 
 # Remove old archives (keep last 5)
-ls -t "$CLAUDE_PROJECT_DIR/.claude/active-story-"*.json | tail -n +6 | xargs rm
+ls -t "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-"*.yaml | tail -n +6 | xargs rm
 ```
 
 ## Troubleshooting
@@ -812,7 +812,7 @@ Filtering and sorting by priority...
 
 Selected: #123 - Implement payment checkout
 
-✓ Story data saved to .claude/active-story.json
+✓ Story data saved to .agile-dev-team/active-story.yaml
 ✓ GitHub status updated to "In Progress"
 
 ───────────────────────────────────────────────────────────────

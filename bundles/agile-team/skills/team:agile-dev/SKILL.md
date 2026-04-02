@@ -22,7 +22,7 @@ All agent coordination artifacts (active story, ADRs, implementation briefs) are
 2. Otherwise use `{{WORKSPACE_DIR}}` (default: `.agile-dev-team/docs`)
 
 File paths derived from workspace:
-- Active story: `WORKSPACE_DIR/active-story.json`
+- Active story: `WORKSPACE_DIR/active-story.yaml`
 - ADRs: `WORKSPACE_DIR/adr/`
 
 Ensure the workspace directory exists: `mkdir -p WORKSPACE_DIR/adr`
@@ -60,11 +60,11 @@ TeamCreate(team_name="tdd-story-team", description="TDD-first development team f
 Create 6 tasks with dependencies:
 
 **Task 1:** "Fetch and enrich story"
-- Description: "PM fetches the next Ready story via /fetch-story, enriches with NFRs from {{NFR_REGISTRY_FILE}}, validates with /check-story-quality, creates feature branch, and initializes teamState in {{WORKSPACE_DIR}}/active-story.json."
+- Description: "PM fetches the next Ready story via /fetch-story, enriches with NFRs from {{NFR_REGISTRY_FILE}}, validates with /check-story-quality, creates feature branch, and initializes teamState in {{WORKSPACE_DIR}}/active-story.yaml."
 - activeForm: "Fetching and enriching story"
 
 **Task 2:** "Design implementation approach"
-- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in {{WORKSPACE_DIR}}/active-story.json. Creates ADR if needed via /arch:create-adr."
+- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in {{WORKSPACE_DIR}}/active-story.yaml. Creates ADR if needed via /arch:create-adr."
 - activeForm: "Designing implementation approach"
 - blockedBy: [Task 1]
 
@@ -109,7 +109,7 @@ Steps:
 3. Enrich the story with applicable NFRs and refined ACs
 4. Run /check-story-quality to validate
 5. Create feature branch: feature/{{PROJECT_PREFIX_LOWER}}-{issueNumber}-{slug}
-6. Initialize teamState in {{WORKSPACE_DIR}}/active-story.json with phase "enriching"
+6. Initialize teamState in {{WORKSPACE_DIR}}/active-story.yaml with phase "enriching"
 7. Mark Task 1 complete
 8. Update phase to "designing" and message architect to begin Task 2
 
@@ -137,12 +137,12 @@ Task(
 Read your full instructions at .claude/agents/architect.md and follow them exactly.
 
 Wait for PM to assign you Task 2 or message you. Then:
-1. Read enriched story from {{WORKSPACE_DIR}}/active-story.json
+1. Read enriched story from {{WORKSPACE_DIR}}/active-story.yaml
 2. Run /gather-context to find related code and patterns
 3. Map ACs and NFRs to files, interfaces, and function signatures
 4. Create ADR if architectural decision is needed (/arch:create-adr)
 5. Assess risks: business, implementation, security (1 line each)
-6. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.json teamState
+6. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.yaml teamState
 7. Mark Task 2 complete
 8. Message test-architect with 2-line summary of the brief
 
@@ -158,12 +158,12 @@ Task(
 Read your full instructions at .claude/agents/test-architect.md and follow them exactly.
 
 Wait for Architect or PM to message you. Then:
-1. Read {{WORKSPACE_DIR}}/active-story.json for story + implementationBrief
+1. Read {{WORKSPACE_DIR}}/active-story.yaml for story + implementationBrief
 2. Write failing tests covering happy path, error paths, corner cases
 3. Follow existing test patterns in the project
 4. Run tests to confirm RED — fix test-side issues until they fail cleanly
 5. Stage test files with git add {{TEST_DIR}}/
-6. Update teamState.testsWritten in {{WORKSPACE_DIR}}/active-story.json
+6. Update teamState.testsWritten in {{WORKSPACE_DIR}}/active-story.yaml
 7. Mark Task 3 complete
 8. Message backend-dev and frontend-dev with test contracts (2 lines each)
 
@@ -179,12 +179,12 @@ Task(
 Read your full instructions at .claude/agents/backend-dev.md and follow them exactly.
 
 Wait for test-architect or PM to message you. Then:
-1. Read test contracts and implementationBrief from {{WORKSPACE_DIR}}/active-story.json
+1. Read test contracts and implementationBrief from {{WORKSPACE_DIR}}/active-story.yaml
 2. Read failing integration test files
 3. Implement backend code to make integration tests pass
 4. Run: {{TEST_INTEGRATION_COMMAND}}
 5. Commit via /commit
-6. Update teamState.commits in {{WORKSPACE_DIR}}/active-story.json
+6. Update teamState.commits in {{WORKSPACE_DIR}}/active-story.yaml
 7. Mark Task 4 complete
 8. Message PM with status
 
@@ -202,13 +202,13 @@ Task(
 Read your full instructions at .claude/agents/frontend-dev.md and follow them exactly.
 
 Wait for test-architect or PM to message you. Then:
-1. Read test contracts and implementationBrief from {{WORKSPACE_DIR}}/active-story.json
+1. Read test contracts and implementationBrief from {{WORKSPACE_DIR}}/active-story.yaml
 2. Read failing unit and e2e test files
 3. Implement frontend code to make tests pass
 4. Run: {{TEST_UNIT_COMMAND}}
 5. Run: {{TEST_E2E_COMMAND}} (if e2e tests exist)
 6. Commit via /commit
-7. Update teamState.commits in {{WORKSPACE_DIR}}/active-story.json
+7. Update teamState.commits in {{WORKSPACE_DIR}}/active-story.yaml
 8. Mark Task 5 complete
 9. Message PM with status
 
@@ -247,5 +247,5 @@ TeamDelete()
 
 - All agents use `general-purpose` subagent type for full tool access
 - File boundaries are enforced by agent instructions, not tooling
-- `{{WORKSPACE_DIR}}/active-story.json` is the shared state file — sequential writes guaranteed by task dependencies
+- `{{WORKSPACE_DIR}}/active-story.yaml` is the shared state file — sequential writes guaranteed by task dependencies
 - The team auto-cleans up after PR creation

@@ -46,7 +46,7 @@ updateGitHubStatus() {
 
   local PROJECT_ID=$(jq -r '.projectId' "$CONFIG")
   local FIELD_ID=$(jq -r '.fieldIds.status' "$CONFIG")
-  local ITEM_ID=$(jq -r '.projectItemId' ".agile-dev-team/active-story.json")
+  local ITEM_ID=$(yq e '.projectItemId' ".agile-dev-team/active-story.yaml")
 
   gh api graphql -f query="mutation {
     updateProjectV2ItemFieldValue(input: {
@@ -132,7 +132,7 @@ fi
 ### Phase 1: Fetch Story
 
 1. Run `/fetch-story` to get the next Ready story from GitHub Projects
-2. Verify `.agile-dev-team/active-story.json` is populated with `issueNumber`, `title`, `body`, `url`, `projectItemId`
+2. Verify `.agile-dev-team/active-story.yaml` is populated with `issueNumber`, `title`, `body`, `url`, `projectItemId`
 3. Update GitHub Projects card to **In Progress**:
    ```bash
    updateGitHubStatus "inProgress"
@@ -140,7 +140,7 @@ fi
 
 ### Phase 2: Enrich Story
 
-1. Read `.claude/active-story.json` (populated by `/fetch-story`)
+1. Read `.agile-dev-team/active-story.yaml` (populated by `/fetch-story`)
 2. Add/refine acceptance criteria if the story body is vague — note enriched ACs for Phase 3
 
 ### Phase 3: Initialize Team State

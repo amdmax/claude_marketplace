@@ -184,17 +184,17 @@ git add <resolved-files>
 PR created successfully but "Closes #..." link is missing or shows wrong issue number.
 
 ### Causes
-1. `.claude/active-story.json` is malformed
+1. `.agile-dev-team/active-story.yaml` is malformed
 2. Issue creation failed silently
 3. GitHub API returned unexpected format
 4. Issue number extraction regex failed
 
 ### Solutions
 
-**Solution 1: Verify active-story.json**
+**Solution 1: Verify active-story.yaml**
 ```bash
-# Check file exists and is valid JSON
-cat .claude/active-story.json | jq
+# Check file exists and is valid YAML
+cat .agile-dev-team/active-story.yaml | yq e
 
 # Expected format:
 # {
@@ -212,8 +212,8 @@ cat .claude/active-story.json | jq
 # Or create new issue
 /create-story --title "My work"
 
-# Verify active-story.json updated
-cat .claude/active-story.json | jq '.issueNumber'
+# Verify active-story.yaml updated
+yq e '.issueNumber' .agile-dev-team/active-story.yaml
 ```
 
 **Solution 3: Manually update PR description**

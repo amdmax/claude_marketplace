@@ -147,7 +147,7 @@ repository:
 
 # File Paths (relative to project root)
 paths:
-  active_story: ".claude/active-story.json"
+  active_story: ".agile-dev-team/active-story.yaml"
   active_bug: ".claude/active-bug.json"
   infrastructure: "infrastructure/"
 
@@ -185,7 +185,7 @@ Skills use `{{VARIABLE_NAME}}` syntax for abstraction. These are replaced at run
 | `{{PROJECT_PREFIX}}` | Commit/branch prefix | MYAPP |
 | `{{REPO_SLUG}}` | GitHub repository | myorg/myapp |
 | `{{DEFAULT_BRANCH}}` | Main branch name | main |
-| `{{ACTIVE_STORY_FILE}}` | Story tracking file | .claude/active-story.json |
+| `{{ACTIVE_STORY_FILE}}` | Story tracking file | .agile-dev-team/active-story.yaml |
 | `{{TYPE_CHECK_CMD}}` | Type checking command | npm run type-check |
 | `{{TEST_CMD}}` | Test command | npm test |
 
@@ -290,7 +290,7 @@ Adjust paths for your project structure:
 ```yaml
 paths:
   # Default structure
-  active_story: ".claude/active-story.json"
+  active_story: ".agile-dev-team/active-story.yaml"
   infrastructure: "infrastructure/"
 
   # Alternative structure
@@ -363,7 +363,7 @@ cat .claude/skills/commit/SKILL.md | grep "issue_based_numbering"
 ```yaml
 # Ensure paths are relative to project root
 paths:
-  active_story: ".claude/active-story.json"    # Relative to project root
+  active_story: ".agile-dev-team/active-story.yaml"    # Relative to project root
   # NOT: "/Users/you/project/.claude/..."      # Avoid absolute paths
 
 # Create directories if they don't exist
@@ -371,7 +371,7 @@ paths:
 
 ```bash
 mkdir -p .claude
-touch .claude/active-story.json
+touch .agile-dev-team/active-story.yaml
 ```
 
 ## Advanced Topics

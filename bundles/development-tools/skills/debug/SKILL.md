@@ -129,7 +129,7 @@ After issue selected/created:
 }
 ```
 
-**Also Creates:** `.agile-dev-team/active-story.json` (for `/gh:commit` integration)
+**Also Creates:** `.agile-dev-team/active-story.yaml` (for `/gh:commit` integration)
 ```json
 {
   "issueNumber": 123,
@@ -693,7 +693,7 @@ From `@config.yaml` → `commit.separate_fix_and_tests: true`
 # Stage fix files only
 git add src/auth/token.ts
 
-# Use /gh:commit skill (reads .agile-dev-team/active-story.json)
+# Use /gh:commit skill (reads .agile-dev-team/active-story.yaml)
 /gh:commit
 # Generates: AIGCODE-123: Fix token expiration validation off-by-one error
 ```
@@ -860,7 +860,7 @@ State is preserved in `.claude/active-debug.json` - workflow continues from curr
 Invoked when user doesn't provide issue number and wants to create new bug report.
 
 ## With /gh:commit
-Reads `.agile-dev-team/active-story.json` for:
+Reads `.agile-dev-team/active-story.yaml` for:
 - Issue number (AIGCODE-### numbering)
 - Automatic grouping (AIGCODE-###, AIGCODE-###a)
 - "Fixes #123" reference

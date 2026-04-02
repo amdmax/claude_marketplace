@@ -4,7 +4,7 @@
 # Project paths
 paths:
   architecture_docs: "_bmad-output/"    # Or docs/architecture/
-  active_story: ".claude/active-story.json"
+  active_story: ".agile-dev-team/active-story.yaml"
   skills_dir: ".claude/skills/"
   adr_dir: "docs/adr/"
   nfr_dir: "docs/nfr/"

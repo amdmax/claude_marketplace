@@ -30,7 +30,7 @@ This skill produces machine-readable Architecture Decision Records as YAML files
 ### Step 1: Check Active Story
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.claude/active-story.json"
+STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "⚠️  No active story found at $STORY_FILE"
   echo "   Continuing without story context..."

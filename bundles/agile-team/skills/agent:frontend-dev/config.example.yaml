@@ -7,7 +7,7 @@ paths:
   workspace_dir: ".agile-dev-team/docs"
 
   # Derived from workspace_dir at runtime:
-  #   active-story.json → workspace_dir/active-story.json
+  #   active-story.yaml → workspace_dir/active-story.yaml
 
 commands:
   test_unit: "npx jest --selectProjects unit --no-coverage"

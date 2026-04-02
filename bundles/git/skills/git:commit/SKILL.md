@@ -63,7 +63,7 @@ repository:
 
 # Paths
 issue:
-  source: "{{ACTIVE_STORY_FILE}}"     # Path to active story JSON file
+  source: "{{ACTIVE_STORY_FILE}}"     # Path to active story YAML file
 ```
 
 ### Optional Configuration
@@ -93,7 +93,7 @@ message:
 | `{{PROJECT_PREFIX}}` | Commit prefix identifier | MYAPP | Yes |
 | `{{NUMBERING_MODE}}` | Numbering strategy | issue-based | Yes |
 | `{{REPO_SLUG}}` | GitHub repository | owner/repo | Yes (issue mode) |
-| `{{ACTIVE_STORY_FILE}}` | Active story file path | .claude/active-story.json | Yes (issue mode) |
+| `{{ACTIVE_STORY_FILE}}` | Active story file path | .agile-dev-team/active-story.yaml | Yes (issue mode) |
 | `{{CREATE_MISSING_ISSUES}}` | Auto-create issues | true | No |
 | `{{GROUPING_ENABLED}}` | Enable grouping | true | No |
 | `{{VALIDATION_HOOK_ENABLED}}` | Enable validation | true | No |
@@ -138,7 +138,7 @@ numbering:
 ```
 
 **Workflow:**
-1. `/play-story` - Activate an issue (creates `.claude/active-story.json`)
+1. `/play-story` - Activate an issue (creates `.agile-dev-team/active-story.yaml`)
 2. Make code changes
 3. `git add .`
 4. `/commit` - Creates commit as `MYAPP-157: description`
@@ -357,7 +357,7 @@ numbering:
   mode: "issue-based"
   prefix: ACME
   issue:
-    source: ".claude/active-story.json"
+    source: ".agile-dev-team/active-story.yaml"
     create_if_missing: true
 
 repository:
@@ -389,7 +389,7 @@ git add index.js
 **Result:**
 - GitHub issue #1 created
 - Commit: `ACME-1: Add initial application structure`
-- `.claude/active-story.json` created
+- `.agile-dev-team/active-story.yaml` created
 
 ### Example 2: Grouped Commits
 
@@ -621,7 +621,7 @@ git log --since="4 hours ago" --name-only
 
 1. **Verification** - Checks for staged changes (`git diff --cached`)
 2. **Number determination:**
-   - Issue-based: Read `.claude/active-story.json` → `/create-story` if missing → extract issueNumber
+   - Issue-based: Read `.agile-dev-team/active-story.yaml` → `/create-story` if missing → extract issueNumber
    - Sequential: Query git log → find highest {{PREFIX}}-### → increment
 3. **Grouping detection** (optional):
    - Get recent commits (last N hours)
@@ -651,7 +651,7 @@ This skill requires:
 ### Files Created/Modified
 
 This skill may create or modify:
-- `.claude/active-story.json` - Active issue tracking (issue-based mode)
+- `.agile-dev-team/active-story.yaml` - Active issue tracking (issue-based mode)
 - Git commit history - New commits with standardized format
 
 ## Customization

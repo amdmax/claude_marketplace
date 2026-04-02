@@ -23,7 +23,7 @@ issue:
 
 # Active story file settings
 active_story:
-  # Path to active story JSON file (relative to project root)
+  # Path to active story YAML file (relative to project root)
   path: "{{ACTIVE_STORY_FILE}}"
 
   # Minimal fields to store (fast path for commits)

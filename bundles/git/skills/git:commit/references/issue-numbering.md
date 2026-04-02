@@ -26,8 +26,8 @@ Issue-based numbering links commits directly to GitHub issues while maintaining 
 ### 1. Active Story Lookup
 
 ```bash
-# Read .claude/active-story.json
-ISSUE_NUMBER=$(jq -r '.issueNumber' .claude/active-story.json)
+# Read .agile-dev-team/active-story.yaml
+ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml)
 # Result: 157
 
 # Format commit prefix ({{PROJECT_PREFIX}} + issue number)
@@ -37,12 +37,12 @@ COMMIT_PREFIX="{{PROJECT_PREFIX}}-${ISSUE_NUMBER}"
 
 ### 2. Auto-Create When Missing
 
-If `.claude/active-story.json` doesn't exist:
+If `.agile-dev-team/active-story.yaml` doesn't exist:
 
 1. Commit skill invokes `/create-story`
 2. User prompted for issue title (suggested from staged changes)
 3. GitHub issue created via `gh issue create` (minimal: title, body)
-4. Minimal data written to `.claude/active-story.json` (issueNumber, title, body, url)
+4. Minimal data written to `.agile-dev-team/active-story.yaml` (issueNumber, title, body, url)
 5. Commit proceeds with {{PROJECT_PREFIX}}-{issueNumber}
 
 **Note**: Does NOT add to Projects, set status, or store complex metadata. Fast path for commits.
@@ -99,7 +99,7 @@ numbering:
 ✅ **Group related commits** - Use suffixes for iterative work
 ✅ **Prefix consistency** - Always {{PROJECT_PREFIX}}, regardless of mode
 
-❌ **Don't manually edit** `.claude/active-story.json` - use skills
+❌ **Don't manually edit** `.agile-dev-team/active-story.yaml` - use skills
 ❌ **Don't skip issue creation** - Traceability is important
 ❌ **Don't reuse closed issues** - Fetch/create new ones
 

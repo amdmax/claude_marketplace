@@ -6,7 +6,7 @@ Produce three artefacts for the active story:
 
 1. **C4 container diagram** — when the story is infrastructure-significant
 2. **ADR with rationale** — formal architecture decision record
-3. **Implementation brief** — written to `WORKSPACE_DIR/active-story.json`
+3. **Implementation brief** — written to `WORKSPACE_DIR/active-story.yaml`
 
 ---
 
@@ -28,7 +28,7 @@ A story is **infrastructure-significant** if any of the following are true:
 
 ### Step 1: Load Story Context
 
-1. Read `WORKSPACE_DIR/active-story.json` — story title, ACs, NFRs, storyId
+1. Read `WORKSPACE_DIR/active-story.yaml` — story title, ACs, NFRs, storyId
 2. Read `WORKSPACE_DIR/architecture-overview.md` if it exists (existing container inventory)
 
 ### Step 2: Gather Code Context
@@ -107,7 +107,7 @@ For each AC and applicable NFR, determine:
 - Test strategy (unit / integration / e2e)
 - New dependencies if any
 
-Update `WORKSPACE_DIR/active-story.json` under `teamState.implementationBrief`:
+Update `WORKSPACE_DIR/active-story.yaml` under `teamState.implementationBrief`:
 
 ```json
 {
@@ -161,4 +161,4 @@ Output:
 |----------------------|-----------------------------------------------|
 | C4 diagram           | `WORKSPACE_DIR/diagrams/story-{storyId}-c4.md` |
 | ADR                  | `WORKSPACE_DIR/adr/*.md`                      |
-| Implementation brief | `WORKSPACE_DIR/active-story.json` (`teamState`) |
+| Implementation brief | `WORKSPACE_DIR/active-story.yaml` (`teamState`) |

@@ -13,7 +13,7 @@ numbering:
   # Issue-based settings (use GitHub issue numbers from active story)
   issue:
     # Path to active story file (relative to project root)
-    source: ".claude/active-story.json"
+    source: ".agile-dev-team/active-story.yaml"
     # JSON field containing issue number
     field: "issueNumber"
     # Format string for issue-based commits (e.g., MYAPP-157)
