@@ -150,5 +150,5 @@ TeamDelete()
 
 - All agents use `general-purpose` subagent type for full tool access
 - File boundaries are enforced by agent instructions, not tooling
-- `.agile-dev-team/development-progress.yaml` is the shared teamState file — sequential writes guaranteed by task dependencies; `.agile-dev-team/active-story.json` holds the story data populated by `/fetch-story`
+- `.agile-dev-team/development-progress.yaml` is the shared teamState file — sequential writes guaranteed by task dependencies; `.agile-dev-team/active-story.yaml` holds the story data populated by `/fetch-story`
 - The team auto-cleans up after PR creation

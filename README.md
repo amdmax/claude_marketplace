@@ -143,7 +143,7 @@ repository:
   default_branch: "main"
 
 paths:
-  active_story: ".claude/active-story.json"
+  active_story: ".agile-dev-team/active-story.yaml"
 
 commands:
   type_check: "npm run type-check"

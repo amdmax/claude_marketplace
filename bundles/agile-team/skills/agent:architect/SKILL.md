@@ -13,7 +13,7 @@ Map business requirements to concrete implementation approach. Produce an implem
 ### Allowed Tools
 
 - Read, Glob, Grep (all files)
-- Write, Edit (ONLY `{{WORKSPACE_DIR}}/adr/` and `{{WORKSPACE_DIR}}/active-story.json` context fields)
+- Write, Edit (ONLY `{{WORKSPACE_DIR}}/adr/` and `{{WORKSPACE_DIR}}/active-story.yaml` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
 - Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
@@ -22,14 +22,14 @@ Map business requirements to concrete implementation approach. Produce an implem
 ### File Boundaries
 
 - **Can read:** All files
-- **Can write:** `{{WORKSPACE_DIR}}/adr/*.md`, `{{WORKSPACE_DIR}}/active-story.json` (`teamState.implementationBrief`, `teamState.risks`)
+- **Can write:** `{{WORKSPACE_DIR}}/adr/*.md`, `{{WORKSPACE_DIR}}/active-story.yaml` (`teamState.implementationBrief`, `teamState.risks`)
 - **Cannot edit:** Production code, test code, infrastructure code
 
 ### Workflow
 
 #### Step 1: Read Story/Context
 
-1. Read `{{WORKSPACE_DIR}}/active-story.json` for story details, ACs, and NFRs (or read context from ARGUMENTS)
+1. Read `{{WORKSPACE_DIR}}/active-story.yaml` for story details, ACs, and NFRs (or read context from ARGUMENTS)
 2. Understand the business intent behind each AC
 
 #### Step 2: Gather Context
@@ -69,7 +69,7 @@ Identify risks in 3 categories (1 line each):
 
 #### Step 6: Produce Implementation Brief
 
-Update `{{WORKSPACE_DIR}}/active-story.json` with:
+Update `{{WORKSPACE_DIR}}/active-story.yaml` with:
 
 ```yaml
 teamState:
@@ -153,21 +153,21 @@ Map business requirements to concrete implementation approach. Produce an implem
 
 [FILE BOUNDARIES]
 - Can read: All files
-- Can write: {{WORKSPACE_DIR}}/adr/*.md, {{WORKSPACE_DIR}}/active-story.json (teamState.implementationBrief, teamState.risks)
+- Can write: {{WORKSPACE_DIR}}/adr/*.md, {{WORKSPACE_DIR}}/active-story.yaml (teamState.implementationBrief, teamState.risks)
 - Cannot edit: Production code, test code, infrastructure code
 
 [ALLOWED TOOLS]
 Read, Glob, Grep (all files), Write/Edit (ADR_DIR and ACTIVE_STORY_FILE context only), Bash (read-only: git log, git diff, ls), Skills (/arch:adr-yaml, /github:mermaid-diagram, /gather-context), Task tools
 
 [WORKFLOW]
-1. Read story/context (from {{WORKSPACE_DIR}}/active-story.json or from task description)
+1. Read story/context (from {{WORKSPACE_DIR}}/active-story.yaml or from task description)
 2. Run /gather-context to find related code and existing patterns
 3. Review existing ADRs in {{WORKSPACE_DIR}}/adr/ for precedents
 4. For each AC/NFR: identify files to change, function signatures, data flow
 5. Create ADR if story introduces new architectural decision (/arch:adr-yaml)
 5b. Create GitHub-compatible diagrams if story involves architecture/data flows/process (/github:mermaid-diagram)
 6. Assess risks: business, implementation, security (1 line each)
-7. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.json teamState
+7. Write implementationBrief and risks to {{WORKSPACE_DIR}}/active-story.yaml teamState
 8. Report implementation brief summary to user
 
 [CONSTRAINTS]

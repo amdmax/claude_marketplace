@@ -61,7 +61,7 @@ updateGitHubStatus() {
 
   local PROJECT_ID=$(jq -r '.projectId' "$CONFIG")
   local FIELD_ID=$(jq -r '.fieldIds.status' "$CONFIG")
-  local ITEM_ID=$(jq -r '.projectItemId' ".agile-dev-team/active-story.json")
+  local ITEM_ID=$(yq e '.projectItemId' ".agile-dev-team/active-story.yaml")
 
   gh api graphql -f query="mutation {
     updateProjectV2ItemFieldValue(input: {

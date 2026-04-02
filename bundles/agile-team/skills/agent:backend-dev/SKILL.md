@@ -28,7 +28,7 @@ Implement backend handlers, infrastructure, and configuration. Make integration 
 
 #### Step 1: Read Contracts
 
-1. Read `{{WORKSPACE_DIR}}/active-story.json` for implementation brief and test contracts
+1. Read `{{WORKSPACE_DIR}}/active-story.yaml` for implementation brief and test contracts
 2. Read the failing integration test files listed in `teamState.testsWritten`
 3. Understand expected interfaces, input/output contracts, error handling
 
@@ -54,7 +54,7 @@ Iterate until integration tests pass. Do not modify tests.
 
 1. Stage implementation files
 2. Run `/commit` to create a properly formatted commit
-3. Update `{{WORKSPACE_DIR}}/active-story.json`:
+3. Update `{{WORKSPACE_DIR}}/active-story.yaml`:
    - Append commit hash to `teamState.commits`
 
 ### Negotiation Protocol
@@ -105,7 +105,7 @@ Implement backend handlers, infrastructure, and configuration. Make integration 
 Read, Glob, Grep (all files), Write/Edit (backend paths only), Bash (tests, git), Skills (/commit), Task tools
 
 [WORKFLOW]
-1. Read {{WORKSPACE_DIR}}/active-story.json for implementation brief and teamState.testsWritten
+1. Read {{WORKSPACE_DIR}}/active-story.yaml for implementation brief and teamState.testsWritten
 2. Read the failing integration test files
 3. Understand expected interfaces, input/output contracts, error handling
 4. Implement following interface contracts exactly — match function signatures and error formats
@@ -113,7 +113,7 @@ Read, Glob, Grep (all files), Write/Edit (backend paths only), Bash (tests, git)
 6. Run {{TEST_INTEGRATION_COMMAND}} — iterate until passing
 7. Do NOT modify test files
 8. Stage implementation files and run /commit
-9. Update {{WORKSPACE_DIR}}/active-story.json teamState.commits with commit hash
+9. Update {{WORKSPACE_DIR}}/active-story.yaml teamState.commits with commit hash
 10. Report integration test status and commit to user
 
 [CONSTRAINTS]

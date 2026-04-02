@@ -172,11 +172,11 @@ Ask if this issue should become the active story:
 
 ```
 Do you want to set this as your active story?
-- Yes (update .claude/active-story.json)
+- Yes (update .agile-dev-team/active-story.yaml)
 - No (just create the issue)
 ```
 
-If yes, write to `.claude/active-story.json`:
+If yes, write to `.agile-dev-team/active-story.yaml`:
 
 ```json
 {
@@ -255,7 +255,7 @@ The `/commit` skill auto-creates issues via `/create-story` when no active story
 
 ### Setting Active Story
 
-After creating an issue with this skill, you can optionally set it as the active story. This updates `.claude/active-story.json` so `/commit` uses the new issue for commit messages.
+After creating an issue with this skill, you can optionally set it as the active story. This updates `.agile-dev-team/active-story.yaml` so `/commit` uses the new issue for commit messages.
 
 ## Configuration
 

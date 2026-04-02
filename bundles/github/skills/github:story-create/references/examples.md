@@ -31,7 +31,7 @@ git add lambda/auth.ts
 
 **Result**:
 - GitHub issue #158 created
-- `.claude/active-story.json` contains minimal data (4 fields)
+- `.agile-dev-team/active-story.yaml` contains minimal data (4 fields)
 - Commit uses `{{PROJECT_PREFIX}}-158:` format
 
 ---
@@ -47,7 +47,7 @@ git add lambda/auth.ts
 # → Enter issue title: Add Chart.js integration for course analytics
 # → Creating GitHub issue...
 # → ✓ Created issue #159: Add Chart.js integration for course analytics
-# → ✓ Active story saved: .claude/active-story.json
+# → ✓ Active story saved: .agile-dev-team/active-story.yaml
 
 # User can now work on this story
 git add src/chart-integration.ts

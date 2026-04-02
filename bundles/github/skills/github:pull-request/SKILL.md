@@ -1,7 +1,7 @@
 ---
 name: github:pull-request
 description: >
-  Create or update a PR coupled to the active story in .agile-dev-team/active-story.json.
+  Create or update a PR coupled to the active story in .agile-dev-team/active-story.yaml.
   Auto-commits uncommitted changes via /git:commit. Checks for an existing open PR on
   the current branch — creates one if absent, updates it if present. Mirrors labels,
   assignees, and project from the linked GitHub issue. PR body is minimal: Closes #N
@@ -20,15 +20,15 @@ All PR fields (title, labels, assignees, project) are sourced from the linked Gi
 ### Step 1 — Read active story
 
 ```bash
-STORY_FILE=".agile-dev-team/active-story.json"
+STORY_FILE=".agile-dev-team/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found at $STORY_FILE"
   echo "Run /fetch-story or /play-story first."
   exit 1
 fi
 
-ISSUE_NUMBER=$(jq -r '.issueNumber' "$STORY_FILE")
-ISSUE_TITLE=$(jq -r '.title' "$STORY_FILE")
+ISSUE_NUMBER=$(yq e '.issueNumber' "$STORY_FILE")
+ISSUE_TITLE=$(yq e '.title' "$STORY_FILE")
 ```
 
 ### Step 2 — Auto-commit uncommitted changes

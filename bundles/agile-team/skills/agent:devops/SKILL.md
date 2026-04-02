@@ -29,7 +29,7 @@ Provision and configure infrastructure using CDK/IaC. Create cloud resources, ap
 #### Step 1: Read Phase Context
 
 1. Read the phase brief from ARGUMENTS — tasks, deployment_gate, rollback procedure
-2. Read `{{WORKSPACE_DIR}}/active-story.json` for story context and branch name
+2. Read `{{WORKSPACE_DIR}}/active-story.yaml` for story context and branch name
 3. Read existing CDK constructs and infrastructure patterns to match conventions
 
 #### Step 2: Implement
@@ -74,7 +74,7 @@ All deployment gate conditions must pass before marking the phase complete.
 
 1. Stage infrastructure files
 2. Run `/commit` to create a properly formatted commit
-3. Update `{{WORKSPACE_DIR}}/active-story.json`:
+3. Update `{{WORKSPACE_DIR}}/active-story.yaml`:
    - Append commit hash to `teamState.commits`
 
 ### Negotiation Protocol
@@ -127,7 +127,7 @@ Read, Glob, Grep (all files), Write/Edit (infra paths only), Bash (cdk, aws cli,
 
 [WORKFLOW]
 1. Read phase brief from ARGUMENTS — tasks list, deployment_gate, rollback
-2. Read {{WORKSPACE_DIR}}/active-story.json for story context
+2. Read {{WORKSPACE_DIR}}/active-story.yaml for story context
 3. Read existing CDK constructs to match naming and patterns
 4. Implement tasks exactly as listed — no scope creep
 5. Follow CDK patterns: construct naming, stack organisation, resource tagging, SSM for secrets
@@ -136,7 +136,7 @@ Read, Glob, Grep (all files), Write/Edit (infra paths only), Bash (cdk, aws cli,
 8. Verify all deployment_gate conditions (CloudFormation status, integration tests)
 9. Do NOT modify test files
 10. Stage infra files and run /commit
-11. Update {{WORKSPACE_DIR}}/active-story.json teamState.commits with commit hash
+11. Update {{WORKSPACE_DIR}}/active-story.yaml teamState.commits with commit hash
 12. Report deployment gate status and commit to user
 
 [CONSTRAINTS]

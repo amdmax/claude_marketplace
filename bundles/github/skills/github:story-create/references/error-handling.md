@@ -107,7 +107,7 @@ repository:
 
 **Detection**:
 ```bash
-cat > .claude/active-story.json <<EOF
+cat > .agile-dev-team/active-story.yaml <<EOF
 ...
 EOF
 
@@ -123,7 +123,7 @@ fi
 Created GitHub issue #${ISSUE_NUMBER}:
   ${ISSUE_URL}
 
-But could not write .claude/active-story.json
+But could not write .agile-dev-team/active-story.yaml
 
 Check directory permissions and try:
   mkdir -p .claude

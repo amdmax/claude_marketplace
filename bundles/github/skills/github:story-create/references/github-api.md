@@ -63,17 +63,16 @@ The `gh issue create` command does **not** support `--json` flag (unlike `gh iss
 ## Store Minimal Active Story
 
 ```bash
-# Create minimal active story JSON (only 4 fields)
-cat > .claude/active-story.json <<EOF
-{
-  "issueNumber": ${ISSUE_NUMBER},
-  "title": "${ISSUE_TITLE}",
-  "body": "${ISSUE_BODY}",
-  "url": "${ISSUE_URL}"
-}
+# Create minimal active story YAML (only 4 fields)
+cat > .agile-dev-team/active-story.yaml <<EOF
+issueNumber: ${ISSUE_NUMBER}
+title: "${ISSUE_TITLE}"
+body: |
+  ${ISSUE_BODY}
+url: "${ISSUE_URL}"
 EOF
 
-echo "✓ Active story saved: .claude/active-story.json"
+echo "✓ Active story saved: .agile-dev-team/active-story.yaml"
 ```
 
 ## Why Minimal?

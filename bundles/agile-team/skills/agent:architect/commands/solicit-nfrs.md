@@ -4,7 +4,7 @@ Interactive Q&A to surface non-functional requirements for the current story or 
 
 ## Workflow
 
-1. Read `WORKSPACE_DIR/active-story.json` if it exists — use story title and ACs as context for targeted questions
+1. Read `WORKSPACE_DIR/active-story.yaml` if it exists — use story title and ACs as context for targeted questions
 2. Ask the user targeted questions across NFR categories (ask each category in turn, wait for responses):
 
    - **Performance:** What are the latency/throughput targets? Are there SLAs for response time?
@@ -14,7 +14,7 @@ Interactive Q&A to surface non-functional requirements for the current story or 
    - **Observability:** What logging, metrics, and alerting are needed? Any existing observability stack to integrate with?
 
 3. Derive concrete, testable NFRs from the user's responses (e.g., "p95 latency < 200ms under 1000 RPS")
-4. Append the derived NFRs to `WORKSPACE_DIR/active-story.json` under the `nfrs` array:
+4. Append the derived NFRs to `WORKSPACE_DIR/active-story.yaml` under the `nfrs` array:
    ```json
    {
      "nfrs": [
@@ -26,4 +26,4 @@ Interactive Q&A to surface non-functional requirements for the current story or 
 
 ## File Boundary
 
-Write only to `WORKSPACE_DIR/active-story.json`.
+Write only to `WORKSPACE_DIR/active-story.yaml`.

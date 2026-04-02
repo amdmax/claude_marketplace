@@ -30,7 +30,7 @@ dependencies, and dispatches specialist agents per execution wave.
 **Invocation:**
 ```
 /pm build 460    # build a specific issue
-/pm build        # uses .agile-dev-team/active-story.json
+/pm build        # uses .agile-dev-team/active-story.yaml
 ```
 
 ---
@@ -55,7 +55,7 @@ A phase with multiple types (e.g. `[backend, frontend]`) spawns one agent per ty
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(jq -r '.issueNumber' .agile-dev-team/active-story.json 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then
@@ -88,7 +88,7 @@ fi
 ### Step 3 — Load plan and read story context
 
 1. Read `$PLAN_FILE` — parse `implementation_plan.phases[]`
-2. Read `.agile-dev-team/active-story.json` for story title and branch name (if present)
+2. Read `.agile-dev-team/active-story.yaml` for story title and branch name (if present)
 3. Build a phase map: `id → phase` object
 
 ---
@@ -297,4 +297,4 @@ Re-running `/pm build {N}` when `build-state.yaml` exists:
 | `/agent:devops` | Executes `infrastructure` phases |
 | `/agent:backend-dev` | Executes `backend` phases |
 | `/agent:frontend-dev` | Executes `frontend` phases |
-| `/github:story-fetch` | Populates `active-story.json` with issue number |
+| `/github:story-fetch` | Populates `active-story.yaml` with issue number |

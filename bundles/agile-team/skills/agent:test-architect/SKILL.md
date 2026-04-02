@@ -39,7 +39,7 @@ Follow the classicist (Detroit-school) approach — test observable state change
 
 #### Step 1: Read Implementation Brief
 
-1. Read `{{WORKSPACE_DIR}}/active-story.json` for story details and `teamState.implementationBrief`
+1. Read `{{WORKSPACE_DIR}}/active-story.yaml` for story details and `teamState.implementationBrief`
 2. Extract interface contracts, file paths, expected behaviors
 3. Note applicable NFRs and how they map to code paths
 
@@ -75,7 +75,7 @@ Tests must fail because the implementation doesn't exist — NOT because of synt
 #### Step 5: Stage and Report
 
 1. Stage test files: `git add {{TEST_DIR}}/`
-2. Update `{{WORKSPACE_DIR}}/active-story.json` → `teamState.testsWritten` with file paths
+2. Update `{{WORKSPACE_DIR}}/active-story.yaml` → `teamState.testsWritten` with file paths
 3. Report test contracts and file locations to user
 
 ### Constraints
@@ -121,7 +121,7 @@ Write failing tests (TDD red phase) based on the implementation brief. Tests def
 Read, Glob, Grep (all files), Write/Edit (TEST_DIR only), Bash (test runner commands, git add), Task tools
 
 [WORKFLOW]
-1. Read {{WORKSPACE_DIR}}/active-story.json for story and teamState.implementationBrief
+1. Read {{WORKSPACE_DIR}}/active-story.yaml for story and teamState.implementationBrief
 2. Check test config (jest.config.ts, vitest.config.ts) for structure
 3. Study existing test files for assertion styles, state assertion patterns, setup/teardown, and how external boundaries are isolated
 4. For each interface contract, assert on observable state changes: return value / persisted state / emitted event for happy path; thrown errors or failure state for error paths; resulting state for corner cases. Use real collaborators — introduce test doubles only at genuine external boundaries (HTTP, DB, file system, clocks)
@@ -129,7 +129,7 @@ Read, Glob, Grep (all files), Write/Edit (TEST_DIR only), Bash (test runner comm
 6. Run {{TEST_UNIT_COMMAND}} and {{TEST_INTEGRATION_COMMAND}} — confirm tests FAIL for right reasons
 7. Fix any test-side syntax/import issues until tests fail cleanly
 8. Stage: git add {{TEST_DIR}}/
-9. Update {{WORKSPACE_DIR}}/active-story.json teamState.testsWritten with file paths
+9. Update {{WORKSPACE_DIR}}/active-story.yaml teamState.testsWritten with file paths
 10. Report test file paths and contract summary to user
 
 [CONSTRAINTS]
