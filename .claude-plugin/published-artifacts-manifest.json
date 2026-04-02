@@ -1,6 +1,6 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-04-01T15:20:44Z",
+  "generated_at": "2026-04-02T09:32:19Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "agents/architect.md": {
@@ -57,7 +57,7 @@
       "type": "agent",
       "path": "agents/pm.md",
       "description": "Team lead that fetches stories, enriches with acceptance criteria, manages story lifecycle, and creates PRs after implementation.",
-      "hash": "sha256:439ef0ebe5c884c5270be4983a872e02ca9121651cdc6958dbb36d4f0adf20d5",
+      "hash": "sha256:652b133ef479387b44de8f2540f7ad384a28f698908e7d5198cae2872d522552",
       "files": [
         "pm.md"
       ],
