@@ -1,6 +1,6 @@
 {
   "name": "agile-team",
-  "description": "Agile dev team skills: spawn the full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev) for controlled, single-agent delegation",
+  "description": "Agile dev team skills: spawn the full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev) for controlled, single-agent delegation; pm:pull-request routes PR creation to the active issue tracker (github or gitlab)",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
