@@ -17,10 +17,11 @@ Installs pre-built output styles that change how Claude formats every response.
 |-------|------|----------|
 | `JSON` | `$SKILL_DIR/assets/json.md` | Automation, piping to jq/scripts, CI systems |
 | `YAML` | `$SKILL_DIR/assets/yaml.md` | Human-readable structured output, config pipelines, docs |
+| `Caveman` | `$SKILL_DIR/assets/caveman.md` | Terse, no-filler human responses |
 
 ## Workflow
 
-1. Ask which style(s) to install: JSON, YAML, or both
+1. Ask which style(s) to install: JSON, YAML, Caveman, or multiple
 2. Ask scope:
    - **User-level** (`~/.claude/output-styles/`) — available in all projects
    - **Project-level** (`.claude/output-styles/`) — this project only
