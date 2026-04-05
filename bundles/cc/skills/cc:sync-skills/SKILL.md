@@ -117,6 +117,10 @@ if [ -f "$SKILL_DIR/SKILL.md" ]; then
   # Extract description from frontmatter
   DESCRIPTION=$(sed -n '/^---$/,/^---$/p' "$SKILL_DIR/SKILL.md" | grep "^description:" | sed 's/description: *//')
 
+  # Extract scope (default: global)
+  SCOPE=$(sed -n '/^---$/,/^---$/p' "$SKILL_DIR/SKILL.md" | grep "^scope:" | sed 's/scope: *//' | tr -d '"')
+  SCOPE=${SCOPE:-global}
+
   # Check for config.yaml (indicates parametrization)
   HAS_CONFIG=$([ -f "$SKILL_DIR/config.yaml" ] && echo "✓" || echo "")
 
@@ -126,9 +130,13 @@ if [ -f "$SKILL_DIR/SKILL.md" ]; then
   # Get file count
   FILE_COUNT=$(find "$SKILL_DIR" -type f | wc -l | tr -d ' ')
 
-  echo "$SKILL_NAME|$DESCRIPTION|$HAS_CONFIG|$HAS_REFS|$FILE_COUNT"
+  echo "$SKILL_NAME|$DESCRIPTION|$HAS_CONFIG|$HAS_REFS|$FILE_COUNT|$SCOPE"
 fi
 ```
+
+**Scope column in the presented table:**
+
+Include a `Scope` column. Skills with `scope: project` are marked `⚠ project-only`.
 
 **Present skills to user:**
 
@@ -194,6 +202,59 @@ SELECTED_SKILLS=(
   "sync-skills"
 )
 ```
+
+### Step 3b: Scope check — detect misplaced project-only skills
+
+After the user confirms their selection, check whether any selected skills have `scope: project`
+**and** are currently installed at global level (`~/.claude/skills/`):
+
+```bash
+GLOBAL_SKILLS_DIR="$HOME/.claude/skills"
+MISPLACED=()
+
+for SKILL_NAME in "${SELECTED_SKILLS[@]}"; do
+  SCOPE=$(sed -n '/^---$/,/^---$/p' ".claude/skills/$SKILL_NAME/SKILL.md" \
+    | grep "^scope:" | sed 's/scope: *//' | tr -d '"')
+
+  if [ "$SCOPE" = "project" ] && [ -d "$GLOBAL_SKILLS_DIR/$SKILL_NAME" ]; then
+    MISPLACED+=("$SKILL_NAME")
+  fi
+done
+```
+
+**If `$MISPLACED` is non-empty**, print a warning and offer to fix:
+
+```
+⚠️  The following skills are marked scope: project but are installed globally:
+
+  - git:commit   (~/.claude/skills/git:commit)
+
+These skills rely on project-level config and may behave incorrectly when run globally.
+
+Options:
+  [1] Remove from global, install locally in this project (recommended)
+  [2] Leave as-is and continue
+  [3] Abort
+```
+
+**If option [1] chosen** — for each misplaced skill:
+
+```bash
+# Remove from global
+rm -rf "$HOME/.claude/skills/$SKILL_NAME"
+
+# Install locally if not already present
+if [ ! -d ".claude/skills/$SKILL_NAME" ]; then
+  mkdir -p ".claude/skills/$SKILL_NAME"
+  cp -r "$HOME/.claude/skills/$SKILL_NAME/." ".claude/skills/$SKILL_NAME/"
+fi
+
+echo "✓ $SKILL_NAME  moved from ~/.claude/skills/ → .claude/skills/"
+```
+
+**If option [2] chosen** — continue without changes.
+
+**If option [3] chosen** — exit 0.
 
 ### Step 4: Prepare Sync Directory
 
