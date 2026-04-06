@@ -1,6 +1,7 @@
 ---
 name: git:commit
 description: Create git commits with configurable numbering (issue-based or sequential). Analyzes staged changes and generates commit messages following project conventions. Optionally creates GitHub issues if no active story exists.
+scope: project
 author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com
 hooks:

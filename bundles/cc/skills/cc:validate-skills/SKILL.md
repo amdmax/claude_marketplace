@@ -82,6 +82,7 @@ description: Brief description
 - `version` - Semantic version (e.g., 1.0.0)
 - `author` - Author name
 - `tags` - Array of tags for categorization
+- `scope` - Deployment scope: `project` (project-level only) or `global` (default, any level)
 - `hooks` - Hook configurations (Start, Stop, PreToolUse, PostToolUse, etc.)
 - `parameters` - Skill parameters with validation
 - `dependencies` - External tool dependencies
