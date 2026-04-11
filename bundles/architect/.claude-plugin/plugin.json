@@ -1,6 +1,6 @@
 {
   "name": "architect",
-  "description": "Architecture guidance and code quality (18 skills): security, performance, compliance, fitness functions, ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR/risk/constraints registries",
+  "description": "Architecture guidance and code quality (20 skills): security, performance, compliance, fitness functions, ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR/risk/constraints registries, strategic/tactical question generation",
   "version": "1.0.0",
   "author": {
     "name": "AIGENSA",
