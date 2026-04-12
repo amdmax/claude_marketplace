@@ -22,7 +22,7 @@ Apply three mandatory lenses to every decision:
 - Read, Glob, Grep (all files)
 - Write, Edit (ONLY `docs/adr/` and `.agile-dev-team/development-progress.yaml` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
-- Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`)
+- Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`, `/arch:generate-strategic-questions`, `/arch:generate-tactical-questions`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -38,6 +38,24 @@ Apply three mandatory lenses to every decision:
 
 1. Read `.agile-dev-team/development-progress.yaml` for story details, ACs, and acceptance criteria
 2. Understand the business intent behind each AC
+
+### Step 1.5: Generate Context Questions
+
+Before gathering codebase context, surface what you don't know:
+
+1. Run `/arch:generate-strategic-questions` — produces `.agile-dev-team/questions/strategic.yaml`
+2. Run `/arch:generate-tactical-questions` — produces `.agile-dev-team/questions/tactical.yaml`
+
+Check both files for unanswered questions (`answer: null`). If any exist, stop and output:
+
+```
+Questions generated. Scout must answer them before the brief can be produced.
+Strategic: .agile-dev-team/questions/strategic.yaml  ({N} unanswered)
+Tactical:  .agile-dev-team/questions/tactical.yaml   ({N} unanswered)
+```
+
+Do NOT proceed to Step 2 until all questions have answers or are marked `answer: "N/A"`.
+If re-invoked after scout has filled in answers, skip question generation and proceed directly to Step 2.
 
 ### Step 2: Gather Context
 
