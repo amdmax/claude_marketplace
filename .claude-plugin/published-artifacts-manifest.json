@@ -1,13 +1,13 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-04-02T09:32:19Z",
+  "generated_at": "2026-04-12T21:06:34Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "agents/architect.md": {
       "type": "agent",
       "path": "agents/architect.md",
       "description": "Solution Architect that maps business requirements to implementation details and prepares technical documentation for test architect and developers.",
-      "hash": "sha256:d9d59d1b804295ad1172795e1d7e50270fbc19991efd79e48f8fae78ee0b4276",
+      "hash": "sha256:8d21707c93201e33f1bfb3a761efa2f5a210042af50eabfd9a06be450f76e270",
       "files": [
         "architect.md"
       ],
