@@ -1,20 +1,36 @@
-name: Validate Skills
+name: Validate Artefacts
 
 on:
   push:
     paths:
-      - '.claude/skills/**/SKILL.md'
-      - '.claude/plugins/**/SKILL.md'
+      - '**SKILL.md'
   pull_request:
-    paths:
-      - '.claude/skills/**/SKILL.md'
-      - '.claude/plugins/**/SKILL.md'
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
 
 jobs:
-  validate-changed-skills:
+  check-loc:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { limit: 1395, glob: '' }
+          - { limit: 1395, glob: '*.md' }
+          - { limit: 500,  glob: '*/SKILL.md' }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/check-loc
+        with:
+          limit: ${{ matrix.limit }}
+          glob: ${{ matrix.glob }}
+
+  validate-skills:
     name: Validate changed skills
     runs-on: ubuntu-latest
     steps:
@@ -46,7 +62,6 @@ jobs:
             echo "Changed files:"
             echo "$CHANGED"
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            # Write to file to preserve newlines
             echo "$CHANGED" > /tmp/changed-skills.txt
           fi
 
@@ -67,10 +82,8 @@ jobs:
 
             echo "::group::Validating $SKILL_FILE"
 
-            # Extract frontmatter
             FRONTMATTER=$(awk 'NR==1 && /^---$/{flag=1; next} flag && /^---$/{exit} flag' "$SKILL_FILE")
 
-            # Check frontmatter exists
             if [[ -z "$FRONTMATTER" ]]; then
               echo "::error file=$SKILL_FILE::Missing frontmatter delimiters (---)"
               echo "- [ ] \`$SKILL_NAME\` — Missing frontmatter delimiters (---)" >> "$GITHUB_STEP_SUMMARY"
@@ -79,7 +92,6 @@ jobs:
               continue
             fi
 
-            # Validate YAML syntax
             if ! echo "$FRONTMATTER" | yq eval '.' - >/dev/null 2>&1; then
               echo "::error file=$SKILL_FILE::Invalid YAML syntax in frontmatter"
               echo "- [ ] \`$SKILL_NAME\` — Invalid YAML syntax in frontmatter" >> "$GITHUB_STEP_SUMMARY"
@@ -91,7 +103,6 @@ jobs:
             FILE_ERRORS=0
             FIRST_ERROR=""
 
-            # Check required fields
             NAME=$(echo "$FRONTMATTER" | yq eval '.name' -)
             if [[ "$NAME" == "null" || -z "$NAME" ]]; then
               echo "::error file=$SKILL_FILE::Required field 'name' not found"
@@ -106,14 +117,12 @@ jobs:
               FILE_ERRORS=$((FILE_ERRORS + 1))
             fi
 
-            # Validate name format
             if [[ "$NAME" != "null" && ! "$NAME" =~ ^[a-zA-Z0-9:_-]+$ ]]; then
               echo "::error file=$SKILL_FILE::Invalid skill name format: $NAME (use alphanumeric, hyphens, colons, underscores)"
               [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Invalid skill name format: $NAME"
               FILE_ERRORS=$((FILE_ERRORS + 1))
             fi
 
-            # Validate hooks if present
             HOOKS=$(echo "$FRONTMATTER" | yq eval '.hooks' -)
             if [[ "$HOOKS" != "null" ]]; then
               VALID_EVENTS="Start Stop PreToolUse PostToolUse Notification SessionStart UserPromptSubmit SubagentStart SubagentStop PreCompact SessionEnd"
@@ -123,16 +132,14 @@ jobs:
                 [[ -z "$EVENT" ]] && continue
 
                 if [[ ! " $VALID_EVENTS " =~ " $EVENT " ]]; then
-                  echo "::error file=$SKILL_FILE::Invalid hook event type: '$EVENT' (valid: $VALID_EVENTS)"
+                  echo "::error file=$SKILL_FILE::Invalid hook event type: '$EVENT'"
                   [[ -z "$FIRST_ERROR" ]] && FIRST_ERROR="Invalid hook event type: '$EVENT'"
                   FILE_ERRORS=$((FILE_ERRORS + 1))
                 fi
 
-                # Detect hook format: array (native Claude Code) or map (flat legacy)
                 HOOK_TYPE=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | type" -)
 
                 if [[ "$HOOK_TYPE" == "!!map" ]]; then
-                  # Flat format: hooks.<EVENT>.command is a direct string
                   COMMAND=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT.command" -)
                   if [[ "$COMMAND" == "null" ]]; then
                     echo "::error file=$SKILL_FILE::Hook '$EVENT' missing required field 'command'"
@@ -146,7 +153,6 @@ jobs:
                     FILE_ERRORS=$((FILE_ERRORS + 1))
                   fi
                 elif [[ "$HOOK_TYPE" == "!!seq" ]]; then
-                  # Native Claude Code array format: [{matcher?, hooks: [{type, command|prompt}]}]
                   COUNT=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT | length" -)
                   for ((i=0; i<COUNT; i++)); do
                     INNER=$(echo "$FRONTMATTER" | yq eval ".hooks.$EVENT[$i].hooks" -)

@@ -1,0 +1,37 @@
+name: Check LOC Cap
+description: Fail if any changed PR files matching a glob exceed a line count limit
+
+inputs:
+  limit:
+    description: Maximum lines of code allowed per file
+    required: true
+  glob:
+    description: File pattern to filter (e.g. "*/SKILL.md"). Empty = all files.
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Check LOC cap (${{ inputs.limit }})
+      shell: bash
+      run: |
+        LIMIT=${{ inputs.limit }}
+        GLOB="${{ inputs.glob }}"
+        BASE="${{ github.event.pull_request.base.sha }}"
+        HEAD="${{ github.event.pull_request.head.sha }}"
+        FAILED=0
+
+        while IFS= read -r file; do
+          [ -f "$file" ] || continue
+          if [ -n "$GLOB" ]; then
+            [[ "$file" == $GLOB ]] || continue
+          fi
+          loc=$(wc -l < "$file")
+          if [ "$loc" -gt "$LIMIT" ]; then
+            echo "::error file=$file::$file has $loc lines (limit: $LIMIT)"
+            FAILED=1
+          fi
+        done < <(git diff --name-only --diff-filter=ACMR "$BASE" "$HEAD")
+
+        exit $FAILED
