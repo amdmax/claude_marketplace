@@ -8,44 +8,11 @@
   },
   "plugins": [
     {
-      "name": "git",
-      "source": "./bundles/git",
-      "description": "Git workflow automation (1 skill): git:commit with configurable numbering and conventions",
+      "name": "agile-team",
+      "source": "./bundles/agile-team",
+      "description": "Agile dev team (6 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
       "version": "1.0.0",
       "category": "workflow",
-      "author": {
-        "name": "AIGENSA",
-        "email": "thesolutionarchitect@aigensa.com"
-      }
-    },
-    {
-      "name": "github",
-      "source": "./bundles/github",
-      "description": "GitHub workflow automation (12 skills): story lifecycle, PRs, CI loops, issue management, board tidy",
-      "version": "1.0.0",
-      "category": "workflow",
-      "author": {
-        "name": "AIGENSA",
-        "email": "thesolutionarchitect@aigensa.com"
-      }
-    },
-    {
-      "name": "development-tools",
-      "source": "./bundles/development-tools",
-      "description": "Development utilities (6 skills): bug fixing, debugging, context gathering, experimentation, remote notebooks, skill creation",
-      "version": "1.0.0",
-      "category": "development",
-      "author": {
-        "name": "AIGENSA",
-        "email": "thesolutionarchitect@aigensa.com"
-      }
-    },
-    {
-      "name": "cc",
-      "source": "./bundles/cc",
-      "description": "Claude Code meta-skills (6 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, and validation",
-      "version": "1.0.0",
-      "category": "development",
       "author": {
         "name": "AIGENSA",
         "email": "thesolutionarchitect@aigensa.com"
@@ -85,6 +52,17 @@
       }
     },
     {
+      "name": "cc",
+      "source": "./bundles/cc",
+      "description": "Claude Code meta-skills (6 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, and validation",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
       "name": "content-specialized",
       "source": "./bundles/content-specialized",
       "description": "Content creation and specialized tools (5 skills): writing, documentation, CUDA",
@@ -107,22 +85,44 @@
       }
     },
     {
-      "name": "mobile",
-      "source": "./bundles/mobile",
-      "description": "Mobile testing (2 skills): Android (Chromium) and iOS (WebKit) layout test automation",
+      "name": "development-tools",
+      "source": "./bundles/development-tools",
+      "description": "Development utilities (6 skills): bug fixing, debugging, context gathering, experimentation, remote notebooks, skill creation",
       "version": "1.0.0",
-      "category": "testing",
+      "category": "development",
       "author": {
         "name": "AIGENSA",
         "email": "thesolutionarchitect@aigensa.com"
       }
     },
     {
-      "name": "agile-team",
-      "source": "./bundles/agile-team",
-      "description": "Agile dev team (6 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
+      "name": "git",
+      "source": "./bundles/git",
+      "description": "Git workflow automation (1 skill): git:commit with configurable numbering and conventions",
       "version": "1.0.0",
       "category": "workflow",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
+      "name": "github",
+      "source": "./bundles/github",
+      "description": "GitHub workflow automation (12 skills): story lifecycle, PRs, CI loops, issue management, board tidy",
+      "version": "1.0.0",
+      "category": "workflow",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
+      "name": "mobile",
+      "source": "./bundles/mobile",
+      "description": "Mobile testing (2 skills): Android (Chromium) and iOS (WebKit) layout test automation",
+      "version": "1.0.0",
+      "category": "testing",
       "author": {
         "name": "AIGENSA",
         "email": "thesolutionarchitect@aigensa.com"
