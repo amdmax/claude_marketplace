@@ -24,18 +24,19 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 ## Bundles
 
-| Bundle | Skills | Description |
-|--------|--------|-------------|
-| `git` | `git:commit` | Local git operations — commit with configurable numbering and message conventions |
-| `github` | `github:actions`, `github:issue-create`, `github:edit-workflow`, `github:merge-chores`, `github:mermaid-diagram`, `github:pull-request`, `github:runner-setup`, `github:story-create`, `github:story-fetch`, `github:story-finalize`, `github:story-play`, `github:story-quality`, `github:tidy-board`, `github:until-green` | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, board management, runner setup, sequential chore merging, and Mermaid diagrams |
-| `development-tools` | `bug-fix`, `debug`, `experimentator`, `jupyter-remote` | Developer utilities — debugging, experimentation, remote notebooks |
-| `cc` | `cc:hooks`, `cc:output-style`, `cc:plugin-scaffold`, `cc:refactor-skill`, `cc:skill-creator`, `cc:sync-skills`, `cc:validate-skills` | Claude Code meta-skills — hooks, output styles, plugin scaffolding, skill creation, refactoring, syncing, and validation |
-| `architect` | `arch:adr-render`, `arch:adr-yaml`, `arch:asyncapi-contract`, `arch:create-adr`, `arch:design-implementation`, `arch:design-review`, `arch:fitness-function`, `arch:gather-nfr`, `arch:generate-strategic-questions`, `arch:generate-tactical-questions`, `arch:implementation-plan`, `arch:maintain-constraints-registry`, `arch:maintain-nfr-registry`, `arch:maintain-risk-registry`, `arch:openapi-contract`, `review:code`, `review:compliance`, `review:overall`, `review:performance`, `review:security` | Architecture guidance and code quality — ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR gathering, strategic/tactical question generation for scout, reviews, fitness functions, registries |
-| `aws` | `aws:architect`, `aws:cdk`, `aws:cdk-validate` | AWS infrastructure — architect guidance, CDK, CDK validation |
-| `content-specialized` | `creative-writing`, `cuda-remote-manager`, `editor-in-chief`, `regenerate-course-content`, `reveal-pdf-export` | Content creation and specialized tools — writing, documentation, CUDA |
-| `design` | `add-content-image`, `css-architecture`, `design-system`, `ux-professional` | Design tools — CSS architecture, design systems, UX, content images |
-| `mobile` | `mobile:android:test`, `mobile:ios:test` | Mobile testing — Android (Chromium) and iOS (WebKit) layout test automation |
-| `agile-team` | `agent:architect`, `agent:backend-dev`, `agent:devops`, `agent:frontend-dev`, `agent:test-architect`, `pm`, `pm:build`, `pm:pull-request`, `scout:gather-context`, `scout:prepare-for-dev`, `team:agile-dev` | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation; `/pm build` orchestrates a fleet of specialist agents driven by the architect's implementation plan; `/pm:pull-request` routes PR creation to the active issue tracker |
+| Bundle | # | Description |
+|--------|---|-------------|
+| `git` | 1 | Local git operations — commit with configurable numbering and message conventions |
+| `github` | 14 | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, board management, runner setup, sequential chore merging, and Mermaid diagrams |
+| `development-tools` | 4 | Developer utilities — debugging, experimentation, remote notebooks |
+| `cc` | 7 | Claude Code meta-skills — hooks, output styles, plugin scaffolding, skill creation, refactoring, syncing, and validation |
+| `architect` | 18 | Architecture guidance and code quality — ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR gathering, reviews, fitness functions, registries |
+| `architect-scout` | 2 | Architect scout question generation — strategic (enterprise/org-level) and tactical (implementation-level) questions for scout to answer before implementation begins |
+| `aws` | 3 | AWS infrastructure — architect guidance, CDK, CDK validation |
+| `content-specialized` | 5 | Content creation and specialized tools — writing, documentation, CUDA |
+| `design` | 4 | Design tools — CSS architecture, design systems, UX, content images |
+| `mobile` | 2 | Mobile testing — Android (Chromium) and iOS (WebKit) layout test automation |
+| `agile-team` | 11 | Agile dev team — full 5-agent TDD team or individual agents for controlled, single-agent delegation; `/pm build` orchestrates a fleet of specialist agents driven by the architect's implementation plan; `/pm:pull-request` routes PR creation to the active issue tracker |
 
 ## How Skill Resolution Works
 
