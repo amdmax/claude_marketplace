@@ -54,7 +54,18 @@
     {
       "name": "architect",
       "source": "./bundles/architect",
-      "description": "Architecture guidance and quality (14 skills): security, performance, compliance, fitness functions, ADRs, NFR/risk/constraints registries, diagrams",
+      "description": "Architecture guidance and quality (18 skills): security, performance, compliance, fitness functions, ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR/risk/constraints registries",
+      "version": "1.0.0",
+      "category": "architecture",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
+      "name": "architect-scout",
+      "source": "./bundles/architect-scout",
+      "description": "Architect scout question generation (2 skills): strategic (enterprise/org-level) and tactical (implementation-level) questions for scout to answer before implementation begins",
       "version": "1.0.0",
       "category": "architecture",
       "author": {
