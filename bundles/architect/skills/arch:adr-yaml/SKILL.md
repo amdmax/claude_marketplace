@@ -2,7 +2,7 @@
 name: arch:adr-yaml
 description: >
   Generate a structured YAML Architecture Decision Record (MADR format) at
-  docs/adr/NNNN-slug.adr.yaml. Validates schema automatically via PostToolUse hook.
+  $ADR_DIR/NNNN-slug.adr.yaml. Validates schema automatically via PostToolUse hook.
   Use /arch:adr-yaml to produce machine-readable ADR data before rendering with /arch:adr-render.
 tags: [architecture, adr, yaml, decision-records, madr]
 hooks:
@@ -17,12 +17,12 @@ hooks:
 
 ## Overview
 
-This skill produces machine-readable Architecture Decision Records as YAML files (`docs/adr/NNNN-slug.adr.yaml`). A PostToolUse hook automatically validates the output against the ADR schema on every write.
+This skill produces machine-readable Architecture Decision Records as YAML files (`$ADR_DIR/NNNN-slug.adr.yaml`). A PostToolUse hook automatically validates the output against the ADR schema on every write.
 
 **Flow:**
 ```
-/arch:adr-yaml  →  docs/adr/NNNN-slug.adr.yaml  →  [hook validates]
-/arch:adr-render →  docs/adr/NNNN-slug.md
+/arch:adr-yaml  →  $ADR_DIR/NNNN-slug.adr.yaml  →  [hook validates]
+/arch:adr-render →  $ADR_DIR/NNNN-slug.md
 ```
 
 ## Workflow
@@ -41,12 +41,13 @@ Warn if absent but continue. Extract `issueNumber`, `title`, `nfrs`, and `contex
 
 ### Step 2: Auto-Number the ADR
 
-Scan `docs/adr/` for files matching `^[0-9]{4}-` (both `*.adr.yaml` and `*.md`):
+Scan `$ADR_DIR` for files matching `^[0-9]{4}-` (both `*.adr.yaml` and `*.md`):
 
 ```bash
-mkdir -p docs/adr
+ADR_DIR="${ADR_DIR:-docs/adr}"
+mkdir -p "$ADR_DIR"
 
-HIGHEST=$(ls docs/adr/ 2>/dev/null | grep -oE "^[0-9]{4}" | sort -n | tail -1)
+HIGHEST=$(ls "$ADR_DIR" 2>/dev/null | grep -oE "^[0-9]{4}" | sort -n | tail -1)
 
 if [ -z "$HIGHEST" ]; then
   NEXT="0001"
@@ -68,12 +69,12 @@ Examples:
 ### Step 4: Determine Output Path
 
 ```
-docs/adr/NNNN-slug.adr.yaml
+$ADR_DIR/NNNN-slug.adr.yaml
 
-Example: docs/adr/0012-stripe-payment-integration.adr.yaml
+Example: $ADR_DIR/0012-stripe-payment-integration.adr.yaml
 ```
 
-Create `docs/adr/` if it does not exist.
+Create `$ADR_DIR` if it does not exist.
 
 ### Step 5: Map Decision Drivers
 
@@ -183,7 +184,7 @@ Exit code 2 = blocking error. Exit code 0 = pass.
 ```javascript
 story.adr = {
   number: adrNumber,        // "0012"
-  filePath: "docs/adr/0012-stripe-payment-integration.adr.yaml",
+  filePath: "$ADR_DIR/0012-stripe-payment-integration.adr.yaml",
   status: "proposed",
   createdAt: new Date().toISOString()
 };
@@ -194,7 +195,7 @@ story.adr = {
 ✅ ADR YAML created
 
 ADR-0012: stripe-payment-integration
-Location: docs/adr/0012-stripe-payment-integration.adr.yaml
+Location: $ADR_DIR/0012-stripe-payment-integration.adr.yaml
 Status:   proposed
 Options:  3 considered
 
@@ -206,7 +207,7 @@ Decision Drivers:
 ✅ Schema validation passed
 ✅ Active story updated
 
-Next step: /arch:adr-render → docs/adr/0012-stripe-payment-integration.md
+Next step: /arch:adr-render → $ADR_DIR/0012-stripe-payment-integration.md
 ```
 
 ## Error Handling

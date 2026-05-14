@@ -18,7 +18,7 @@ Runs read-only reconnaissance on a story before implementation starts. Produces 
 ## Constraints
 
 - **Read-only** for all source code, tests, infrastructure, and config
-- Write only under `docs/stories/{id}/` and `docs/adr/`
+- Write only under `docs/stories/{id}/` and `$ADR_DIR`
 - Do not change issue status to In Progress
 - Do not create implementation branches
 - If a bug is found during recon, record it in Open Questions — do not fix it
@@ -80,7 +80,7 @@ Use multiple terms. Look for existing components, handlers, tests, and templates
 
 - `CLAUDE.md` files in any directories that appeared in Step 3
 - Registry files via `/arch:maintain-constraints-registry`, `/arch:maintain-nfr-registry`, `/arch:maintain-risk-registry`
-- `ls docs/adr/` — then read ADRs relevant to this story's domain
+- `ls "${ADR_DIR:-docs/adr}"` — then read ADRs relevant to this story's domain
 
 ### Step 5 — Build blast radius (three tiers)
 
@@ -111,11 +111,11 @@ If a new ADR is warranted, use `/create-adr` for MADR format and auto-numbering:
 
 ```bash
 # Find next ADR number
-ls docs/adr/ 2>/dev/null | grep -o "^[0-9]*" | sort -n | tail -1
+ls "${ADR_DIR:-docs/adr}" 2>/dev/null | grep -o "^[0-9]*" | sort -n | tail -1
 # Increment and zero-pad to 4 digits (start at 0001 if empty)
 ```
 
-File: `docs/adr/{NNNN}-{slug}.md` with `status: proposed`.
+File: `$ADR_DIR/{NNNN}-{slug}.md` with `status: proposed`.
 
 If no ADR is needed, record the governing document reference instead.
 
@@ -169,9 +169,9 @@ scout:
 
   architecture:
     governing_adrs:
-      - docs/adr/0001-slug.md
+      - $ADR_DIR/0001-slug.md
     sufficient: true
-    new_adr: null   # or: docs/adr/NNNN-slug.md
+    new_adr: null   # or: $ADR_DIR/NNNN-slug.md
 
   tasks:
     - id: 1
@@ -214,7 +214,7 @@ gh issue comment $ISSUE_NUMBER --body "<!-- scout-report -->
 **Directly affected:** N files | **Likely affected:** N files | **Tasks:** N | **Open questions:** N
 
 Full report: docs/stories/<N>/scout.yaml
-[**ADR draft:** docs/adr/NNNN-slug.md]          # include if proposed
+[**ADR draft:** $ADR_DIR/NNNN-slug.md]          # include if proposed
 [**Architecture review needed** before coding.]   # include if applicable"
 ```
 
@@ -234,7 +234,7 @@ gh issue edit $ISSUE_NUMBER --add-label "adr-proposed"                # if true
 | File | Description |
 |------|-------------|
 | `docs/stories/<N>/scout.yaml` | Full scout report (YAML, token-efficient) |
-| `docs/adr/{NNNN}-{slug}.md` | ADR draft (only if warranted) |
+| `$ADR_DIR/{NNNN}-{slug}.md` | ADR draft (only if warranted) |
 
 ## Scout Blocked Conditions
 

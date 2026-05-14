@@ -43,7 +43,7 @@ mkdir -p "$OUTPUT_DIR"
 
 Read:
 - `.agile-dev-team/active-story.yaml` — story title, issueNumber, ACs, NFRs
-- `docs/adr/` — all existing ADRs (to avoid re-asking decided questions)
+- `$ADR_DIR` — all existing ADRs (to avoid re-asking decided questions)
 - `.agile-dev-team/nfr-registry.json` — existing NFRs (to avoid duplication)
 
 ### Step 2 — Analyse story scope
@@ -113,7 +113,7 @@ Before writing, check each question:
 
 ```bash
 # Check if topic is covered in any ADR
-grep -r "QUESTION_TOPIC" docs/adr/ 2>/dev/null
+grep -r "QUESTION_TOPIC" "${ADR_DIR:-docs/adr}" 2>/dev/null
 # Check if NFR already captures this constraint
 grep "QUESTION_TOPIC" .agile-dev-team/nfr-registry.json 2>/dev/null
 ```

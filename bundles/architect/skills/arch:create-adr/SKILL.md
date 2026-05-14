@@ -10,7 +10,7 @@ description: Generate Architecture Decision Records in MADR format with auto-num
 This skill generates Architecture Decision Records (ADRs) in MADR (Markdown Any Decision Records) format. It:
 
 1. **Analyzes story context** to determine if ADR is needed
-2. **Auto-numbers ADRs** by scanning existing `docs/adr/` directory
+2. **Auto-numbers ADRs** by scanning existing `$ADR_DIR` directory
 3. **Extracts decision drivers** from NFRs and technical context
 4. **Identifies options** from context and industry best practices
 5. **Generates MADR-format file** with comprehensive decision documentation
@@ -245,11 +245,12 @@ console.log('  Reason: [New technology | Security-sensitive | Multiple options]'
 **Scan existing ADRs:**
 
 ```bash
+ADR_DIR="${ADR_DIR:-docs/adr}"
 # Create directory if it doesn't exist
-mkdir -p docs/adr
+mkdir -p "$ADR_DIR"
 
 # Find highest ADR number
-HIGHEST=$(ls docs/adr/ 2>/dev/null | grep -o "^[0-9]*" | sort -n | tail -1)
+HIGHEST=$(ls "$ADR_DIR" 2>/dev/null | grep -o "^[0-9]*" | sort -n | tail -1)
 
 # If no ADRs exist, start at 0001
 if [ -z "$HIGHEST" ]; then
@@ -293,9 +294,9 @@ function generateTitleSlug(storyTitle, context) {
 
 **File naming:**
 ```
-docs/adr/{NNNN}-{slug}.md
+$ADR_DIR/{NNNN}-{slug}.md
 
-Example: docs/adr/0012-stripe-payment-integration.md
+Example: $ADR_DIR/0012-stripe-payment-integration.md
 ```
 
 ### Step 6: Extract Decision Drivers from NFRs
@@ -644,7 +645,7 @@ ${moreInformationSection}
 `;
 
 // Write file
-fs.writeFileSync(`docs/adr/${adrNumber}-${titleSlug}.md`, adrContent);
+fs.writeFileSync(`${process.env.ADR_DIR || 'docs/adr'}/${adrNumber}-${titleSlug}.md`, adrContent);
 ```
 
 ### Step 13: Update Active Story with ADR Reference
@@ -652,7 +653,7 @@ fs.writeFileSync(`docs/adr/${adrNumber}-${titleSlug}.md`, adrContent);
 ```javascript
 story.adr = {
   number: adrNumber,
-  filePath: `docs/adr/${adrNumber}-${titleSlug}.md`,
+  filePath: `${process.env.ADR_DIR || 'docs/adr'}/${adrNumber}-${titleSlug}.md`,
   title: titleSlug,
   status: 'proposed',
   createdAt: new Date().toISOString()
@@ -668,7 +669,7 @@ fs.writeFileSync('.agile-dev-team/active-story.yaml', yaml.dump(story));
 ✓ Architecture Decision Record Created
 
 ADR-0012: stripe-payment-integration
-Location: docs/adr/0012-stripe-payment-integration.md
+Location: $ADR_DIR/0012-stripe-payment-integration.md
 
 Decision: Stripe Checkout (hosted page)
 
@@ -724,7 +725,7 @@ Choice:
 ### ADR Directory Creation Failed
 
 ```
-❌ Failed to create docs/adr/ directory
+❌ Failed to create $ADR_DIR directory
 
 Error: [error message]
 
@@ -741,7 +742,7 @@ Error: [error message]
 Possible causes:
 - File permissions issue
 - Disk full
-- File already exists (check docs/adr/)
+- File already exists (check $ADR_DIR)
 
 Please resolve and try again.
 ```

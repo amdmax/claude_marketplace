@@ -132,7 +132,7 @@ For each ADR warranted by Step 4:
 - Provide: story title, issue number, decision drivers drawn from NFRs and constraints, options synthesised from scout dependencies and gaps in governing ADRs.
 - Do not recreate a decision already covered by an accepted ADR. Supersede only with strong evidence (reference the governing ADR explicitly).
 
-**5b.** Invoke `/arch:adr-render` to convert the YAML to `docs/adr/NNNN-slug.md`.
+**5b.** Invoke `/arch:adr-render` to convert the YAML to `$ADR_DIR/NNNN-slug.md`.
 
 **5c.** Record in `design.yaml` artefacts list with `type: adr`, both `file` (YAML) and `rendered` (Markdown) paths.
 
@@ -240,8 +240,8 @@ reviewers post approvals — no need to re-run the full orchestrator.
 | `docs/stories/{id}/design/flow-{slug}.mmd` | Business process flow diagram (Mermaid) |
 | `docs/stories/{id}/design/api-{slug}.openapi.yaml` | OpenAPI 3.1.0 contract |
 | `docs/stories/{id}/design/async-{slug}.asyncapi.yaml` | AsyncAPI 2.6 event contract |
-| `docs/adr/NNNN-slug.adr.yaml` | ADR YAML (via `/arch:adr-yaml`) |
-| `docs/adr/NNNN-slug.md` | Rendered ADR Markdown (via `/arch:adr-render`) |
+| `$ADR_DIR/NNNN-slug.adr.yaml` | ADR YAML (via `/arch:adr-yaml`) |
+| `$ADR_DIR/NNNN-slug.md` | Rendered ADR Markdown (via `/arch:adr-render`) |
 
 ---
 
@@ -259,8 +259,8 @@ design:
   artefacts:
     - id: adr-0014                        # unique slug per artefact
       type: adr                           # adr | diagram_c4 | diagram_erd | diagram_flow | api_openapi | api_asyncapi | implementation_plan
-      file: docs/adr/0014-slug.adr.yaml
-      rendered: docs/adr/0014-slug.md     # adr type only
+      file: $ADR_DIR/0014-slug.adr.yaml
+      rendered: $ADR_DIR/0014-slug.md     # adr type only
       rationale: "why this artefact was produced"
       comment_id: null                    # GitHub comment ID once posted
       approval_status: pending            # pending | approved | rejected

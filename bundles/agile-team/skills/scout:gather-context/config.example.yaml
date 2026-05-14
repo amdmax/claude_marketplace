@@ -6,7 +6,7 @@ paths:
   architecture_docs: "_bmad-output/"    # Or docs/architecture/
   active_story: ".agile-dev-team/active-story.yaml"
   skills_dir: ".claude/skills/"
-  adr_dir: "docs/adr/"
+  adr_dir: "docs/adr/"       # override via agent_docs_dir in .claude/config.yaml
   nfr_dir: "docs/nfr/"
 
 # Context sources

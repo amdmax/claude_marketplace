@@ -309,7 +309,7 @@ Skill: "create-adr"
 ```
 
 **Expected output:**
-- ADR file created in `docs/adr/`
+- ADR file created in `$ADR_DIR`
 - ADR reference added to `.agile-dev-team/active-story.yaml`
 - ADR summary displayed
 
@@ -338,7 +338,7 @@ Choice:
 ✓ ADR Created: ADR-0012: stripe-payment-integration
   Decision: Stripe Checkout (hosted page)
   Status: Proposed
-  Location: docs/adr/0012-stripe-payment-integration.md
+  Location: $ADR_DIR/0012-stripe-payment-integration.md
 ```
 
 ### Step 7: Final Summary
@@ -418,7 +418,7 @@ Architecture Decision Record
 
 ADR-0012: stripe-payment-integration
 Status: Proposed
-Location: docs/adr/0012-stripe-payment-integration.md
+Location: $ADR_DIR/0012-stripe-payment-integration.md
 
 Decision: Stripe Checkout (hosted page)
 
@@ -444,7 +444,7 @@ Next Steps
 5. Create PR when ready: /mr
 
 Story data saved to: .agile-dev-team/active-story.yaml
-ADR location: docs/adr/0012-stripe-payment-integration.md
+ADR location: $ADR_DIR/0012-stripe-payment-integration.md
 
 ═══════════════════════════════════════════════════════════════
 ```
@@ -865,7 +865,7 @@ Analysis: ADR recommended (new payment integration, security-sensitive)
   Next ADR number: 0012
   Title slug: stripe-payment-integration
 
-✓ ADR created: docs/adr/0012-stripe-payment-integration.md
+✓ ADR created: $ADR_DIR/0012-stripe-payment-integration.md
 ✓ ADR reference saved to active story
 
 ───────────────────────────────────────────────────────────────
