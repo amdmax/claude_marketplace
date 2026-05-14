@@ -35,7 +35,7 @@ Invoke `/commit`:
 
 ### Phase 3 — Create PR
 
-Invoke `/gh:pr`:
+Invoke `/github:pull-request`:
 - Verifies commits exist ahead of master
 - Creates PR with `--base master`
 - Stores PR number for the CI loop
@@ -218,7 +218,7 @@ No manual configuration needed — this is handled by `/commit`'s PR-based group
 ## Integration
 
 - **`/commit`** — invoked in Phase 2 and after each fix in Phase 4
-- **`/gh:pr`** — invoked in Phase 3
+- **`/github:pull-request`** — invoked in Phase 3
 - **`/finalize-story`** — always invoked post-green to close the issue loop
 - **`gh pr checks`** — native gh CLI for polling CI status
 - **`gh run view --log-failed`** — native gh CLI for fetching failure logs
