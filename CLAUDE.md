@@ -30,8 +30,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 | `github` | 14 | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, board management, runner setup, sequential chore merging, and Mermaid diagrams |
 | `development-tools` | 4 | Developer utilities — debugging, experimentation, remote notebooks |
 | `cc` | 7 | Claude Code meta-skills — hooks, output styles, plugin scaffolding, skill creation, refactoring, syncing, and validation |
-| `architect` | 18 | Architecture guidance and code quality — ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR gathering, reviews, fitness functions, registries |
-| `architect-scout` | 2 | Architect scout question generation — strategic (enterprise/org-level) and tactical (implementation-level) questions for scout to answer before implementation begins |
+| `architect` | 20 | Architecture guidance and code quality — ADRs, story design lifecycle, API/event contracts, implementation planning, design review, NFR gathering, reviews, fitness functions, registries, strategic and tactical scout questions |
 | `aws` | 3 | AWS infrastructure — architect guidance, CDK, CDK validation |
 | `content-specialized` | 5 | Content creation and specialized tools — writing, documentation, CUDA |
 | `design` | 4 | Design tools — CSS architecture, design systems, UX, content images |
