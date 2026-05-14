@@ -4,8 +4,8 @@ description: >
   Generates implementation-level questions about conventions and patterns already
   established in the codebase. Covers integration patterns, data schemas, API conventions,
   code conventions, testing strategy, and deployment. Every question includes a
-  codebase_hint pointing scout to where the answer likely lives. Outputs to
-  .agile-dev-team/questions/tactical.yaml.
+  codebase_hint pointing scout to where the answer likely lives. Writes to
+  agent-docs/stories/{issueNumber}/tactical-questions.yaml (created if absent).
 argument-hint: "[issue_number]"
 allowed-tools:
   - Read
@@ -14,7 +14,7 @@ allowed-tools:
   - Bash
   - Write
 write-paths:
-  - .agile-dev-team/
+  - agent-docs/
 ---
 
 # arch:generate-tactical-questions
@@ -35,11 +35,16 @@ if [ ! -f "$STORY_FILE" ]; then
   echo "ERROR  No active story. Run /github:story-fetch first."
   exit 1
 fi
+ISSUE_NUMBER=$(grep 'issueNumber:' "$STORY_FILE" | awk '{print $2}')
+OUTPUT_DIR="agent-docs/stories/${ISSUE_NUMBER}"
+OUTPUT_PATH="${OUTPUT_DIR}/tactical-questions.yaml"
+STRATEGIC_PATH="${OUTPUT_DIR}/strategic-questions.yaml"
+mkdir -p "$OUTPUT_DIR"
 ```
 
 Read:
 - `.agile-dev-team/active-story.yaml` — story title, issueNumber, ACs, NFRs
-- `.agile-dev-team/questions/strategic.yaml` — avoid duplicating strategic answers
+- `agent-docs/stories/{issueNumber}/strategic-questions.yaml` — avoid duplicating strategic answers
 - `docs/adr/` — skip questions already decided in ADRs
 
 ### Step 2 — Analyse story scope
@@ -60,7 +65,7 @@ Skip any category not touched by any AC.
 ### Step 3 — Generate questions
 
 For each relevant category, generate targeted questions from the catalogue below.
-Skip questions whose answers are already in ADRs or strategic.yaml.
+Skip questions whose answers are already in ADRs or strategic-questions.yaml.
 Add `codebase_hint` to every question — tell scout where to look.
 
 #### Category: `integration_patterns`
@@ -149,14 +154,14 @@ Before writing, check each question:
 # Check ADRs
 grep -r "QUESTION_TOPIC" docs/adr/ 2>/dev/null
 # Check strategic answers
-grep "QUESTION_TOPIC" .agile-dev-team/questions/strategic.yaml 2>/dev/null
+grep "QUESTION_TOPIC" "${STRATEGIC_PATH}" 2>/dev/null
 ```
 
 If already answered, set `answer:` to the reference rather than `null`.
 
 ### Step 5 — Write output
 
-Write `.agile-dev-team/questions/tactical.yaml`:
+Write `agent-docs/stories/{issueNumber}/tactical-questions.yaml`:
 
 ```yaml
 generated_at: "YYYY-MM-DD"
@@ -193,9 +198,9 @@ arch:generate-tactical-questions: {N} questions written
   testing               {n} questions
   deployment            {n} questions
 
-  {m} already answered (from ADRs / strategic.yaml)
+  {m} already answered (from ADRs / strategic-questions.yaml)
 
-Output: .agile-dev-team/questions/tactical.yaml
+Output: agent-docs/stories/{issueNumber}/tactical-questions.yaml
 Next:   send scout to answer both strategic and tactical question files.
 ```
 
@@ -205,7 +210,7 @@ Next:   send scout to answer both strategic and tactical question files.
 
 | File | Content |
 |------|---------|
-| `.agile-dev-team/questions/tactical.yaml` | Structured question list with `codebase_hint` on every question |
+| `agent-docs/stories/{issueNumber}/tactical-questions.yaml` | Structured question list with `codebase_hint` on every question |
 
 ---
 
