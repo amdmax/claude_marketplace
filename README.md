@@ -209,7 +209,7 @@ Synced directly from [aigensa/academy](https://github.com/amdmax/academy) `.clau
 | `gh-actions` | GitHub Actions Composite Actions |
 | `gh-edit-workflow` | GitHub Actions Workflow Editor |
 | `gh:commit` | AIGCODE Commit Automation with issue numbering |
-| `gh:pr` | Pull Request Creation with Story Integration |
+| `github:pull-request` | Pull Request Creation with Story Integration |
 | `mermaid-diagram` | Mermaid Diagram Generator |
 | `overall-review` | Overall Code Review |
 | `performance-review` | Performance Review |
