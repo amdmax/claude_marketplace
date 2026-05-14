@@ -4,8 +4,8 @@ description: >
   Generates enterprise/org-level questions that must be answered before an implementation
   brief can be safely produced. Covers cloud infrastructure, security & compliance,
   architecture governance, team ownership, and cost/budget constraints. Skips questions
-  already answered in existing ADRs or the NFR registry. Outputs to
-  .agile-dev-team/questions/strategic.yaml for scout to answer.
+  already answered in existing ADRs or the NFR registry. Writes to
+  agent-docs/stories/{issueNumber}/strategic-questions.yaml (created if absent).
 argument-hint: "[issue_number]"
 allowed-tools:
   - Read
@@ -14,7 +14,7 @@ allowed-tools:
   - Bash
   - Write
 write-paths:
-  - .agile-dev-team/
+  - agent-docs/
 ---
 
 # arch:generate-strategic-questions
@@ -35,6 +35,10 @@ if [ ! -f "$STORY_FILE" ]; then
   echo "ERROR  No active story. Run /github:story-fetch first."
   exit 1
 fi
+ISSUE_NUMBER=$(grep 'issueNumber:' "$STORY_FILE" | awk '{print $2}')
+OUTPUT_DIR="agent-docs/stories/${ISSUE_NUMBER}"
+OUTPUT_PATH="${OUTPUT_DIR}/strategic-questions.yaml"
+mkdir -p "$OUTPUT_DIR"
 ```
 
 Read:
@@ -119,7 +123,7 @@ If an existing ADR or NFR fully answers a question, set `answer:` to the referen
 
 ### Step 5 — Write output
 
-Write `.agile-dev-team/questions/strategic.yaml`:
+Write `agent-docs/stories/{issueNumber}/strategic-questions.yaml`:
 
 ```yaml
 generated_at: "YYYY-MM-DD"
@@ -156,7 +160,7 @@ arch:generate-strategic-questions: {N} questions written
 
   {m} already answered (from ADRs / NFR registry)
 
-Output: .agile-dev-team/questions/strategic.yaml
+Output: agent-docs/stories/{issueNumber}/strategic-questions.yaml
 Next:   run /arch:generate-tactical-questions, then send scout to answer both files.
 ```
 
@@ -166,7 +170,7 @@ Next:   run /arch:generate-tactical-questions, then send scout to answer both fi
 
 | File | Content |
 |------|---------|
-| `.agile-dev-team/questions/strategic.yaml` | Structured question list; `answer: null` for unanswered |
+| `agent-docs/stories/{issueNumber}/strategic-questions.yaml` | Structured question list; `answer: null` for unanswered |
 
 ---
 
