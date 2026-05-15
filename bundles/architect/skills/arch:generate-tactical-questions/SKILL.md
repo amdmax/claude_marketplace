@@ -45,7 +45,7 @@ mkdir -p "$OUTPUT_DIR"
 Read:
 - `.agile-dev-team/active-story.yaml` — story title, issueNumber, ACs, NFRs
 - `agent-docs/stories/{issueNumber}/strategic-questions.yaml` — avoid duplicating strategic answers
-- `docs/adr/` — skip questions already decided in ADRs
+- `$ADR_DIR` — skip questions already decided in ADRs
 
 ### Step 2 — Analyse story scope
 
@@ -152,7 +152,7 @@ Before writing, check each question:
 
 ```bash
 # Check ADRs
-grep -r "QUESTION_TOPIC" docs/adr/ 2>/dev/null
+grep -r "QUESTION_TOPIC" "${ADR_DIR:-docs/adr}" 2>/dev/null
 # Check strategic answers
 grep "QUESTION_TOPIC" "${STRATEGIC_PATH}" 2>/dev/null
 ```

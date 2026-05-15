@@ -54,7 +54,7 @@ file_boundaries:
       - ".agile-dev-team/active-story.yaml"  # = workspace_dir/active-story.yaml
   architect:
     writable:
-      - ".agile-dev-team/docs/adr/*.md"            # = workspace_dir/adr/*.md
+      - ".agile-dev-team/docs/adr/*.md"            # = workspace_dir/adr/*.md; set agent_docs_dir in .claude/config.yaml to override
       - ".agile-dev-team/active-story.yaml"   # = workspace_dir/active-story.yaml
   test_architect:
     writable:

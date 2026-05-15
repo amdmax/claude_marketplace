@@ -1,7 +1,7 @@
 ---
 name: arch:adr-render
 description: >
-  Convert a docs/adr/NNNN-slug.adr.yaml file into a MADR-format Markdown file.
+  Convert a $ADR_DIR/NNNN-slug.adr.yaml file into a MADR-format Markdown file.
   Output path is same as input with .md extension. Use after /arch:adr-yaml.
 tags: [architecture, adr, markdown, madr, render]
 ---
@@ -14,7 +14,7 @@ Converts a structured `*.adr.yaml` file into a human-readable MADR-format Markdo
 
 **Flow:**
 ```
-docs/adr/NNNN-slug.adr.yaml  →  /arch:adr-render  →  docs/adr/NNNN-slug.md
+$ADR_DIR/NNNN-slug.adr.yaml  →  /arch:adr-render  →  $ADR_DIR/NNNN-slug.md
 ```
 
 ## Workflow
@@ -22,15 +22,16 @@ docs/adr/NNNN-slug.adr.yaml  →  /arch:adr-render  →  docs/adr/NNNN-slug.md
 ### Step 1: Locate Source YAML
 
 Accept an optional path argument:
-- `/arch:adr-render docs/adr/0012-stripe-payment-integration.adr.yaml`
-- `/arch:adr-render` (no arg) → find the most-recently-modified `*.adr.yaml` in `docs/adr/`
+- `/arch:adr-render $ADR_DIR/0012-stripe-payment-integration.adr.yaml`
+- `/arch:adr-render` (no arg) → find the most-recently-modified `*.adr.yaml` in `$ADR_DIR`
 
 ```bash
+ADR_DIR="${ADR_DIR:-docs/adr}"
 # No arg: find most recent
-SOURCE=$(ls -t docs/adr/*.adr.yaml 2>/dev/null | head -1)
+SOURCE=$(ls -t "$ADR_DIR"/*.adr.yaml 2>/dev/null | head -1)
 
 if [ -z "$SOURCE" ]; then
-  echo "❌ No *.adr.yaml files found in docs/adr/"
+  echo "❌ No *.adr.yaml files found in $ADR_DIR"
   exit 1
 fi
 ```
@@ -58,7 +59,7 @@ If any required field is missing, report all absent fields and exit:
    - decision.rationale
    - options (need ≥ 2, found 1)
 
-Fix docs/adr/0012-stripe-payment-integration.adr.yaml and re-run.
+Fix $ADR_DIR/0012-stripe-payment-integration.adr.yaml and re-run.
 ```
 
 ### Step 3: Determine Output Path
@@ -66,15 +67,15 @@ Fix docs/adr/0012-stripe-payment-integration.adr.yaml and re-run.
 Replace `.adr.yaml` suffix with `.md`:
 
 ```
-docs/adr/0012-stripe-payment-integration.adr.yaml
+$ADR_DIR/0012-stripe-payment-integration.adr.yaml
          ↓
-docs/adr/0012-stripe-payment-integration.md
+$ADR_DIR/0012-stripe-payment-integration.md
 ```
 
 If the `.md` file already exists, confirm overwrite before proceeding:
 
 ```
-⚠️  docs/adr/0012-stripe-payment-integration.md already exists.
+⚠️  $ADR_DIR/0012-stripe-payment-integration.md already exists.
 Overwrite? [y/N]
 ```
 
@@ -170,15 +171,15 @@ Chosen option: "{decision.chosen}", because {decision.rationale}
 
 ### Step 5: Write Markdown File
 
-Write the rendered content to `docs/adr/NNNN-slug.md`.
+Write the rendered content to `$ADR_DIR/NNNN-slug.md`.
 
 ### Step 6: Report and Next Steps
 
 ```
 ✅ ADR rendered to Markdown
 
-Source: docs/adr/0012-stripe-payment-integration.adr.yaml
-Output: docs/adr/0012-stripe-payment-integration.md
+Source: $ADR_DIR/0012-stripe-payment-integration.adr.yaml
+Output: $ADR_DIR/0012-stripe-payment-integration.md
 
 Next steps:
   1. Review the rendered ADR for accuracy
@@ -207,19 +208,19 @@ Next steps:
 
 ### File Not Found
 ```
-❌ File not found: docs/adr/0012-stripe-payment-integration.adr.yaml
+❌ File not found: $ADR_DIR/0012-stripe-payment-integration.adr.yaml
    Run /arch:adr-yaml to generate it first.
 ```
 
 ### Invalid YAML
 ```
-❌ Failed to parse YAML: docs/adr/0012-stripe-payment-integration.adr.yaml
+❌ Failed to parse YAML: $ADR_DIR/0012-stripe-payment-integration.adr.yaml
    [parse error detail]
 ```
 
 ### Write Failure
 ```
-❌ Failed to write docs/adr/0012-stripe-payment-integration.md
+❌ Failed to write $ADR_DIR/0012-stripe-payment-integration.md
    [error detail]
 ```
 
@@ -228,8 +229,8 @@ Next steps:
 Designed to run immediately after `/arch:adr-yaml`:
 
 ```
-/arch:adr-yaml   → produces docs/adr/NNNN-slug.adr.yaml (validated by hook)
-/arch:adr-render → produces docs/adr/NNNN-slug.md
+/arch:adr-yaml   → produces $ADR_DIR/NNNN-slug.adr.yaml (validated by hook)
+/arch:adr-render → produces $ADR_DIR/NNNN-slug.md
 /git:commit      → commits both files
 ```
 
