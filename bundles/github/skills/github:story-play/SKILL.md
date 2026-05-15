@@ -7,894 +7,182 @@ description: Put a story "in play" by fetching it from GitHub Projects, gatherin
 
 ## Overview
 
-This skill orchestrates the complete story preparation workflow, coordinating all helper skills to prepare a story for implementation. It:
+Orchestrates the complete story preparation workflow:
 
-1. **Checks for active story** - Handles existing work gracefully
-2. **Fetches next Ready story** - Calls `/fetch-story` to get highest-priority story
-3. **Gathers non-functional requirements** - Calls `/gather-nfr` for NFR collection
-4. **Collects technical context** - Calls `/gather-context` for comprehensive context
-5. **Creates ADR if needed** - Calls `/arch:create-adr` for architectural decisions
-6. **Provides summary** - Shows complete story preparation and suggests next steps
+1. Checks for active story — handles existing work gracefully
+2. Pulls latest master
+3. Fetches next Ready story via `/github:story-fetch`
+4. Gathers NFRs via `/arch:gather-nfr`
+5. Collects technical context via `/scout:gather-context`
+6. Creates ADR if needed via `/arch:create-adr`
+7. Displays summary and suggests next steps
 
-This is the **primary entry point** for developers starting work on a new story.
+Primary entry point for developers starting work on a new story.
 
 ## Workflow
 
 ### Step 1: Pull Latest Changes from Master
 
-**CRITICAL: Always pull latest changes before starting new work**
-
 ```bash
-# Fetch and pull latest from master
-echo "🔄 Pulling latest changes from master..."
-
-# Fetch latest
 git fetch origin master
-
-# Get current branch
 CURRENT_BRANCH=$(git branch --show-current)
-
-# Stash uncommitted changes if any
 if ! git diff-index --quiet HEAD --; then
-  echo "  Stashing uncommitted changes..."
   git stash push -u -m "Auto-stash before pulling master (play-story)"
   STASHED=true
-else
-  STASHED=false
 fi
-
-# Switch to master and pull
-git checkout master
-git pull origin master
-
-# Return to previous branch
-if [ "$CURRENT_BRANCH" != "master" ]; then
-  git checkout "$CURRENT_BRANCH"
-
-  # Offer to rebase/merge if branch exists
-  echo "  Current branch: $CURRENT_BRANCH"
-  echo "  Master updated. Consider rebasing your branch."
-fi
-
-# Restore stashed changes
-if [ "$STASHED" = "true" ]; then
-  echo "  Restoring stashed changes..."
-  git stash pop
-fi
-
+git checkout master && git pull origin master
+[ "$CURRENT_BRANCH" != "master" ] && git checkout "$CURRENT_BRANCH"
+[ "$STASHED" = "true" ] && git stash pop
 echo "✓ Master branch updated"
 ```
 
-**Why this is critical:**
-- PR #207 merged while working on another feature
-- Master may contain dependency updates affecting your work
-- Prevents merge conflicts and duplicate work
-- Ensures you're working with latest code patterns
-
-**When to skip:**
-- You just cloned the repository
-- You're certain master hasn't changed (check `git fetch origin master && git log master..origin/master`)
-
 ### Step 2: Check for Active Story
-
-**Read active story file:**
 
 ```bash
 STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
-if [ -f "$STORY_FILE" ]; then
-  # Active story exists
-  ACTIVE_STORY_EXISTS=true
-else
-  ACTIVE_STORY_EXISTS=false
-fi
+[ -f "$STORY_FILE" ] && ACTIVE_STORY_EXISTS=true || ACTIVE_STORY_EXISTS=false
 ```
 
-**If active story exists, prompt user:**
-
+If active story exists, prompt:
 ```
-⚠️  Active story in progress
+⚠️  Active story in progress: #123 - Implement payment checkout
 
-Current story: #123 - Implement payment checkout
-Status: NFRs collected, context gathered, ADR created
-Fetched: 2 hours ago
-
-What would you like to do?
   [1] Continue with current story
-  [2] Switch to a different story (fetch new story)
+  [2] Switch to a different story
   [3] View current story details
   [4] Cancel
-
-Choice:
 ```
 
-**Handle user choice:**
-
-| Choice | Action |
-|--------|--------|
-| 1 - Continue | Skip to summary, show current story status |
-| 2 - Switch | Archive current story, fetch new one |
-| 3 - View details | Display full `.agile-dev-team/active-story.yaml`, then re-prompt |
-| 4 - Cancel | Exit workflow |
-
-**Archive current story (if switching):**
-
+If switching, archive the current story:
 ```bash
-# Move active story to archive
 TIMESTAMP=$(date +%Y%m%d-%H%M%S)
-mv "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml" \
-   "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-${TIMESTAMP}.yaml"
-
-echo "✓ Previous story archived to .agile-dev-team/active-story-${TIMESTAMP}.yaml"
+mv "$STORY_FILE" "${STORY_FILE%.yaml}-${TIMESTAMP}.yaml"
 ```
 
 ### Step 3: Fetch Next Ready Story
 
-**Call `/fetch-story` skill:**
-
 ```
 → Step 2/5: Fetching next Ready story from GitHub Projects
-
-Calling /fetch-story...
 ```
 
-**Skill tool invocation:**
+Invoke skill: `github:story-fetch`
 
-```javascript
-Skill: "fetch-story"
-```
+Expected: `.agile-dev-team/active-story.yaml` created, GitHub status → "In Progress".
 
-**Expected output:**
-- `.agile-dev-team/active-story.yaml` created with story data
-- GitHub status updated to "In Progress"
-- Story summary displayed
-
-**Error handling:**
-
-If `/fetch-story` fails:
-
-```
-❌ Failed to fetch story
-
-Error: [error from fetch-story skill]
-
-Common causes:
-- No Ready stories in project
-- GitHub authentication failed
-- Configuration missing
-
-Please resolve the issue and run /play-story again.
-```
-
-Exit workflow if fetch fails.
-
-**Success confirmation:**
-
-```
-✓ Story Fetched: #123 - Implement payment checkout
-  Priority: P0
-  Size: M
-  Labels: story, feature, payment
-```
+If fetch fails, display error and exit. Configuration required — see [references/configuration.md](references/configuration.md).
 
 ### Step 4: Gather Non-Functional Requirements
 
-**Call `/gather-nfr` skill:**
-
 ```
 → Step 3/5: Collecting non-functional requirements
-
-Calling /gather-nfr...
 ```
 
-**Skill tool invocation:**
+Invoke skill: `arch:gather-nfr`
 
-```javascript
-Skill: "gather-nfr"
-```
+Expected: interactive Q&A, NFRs saved to active-story.yaml.
 
-**Expected output:**
-- Interactive Q&A session with user
-- NFRs appended to `.agile-dev-team/active-story.yaml`
-- NFR summary displayed
-
-**Error handling:**
-
-If `/gather-nfr` fails or user cancels:
-
-```
-⚠️  NFR collection incomplete
-
-You can continue without NFRs, but architectural decisions may be less informed.
-
-Options:
-  [1] Continue without NFRs (skip to context gathering)
-  [2] Retry NFR collection
-  [3] Cancel workflow
-
-Choice:
-```
-
-**Success confirmation:**
-
-```
-✓ NFRs Collected
-  • Performance: 1000-10000 daily users, <2s response
-  • Security: PII + Payment, PCI-DSS + GDPR
-  • Reliability: 99.9% uptime
-  • Cost: Standard budget
-```
+If incomplete, offer: continue without NFRs / retry / cancel.
 
 ### Step 5: Gather Technical Context
 
-**Call `/gather-context` skill:**
-
 ```
 → Step 4/5: Gathering technical context
-
-Calling /gather-context...
 ```
 
-**Skill tool invocation:**
+Invoke skill: `scout:gather-context`
 
-```javascript
-Skill: "gather-context"
-```
+Expected: docs, codebase, ADRs searched; context saved to active-story.yaml.
 
-**Expected output:**
-- Documentation search results
-- Codebase analysis (via Explore agent)
-- Architecture doc review
-- User clarification questions
-- Context appended to `.agile-dev-team/active-story.yaml`
-
-**Error handling:**
-
-If `/gather-context` fails:
-
-```
-⚠️  Context gathering incomplete
-
-Partial context available:
-  • 2 related docs
-  • 1 code file
-
-Options:
-  [1] Continue with partial context
-  [2] Retry context gathering
-  [3] Cancel workflow
-
-Choice:
-```
-
-**Success confirmation:**
-
-```
-✓ Context Collected
-  • 2 documentation files
-  • 3 related code files
-  • 1 architecture document
-  • 2 existing ADRs
-  • 3 dependencies identified
-  • 2 constraints noted
-```
+If incomplete, offer: continue with partial context / retry / cancel.
 
 ### Step 6: Create ADR (Conditional)
 
-**Determine if ADR is needed:**
-
-```javascript
-// Read story data
-const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
-
-// Check if ADR is recommended
-const needsADR = shouldCreateADR(story);
-
-if (needsADR) {
-  console.log('→ Step 5/5: Creating Architecture Decision Record');
-  console.log('  ADR recommended: [Reason]');
-  console.log('');
-  console.log('Calling /arch:create-adr...');
-} else {
-  console.log('ℹ️  Step 5/5: ADR not needed');
-  console.log('  Reason: [Simple bug fix | Following established pattern]');
-  console.log('');
-  console.log('Skipping ADR creation.');
-}
+```
+→ Step 5/5: Creating Architecture Decision Record
 ```
 
-**If ADR needed, call `/arch:create-adr`:**
+Determine if ADR is needed from story labels, NFRs, and context. If yes, invoke skill: `arch:create-adr`.
 
-```javascript
-Skill: "create-adr"
-```
+Expected: ADR file created in `$ADR_DIR`, reference saved to active-story.yaml.
 
-**Expected output:**
-- ADR file created in `$ADR_DIR`
-- ADR reference added to `.agile-dev-team/active-story.yaml`
-- ADR summary displayed
-
-**Error handling:**
-
-If `/arch:create-adr` fails:
-
-```
-⚠️  ADR creation failed
-
-Error: [error from create-adr skill]
-
-You can proceed without an ADR, but architectural decisions won't be documented.
-
-Options:
-  [1] Continue without ADR
-  [2] Retry ADR creation
-  [3] Cancel workflow
-
-Choice:
-```
-
-**Success confirmation:**
-
-```
-✓ ADR Created: ADR-0012: stripe-payment-integration
-  Decision: Stripe Checkout (hosted page)
-  Status: Proposed
-  Location: $ADR_DIR/0012-stripe-payment-integration.md
-```
+If creation fails, offer: continue without ADR / retry / cancel.
 
 ### Step 7: Final Summary
 
-**Display complete story preparation:**
-
-```
-═══════════════════════════════════════════════════════════════
-  Story Ready for Implementation
-═══════════════════════════════════════════════════════════════
-
-Story: #123 - Implement payment checkout
-Priority: P0
-Size: M (estimated 4-6 hours)
-URL: https://github.com/{{REPO_SLUG}}/issues/123
-
-───────────────────────────────────────────────────────────────
-Non-Functional Requirements
-───────────────────────────────────────────────────────────────
-
-Performance:
-  • 1,000-10,000 daily active users
-  • <2s maximum response time
-  • 100-1,000 concurrent users
-
-Security:
-  • PII + Payment data
-  • Authenticated-only access
-  • PCI-DSS + GDPR compliance
-
-Reliability:
-  • 8 hours/year (99.9%) acceptable downtime
-  • <1% error rate tolerance
-  • Comprehensive monitoring
-
-Cost:
-  • Standard/balanced budget
-  • Preferred services: Lambda, DynamoDB, S3
-
-───────────────────────────────────────────────────────────────
-Technical Context
-───────────────────────────────────────────────────────────────
-
-Documentation:
-  • docs/DEVELOPMENT_WORKFLOW.md - Payment testing requirements
-  • docs/API_GUIDELINES.md - Error handling patterns
-
-Related Code:
-  • lambda/payment-handler/index.ts - Stripe integration with retries
-  • infrastructure/payment-stack.ts - CDK stack for payment Lambda
-
-Architecture:
-  • _bmad-output/payment-referral-architecture.md
-
-Existing ADRs:
-  • ADR-0001: Stripe payment processor (accepted)
-  • ADR-0005: Lambda@Edge auth (accepted)
-
-Dependencies:
-  • Authentication system (Cognito)
-  • User profile service
-  • Notification system (SNS)
-
-Constraints:
-  • AWS Lambda timeout (30s max)
-  • Cost constraints (standard budget)
-
-Established Patterns:
-  • API Gateway + Lambda pattern
-  • DynamoDB single-table design
-  • Exponential backoff for retries
-  • Lambda@Edge authentication
-
-───────────────────────────────────────────────────────────────
-Architecture Decision Record
-───────────────────────────────────────────────────────────────
-
-ADR-0012: stripe-payment-integration
-Status: Proposed
-Location: $ADR_DIR/0012-stripe-payment-integration.md
-
-Decision: Stripe Checkout (hosted page)
-
-Rationale:
-  • Satisfies PCI-DSS compliance with minimal effort
-  • Fast implementation (1-2 days)
-  • Meets performance (<2s) and reliability (99.9%) requirements
-
-Trade-offs:
-  ✓ Stripe handles PCI compliance (reduces audit scope)
-  ✓ Battle-tested infrastructure (99.99% uptime)
-  ✗ Limited UI customization (Stripe branding)
-  ✗ User redirect may increase abandonment by 10-15%
-
-───────────────────────────────────────────────────────────────
-Next Steps
-───────────────────────────────────────────────────────────────
-
-1. Review ADR and update status to "accepted" if approved
-2. Create feature branch: git checkout -b feature/payment-checkout-[timestamp]
-3. Implement according to ADR implementation notes
-4. Reference story #123 and ADR-0012 in commits
-5. Create PR when ready: /mr
-
-Story data saved to: .agile-dev-team/active-story.yaml
-ADR location: $ADR_DIR/0012-stripe-payment-integration.md
-
-═══════════════════════════════════════════════════════════════
-```
+Display complete story preparation. See [references/output-format.md](references/output-format.md) for full format.
 
 ### Step 8: Offer Quick Actions
-
-**Prompt user for next action:**
 
 ```
 What would you like to do next?
 
-  [1] Start implementation (opens ADR + story in editor)
+  [1] Start implementation (open ADR + story in editor)
   [2] Review ADR before starting
   [3] View story details in browser
   [4] Create feature branch
-  [5] Nothing (I'll start manually)
+  [5] Nothing
 
 Choice:
 ```
 
-**Handle quick actions:**
-
 | Choice | Action |
 |--------|--------|
-| 1 - Start implementation | Open ADR file and GitHub issue URL |
-| 2 - Review ADR | Read and display ADR file |
-| 3 - View story | Open story URL in browser using `open` command |
-| 4 - Create branch | Run `git checkout -b feature/[story-slug]-[timestamp]` |
-| 5 - Nothing | Exit workflow |
+| 1 | Open ADR file and GitHub issue URL |
+| 2 | Read and display ADR file |
+| 3 | `open <story URL>` |
+| 4 | `git checkout -b feature/[story-slug]-[timestamp]` |
+| 5 | Exit |
 
 ## Error Handling
 
-### Configuration Missing
+| Error | Response |
+|-------|----------|
+| Configuration missing | `❌ Configuration not found. See references/configuration.md` |
+| GitHub auth failed | `❌ Run: gh auth login` |
+| No Ready stories | `ℹ️ No Ready stories in project. Add stories and set Status=Ready.` |
+| Workflow interrupted | Save partial progress; show completed/pending steps; offer resume instructions |
+| Skill execution failed | Show error, troubleshooting tips, and partial progress |
 
-```
-❌ Configuration not found
-
-This workflow requires configuration in .claude/story-workflow-config.json
-
-Please add the following section:
-
-{
-  "storyWorkflow": {
-    "projectId": "{{GITHUB_PROJECT_ID}}",
-    "fieldIds": { ... },
-    "optionIds": { ... }
-  }
-}
-
-See /fetch-story skill documentation for complete configuration schema.
-```
-
-### GitHub Authentication Failed
-
-```
-❌ GitHub authentication required
-
-Please authenticate with GitHub CLI:
-  gh auth login
-
-Then run /play-story again.
-```
-
-### No Ready Stories
-
-```
-ℹ️  No Ready stories found
-
-There are no stories with Status='Ready' in the GitHub Project.
-
-Suggestions:
-1. Create new stories in GitHub Issues
-2. Add them to the project: https://github.com/orgs/aigensa/projects/...
-3. Set their Status to 'Ready'
-4. Run /play-story again
-
-Alternatively, you can manually select a story from:
-  gh issue list --label story
-```
-
-### Workflow Interrupted
-
-**If user cancels at any step:**
-
-```
-⚠️  Workflow cancelled by user
-
-Partial progress saved to .agile-dev-team/active-story.yaml
-
-Completed:
-  ✓ Story fetched
-  ✓ NFRs collected
-  ✗ Context gathering (not started)
-  ✗ ADR creation (not started)
-
-To resume, run:
-  /gather-context  (continue from where you left off)
-  /play-story     (restart full workflow)
-```
-
-### Skill Execution Failed
-
-**If any helper skill fails:**
-
-```
-❌ Workflow failed at step [X/5]: [Step name]
-
-Error: [error message from skill]
-
-Troubleshooting:
-- Check error details above
-- Verify prerequisites (GitHub auth, configuration)
-- Try running /[skill-name] directly to diagnose
-- Report issue if error persists
-
-Partial progress saved to .agile-dev-team/active-story.yaml
-```
+Full error details and troubleshooting: [references/troubleshooting.md](references/troubleshooting.md).
 
 ## Configuration
 
-### Required Settings
+See [references/configuration.md](references/configuration.md) for required `.claude/story-workflow-config.json` schema.
 
-**File:** `.claude/story-workflow-config.json`
-
-```json
-{
-  "storyWorkflow": {
-    "projectId": "{{GITHUB_PROJECT_ID}}",
-    "fieldIds": {
-      "status": "PVTSSF_lADODvZ3Zc4BM9rkzg8GG4A",
-      "priority": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB4",
-      "size": "PVTSSF_lADODvZ3Zc4BM9rkzg8GHB8",
-      "itemType": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOqE",
-      "techSpecStatus": "PVTSSF_lADODvZ3Zc4BM9rkzg8GOtI"
-    },
-    "optionIds": {
-      "status": {
-        "ready": "61e4505c",
-        "inProgress": "47fc9ee4",
-        "backlog": "f75ad846"
-      },
-      "priority": {
-        "p0": "79628723",
-        "p1": "0a877460",
-        "p2": "da944a9c"
-      }
-    }
-  }
-}
-```
-
-### Optional Settings
-
-```json
-{
-  "storyWorkflow": {
-    ...
-    "defaultNFRs": {
-      "performance": {
-        "dailyActiveUsers": "100-1000",
-        "maxResponseTime": "<2s"
-      }
-    },
-    "skipADRForLabels": ["bug", "chore", "docs"],
-    "autoCreateBranch": true,
-    "branchPrefix": "feature/"
-  }
-}
-```
-
-## Integration with Other Skills
-
-### Calls Helper Skills
+## Integration
 
 ```
 /play-story (this skill)
   ↓
-  ├── /fetch-story
-  ├── /gather-nfr
-  ├── /gather-context
+  ├── /github:story-fetch
+  ├── /arch:gather-nfr
+  ├── /scout:gather-context
   └── /arch:create-adr (conditional)
 ```
 
-### Called Before Implementation
+Then: implement → `/git:commit` → `/github:pull-request`
 
-**Typical workflow:**
-
-```
-Developer workflow:
-1. /play-story          (prepare story)
-2. [Implement code]      (write code following ADR)
-3. /commit               (create commits with AIGCODE-###)
-4. /mr                   (create pull request)
-```
-
-### Alternative: Run Skills Individually
-
-Users can also run helper skills individually:
-
+Run skills individually when you only need one step:
 ```bash
-# Manual workflow
-/fetch-story         # Just fetch story
-/gather-nfr          # Just collect NFRs
-/gather-context      # Just gather context
-/arch:create-adr          # Just create ADR
+/github:story-fetch   # just fetch
+/arch:gather-nfr      # just NFRs
+/scout:gather-context # just context
+/arch:create-adr      # just ADR
 ```
 
 ## Best Practices
 
-### When to Use /play-story
+**Use /play-story when** starting work on a new story, beginning a development session, or switching stories.
 
-**✅ Use when:**
-- Starting work on a new story
-- Beginning a development session
-- Switching to a different story
-- Need complete story context
+**Skip /play-story when** you already have an active story prepared or only need one step — run that skill directly instead.
 
-**❌ Don't use when:**
-- Already have active story prepared
-- Continuing work on current story
-- Just need one piece (use specific skill instead)
-
-### Workflow Customization
-
-**Skip steps if not needed:**
-
-```javascript
-// If you know you don't need ADRs for this story
-/play-story --skip-adr
-
-// If you want to quickly fetch without full workflow
-/fetch-story
-
-// If you already have story but need context
-/gather-context
-```
-
-*Note: Command-line flags are illustrative; actual implementation uses Skill tool which doesn't support flags. Users would run individual skills instead.*
-
-### Archive Management
-
-**Periodically clean up archives:**
-
+**Archive management:**
 ```bash
-# List archived stories
-ls "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-"*.yaml
-
-# Remove old archives (keep last 5)
 ls -t "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-"*.yaml | tail -n +6 | xargs rm
 ```
 
-## Troubleshooting
-
-### Issue: "Active story is stale"
-
-**Cause:** Story was fetched days ago, may be outdated
-
-**Solution:**
-
-```
-⚠️  Active story is stale
-
-Story was fetched 3 days ago. It may be outdated.
-
-Recommended: Fetch fresh story
-
-Options:
-  [1] Continue with current story
-  [2] Fetch fresh story (recommended)
-
-Choice:
-```
-
-### Issue: "Skills are taking too long"
-
-**Cause:** Explore agent or searches are slow
-
-**Solution:**
-- Use thoroughness="quick" for faster results
-- Skip optional steps (e.g., ADR creation)
-- Run skills individually to diagnose
-
-### Issue: "Story already has status='In Progress'"
-
-**Cause:** Multiple team members may be working on same story
-
-**Solution:**
-
-```
-⚠️  Story #123 already has status 'In Progress'
-
-Another developer may be working on this story.
-
-Options:
-  [1] Continue anyway (coordinate with team)
-  [2] Fetch different story
-  [3] Cancel
-
-Choice:
-```
-
-## Advanced Usage
-
-### Running Skills in Parallel
-
-For maximum efficiency, independent steps could be parallelized (future enhancement):
-
-```javascript
-// Future: Run NFR and context gathering in parallel
-await Promise.all([
-  Skill("gather-nfr"),
-  Skill("gather-context")
-]);
-```
-
-*Note: Current implementation runs sequentially for simplicity.*
-
-### Custom Workflows
-
-Create custom orchestrations:
-
-```javascript
-// Custom: Skip NFRs for simple bug fixes
-if (story.labels.includes('bug') && story.size === 'XS') {
-  // Skip NFRs and context, just create branch
-  runSkill('fetch-story');
-  createBranch();
-}
-```
-
-### Integration with BMAD
-
-**Bridge to BMAD's `/dev-story` skill:**
-
-```
-/play-story         (this skill - preparation)
-  → Story ready
-/dev-story           (BMAD skill - implementation)
-  → Code written, tests pass
-/commit              (this project - commit)
-/mr                  (this project - PR)
-```
-
-## Example Session
-
-```bash
-$ /play-story
-
-═══════════════════════════════════════════════════════════════
-  Story Workflow Orchestrator
-═══════════════════════════════════════════════════════════════
-
-Checking for active story...
-  No active story found
-
-→ Step 2/5: Fetching next Ready story from GitHub Projects
-
-🔍 Querying project {{GITHUB_PROJECT_ID}}...
-  ✓ Found 3 Ready stories
-
-Filtering and sorting by priority...
-  • P0: Implement payment checkout (M)
-  • P1: Add user profile editing (S)
-  • P2: Improve error messages (XS)
-
-Selected: #123 - Implement payment checkout
-
-✓ Story data saved to .agile-dev-team/active-story.yaml
-✓ GitHub status updated to "In Progress"
-
-───────────────────────────────────────────────────────────────
-
-→ Step 3/5: Collecting non-functional requirements
-
-📋 Analyzing story context...
-  Labels: story, feature, payment
-
-Q1: How many daily active users do you expect?
-  [User selects: 1,000-10,000]
-
-Q2: What is the maximum acceptable response time?
-  [User selects: <2s]
-
-[... more questions ...]
-
-✓ NFRs collected and saved
-
-───────────────────────────────────────────────────────────────
-
-→ Step 4/5: Gathering technical context
-
-🔍 Searching documentation...
-  ✓ Found 2 related docs
-
-🔍 Analyzing codebase...
-  ✓ Found 3 related code files
-
-🔍 Reviewing architecture...
-  ✓ Found 1 architecture document
-
-🔍 Checking existing ADRs...
-  ✓ Found 2 related ADRs
-
-Q: Does this feature depend on any existing systems?
-  [User selects: Authentication, User profile, Notifications]
-
-[... more questions ...]
-
-✓ Context collected and saved
-
-───────────────────────────────────────────────────────────────
-
-→ Step 5/5: Creating Architecture Decision Record
-
-Analysis: ADR recommended (new payment integration, security-sensitive)
-
-🔍 Generating ADR...
-  Next ADR number: 0012
-  Title slug: stripe-payment-integration
-
-✓ ADR created: $ADR_DIR/0012-stripe-payment-integration.md
-✓ ADR reference saved to active story
-
-───────────────────────────────────────────────────────────────
-
-[... Final Summary displayed ...]
-
-What would you like to do next?
-  [1] Start implementation
-  [2] Review ADR before starting
-  [3] View story in browser
-  [4] Create feature branch
-  [5] Nothing
-
-Choice: 1
-
-Opening ADR in editor...
-Opening story in browser...
-
-✓ Ready to implement! Good luck! 🚀
-```
-
-## Summary
-
-The `/play-story` skill orchestrates the complete story preparation workflow by:
-
-✅ **Coordinating helper skills** - Calls fetch-story, gather-nfr, gather-context, create-adr
-✅ **Handling errors gracefully** - Allows recovery and retry at each step
-✅ **Managing state** - Checks for active stories, archives old ones
-✅ **Providing clear guidance** - Shows progress, summarizes results, suggests next steps
-✅ **Saving time** - Automates tedious preparation work in one command
-
-Use `/play-story` as your primary entry point when beginning work on a new story!
+## Supporting Files
+
+- [references/output-format.md](references/output-format.md) — full summary output format
+- [references/configuration.md](references/configuration.md) — config schema
+- [references/troubleshooting.md](references/troubleshooting.md) — troubleshooting and example session
