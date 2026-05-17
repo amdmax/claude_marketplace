@@ -28,7 +28,7 @@ Callable standalone (after manual edits to any artefact) or from
 **Invocation:**
 ```
 /arch:design-review 460    # for a specific issue
-/arch:design-review        # uses .agile-dev-team/active-story.yaml
+/arch:design-review        # uses $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Constraints
@@ -48,7 +48,7 @@ Callable standalone (after manual edits to any artefact) or from
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml" 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then

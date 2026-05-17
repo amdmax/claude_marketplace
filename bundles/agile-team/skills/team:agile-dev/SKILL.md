@@ -19,7 +19,7 @@ All agent coordination artifacts (active story, ADRs, implementation briefs) are
 
 **Resolve workspace before doing anything else:**
 1. Check ARGUMENTS for `--workspace <path>` — if present, use that path as WORKSPACE_DIR and strip the flag from ARGUMENTS
-2. Otherwise use `{{WORKSPACE_DIR}}` (default: `.agile-dev-team/docs`)
+2. Otherwise use `{{WORKSPACE_DIR}}` (default: `$AGENT_DOCS_DIR/docs`)
 
 File paths derived from workspace:
 - Active story: `WORKSPACE_DIR/active-story.yaml`

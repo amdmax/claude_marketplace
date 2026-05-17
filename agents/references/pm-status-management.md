@@ -61,7 +61,7 @@ updateGitHubStatus() {
 
   local PROJECT_ID=$(jq -r '.projectId' "$CONFIG")
   local FIELD_ID=$(jq -r '.fieldIds.status' "$CONFIG")
-  local ITEM_ID=$(yq e '.projectItemId' ".agile-dev-team/active-story.yaml")
+  local ITEM_ID=$(yq e '.projectItemId' "${AGENT_DOCS_DIR:-docs}/active-story.yaml")
 
   gh api graphql -f query="mutation {
     updateProjectV2ItemFieldValue(input: {
@@ -79,7 +79,7 @@ updateGitHubStatus() {
 ```bash
 _trackUnknownStatus() {
   local STATUS_KEY=$1
-  local STATE_FILE=".agile-dev-team/development-progress.yaml"
+  local STATE_FILE="${AGENT_DOCS_DIR:-docs}/development-progress.yaml"
 
   local CURRENT=$(jq -r ".teamState.unknownStatusRequests[\"$STATUS_KEY\"] // 0" "$STATE_FILE")
   local NEXT=$((CURRENT + 1))

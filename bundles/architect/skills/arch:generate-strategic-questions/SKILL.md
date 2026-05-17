@@ -5,7 +5,7 @@ description: >
   brief can be safely produced. Covers cloud infrastructure, security & compliance,
   architecture governance, team ownership, and cost/budget constraints. Skips questions
   already answered in existing ADRs or the NFR registry. Writes to
-  agent-docs/stories/{issueNumber}/strategic-questions.yaml (created if absent).
+  $STORIES_DIR/{issueNumber}/strategic-questions.yaml (created if absent).
 argument-hint: "[issue_number]"
 allowed-tools:
   - Read
@@ -14,7 +14,7 @@ allowed-tools:
   - Bash
   - Write
 write-paths:
-  - agent-docs/
+  - $AGENT_DOCS_DIR/
 ---
 
 # arch:generate-strategic-questions
@@ -30,21 +30,22 @@ invalidate the implementation brief.
 ### Step 1 — Load story context
 
 ```bash
-STORY_FILE=".agile-dev-team/active-story.yaml"
+STORY_FILE="${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "ERROR  No active story. Run /github:story-fetch first."
   exit 1
 fi
 ISSUE_NUMBER=$(grep 'issueNumber:' "$STORY_FILE" | awk '{print $2}')
-OUTPUT_DIR="agent-docs/stories/${ISSUE_NUMBER}"
+STORIES_DIR="${STORIES_DIR:-agent-docs/stories}"
+OUTPUT_DIR="${STORIES_DIR}/${ISSUE_NUMBER}"
 OUTPUT_PATH="${OUTPUT_DIR}/strategic-questions.yaml"
 mkdir -p "$OUTPUT_DIR"
 ```
 
 Read:
-- `.agile-dev-team/active-story.yaml` — story title, issueNumber, ACs, NFRs
+- `$AGENT_DOCS_DIR/active-story.yaml` — story title, issueNumber, ACs, NFRs
 - `$ADR_DIR` — all existing ADRs (to avoid re-asking decided questions)
-- `.agile-dev-team/nfr-registry.json` — existing NFRs (to avoid duplication)
+- `$AGENT_DOCS_DIR/nfr-registry.json` — existing NFRs (to avoid duplication)
 
 ### Step 2 — Analyse story scope
 
@@ -115,7 +116,7 @@ Before writing, check each question:
 # Check if topic is covered in any ADR
 grep -r "QUESTION_TOPIC" "${ADR_DIR:-docs/adr}" 2>/dev/null
 # Check if NFR already captures this constraint
-grep "QUESTION_TOPIC" .agile-dev-team/nfr-registry.json 2>/dev/null
+grep "QUESTION_TOPIC" "${AGENT_DOCS_DIR:-docs}/nfr-registry.json" 2>/dev/null
 ```
 
 If an existing ADR or NFR fully answers a question, set `answer:` to the reference
@@ -123,7 +124,7 @@ If an existing ADR or NFR fully answers a question, set `answer:` to the referen
 
 ### Step 5 — Write output
 
-Write `agent-docs/stories/{issueNumber}/strategic-questions.yaml`:
+Write `$STORIES_DIR/{issueNumber}/strategic-questions.yaml`:
 
 ```yaml
 generated_at: "YYYY-MM-DD"
@@ -160,7 +161,7 @@ arch:generate-strategic-questions: {N} questions written
 
   {m} already answered (from ADRs / NFR registry)
 
-Output: agent-docs/stories/{issueNumber}/strategic-questions.yaml
+Output: $STORIES_DIR/{issueNumber}/strategic-questions.yaml
 Next:   run /arch:generate-tactical-questions, then send scout to answer both files.
 ```
 
@@ -170,7 +171,7 @@ Next:   run /arch:generate-tactical-questions, then send scout to answer both fi
 
 | File | Content |
 |------|---------|
-| `agent-docs/stories/{issueNumber}/strategic-questions.yaml` | Structured question list; `answer: null` for unanswered |
+| `$STORIES_DIR/{issueNumber}/strategic-questions.yaml` | Structured question list; `answer: null` for unanswered |
 
 ---
 

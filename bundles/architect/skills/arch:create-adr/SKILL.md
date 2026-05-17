@@ -39,7 +39,7 @@ ADRs document **why** decisions were made. Full template: [references/madr-templ
 ### Step 1: Verify Prerequisites
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 [ -f "$STORY_FILE" ] || { echo "❌ No active story found"; exit 1; }
 ```
 
@@ -47,7 +47,7 @@ Warn if NFRs or context are missing, but continue.
 
 ### Step 2: Load Story Data
 
-Read `.agile-dev-team/active-story.yaml`. Extract `issueNumber`, `title`, `body`, `nfrs`, `context`, `labels`.
+Read `$AGENT_DOCS_DIR/active-story.yaml`. Extract `issueNumber`, `title`, `body`, `nfrs`, `context`, `labels`.
 
 ### Step 3: Determine if ADR is Needed
 
@@ -110,7 +110,7 @@ Assemble all sections per [MADR template](references/madr-template.md) and write
 
 ### Step 13: Update Active Story
 
-Add ADR reference to `.agile-dev-team/active-story.yaml` with `number`, `filePath`, `title`, `status: proposed`, `createdAt`.
+Add ADR reference to `$AGENT_DOCS_DIR/active-story.yaml` with `number`, `filePath`, `title`, `status: proposed`, `createdAt`.
 
 ### Step 14: Report Success
 
@@ -129,7 +129,7 @@ Next Steps:
   3. Reference ADR in implementation PR
   4. Run /dev-story to begin implementation
 
-✓ ADR reference saved to .agile-dev-team/active-story.yaml
+✓ ADR reference saved to $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Error Handling

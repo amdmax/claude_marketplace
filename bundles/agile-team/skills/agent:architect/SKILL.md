@@ -132,7 +132,7 @@ If no sub-command is recognized, fall through to the default Execution section.
 
 Before spawning the subagent:
 1. Check ARGUMENTS for `--workspace <path>` — if present, use `<path>` as WORKSPACE_DIR and strip `--workspace <path>` from ARGUMENTS
-2. Otherwise use `{{WORKSPACE_DIR}}` (default: `.agile-dev-team/docs`)
+2. Otherwise use `{{WORKSPACE_DIR}}` (default: `$AGENT_DOCS_DIR/docs`)
 3. Ensure the workspace exists: `mkdir -p WORKSPACE_DIR/adr`
 
 Substitute the resolved workspace path wherever `WORKSPACE_DIR` appears in the subagent prompt below.

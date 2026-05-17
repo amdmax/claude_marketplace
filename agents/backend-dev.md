@@ -31,7 +31,7 @@ Implement backend handlers, AWS CDK infrastructure, and configuration. Make inte
 
 ### Step 1: Read Contracts
 
-1. Read `.agile-dev-team/development-progress.yaml` for implementation brief and test contracts
+1. Read `$AGENT_DOCS_DIR/development-progress.yaml` for implementation brief and test contracts
 2. Read the failing integration test files listed in `teamState.testsWritten`
 3. Understand expected interfaces, input/output contracts, error handling
 
@@ -72,7 +72,7 @@ Iterate until integration tests pass. Do not modify tests.
 
 1. Stage implementation files
 2. Run `/commit` to create a properly formatted commit
-3. Update `.agile-dev-team/development-progress.yaml`:
+3. Update `$AGENT_DOCS_DIR/development-progress.yaml`:
    - Append commit hash to `teamState.commits`
    - If all integration tests pass, note in message to PM
 

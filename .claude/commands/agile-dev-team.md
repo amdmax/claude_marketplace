@@ -42,11 +42,11 @@ TeamCreate(team_name="tdd-story-team", description="TDD-first development team f
 Create 8 tasks with dependencies:
 
 **Task 1:** "Fetch and enrich story"
-- Description: "PM fetches the next Ready story via /fetch-story, enriches with NFRs from nfr-registry.json, validates with /check-story-quality, creates feature branch, and initializes teamState in .agile-dev-team/development-progress.yaml."
+- Description: "PM fetches the next Ready story via /fetch-story, enriches with NFRs from nfr-registry.json, validates with /check-story-quality, creates feature branch, and initializes teamState in ${AGENT_DOCS_DIR:-docs}/development-progress.yaml."
 - activeForm: "Fetching and enriching story"
 
 **Task 2:** "Design implementation approach"
-- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in .agile-dev-team/development-progress.yaml. Writes requiredAgents array (e.g. [\"backend-dev\", \"frontend-dev\"]) to development-progress.yaml. Creates ADR if needed via /arch:create-adr."
+- Description: "Architect reads enriched story, runs /gather-context, maps ACs to files/interfaces, assesses risks, produces implementation brief in ${AGENT_DOCS_DIR:-docs}/development-progress.yaml. Writes requiredAgents array (e.g. [\"backend-dev\", \"frontend-dev\"]) to development-progress.yaml. Creates ADR if needed via /arch:create-adr."
 - activeForm: "Designing implementation approach"
 - blockedBy: [Task 1]
 
@@ -150,5 +150,5 @@ TeamDelete()
 
 - All agents use `general-purpose` subagent type for full tool access
 - File boundaries are enforced by agent instructions, not tooling
-- `.agile-dev-team/development-progress.yaml` is the shared teamState file — sequential writes guaranteed by task dependencies; `.agile-dev-team/active-story.yaml` holds the story data populated by `/fetch-story`
+- `$AGENT_DOCS_DIR/development-progress.yaml` is the shared teamState file — sequential writes guaranteed by task dependencies; `$AGENT_DOCS_DIR/active-story.yaml` holds the story data populated by `/fetch-story`
 - The team auto-cleans up after PR creation

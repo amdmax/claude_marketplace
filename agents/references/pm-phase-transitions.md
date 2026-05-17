@@ -28,10 +28,10 @@
 
 ## Spawning Developer Agents (Task 2 → Task 3 Transition)
 
-After architect completes Task 2, read `teamState.requiredRoles` from `.agile-dev-team/development-progress.yaml`:
+After architect completes Task 2, read `teamState.requiredRoles` from `$AGENT_DOCS_DIR/development-progress.yaml`:
 
 ```bash
-REQUIRED_ROLES=$(yq '.teamState.requiredRoles[]' .agile-dev-team/development-progress.yaml 2>/dev/null)
+REQUIRED_ROLES=$(yq '.teamState.requiredRoles[]' ${AGENT_DOCS_DIR:-docs}/development-progress.yaml 2>/dev/null)
 ```
 
 For each role in the list, spawn the agent via Agent tool:
@@ -45,7 +45,7 @@ If `requiredRoles` is `[]`: skip Tasks 4 and 5 — mark both complete and messag
 After scope-guard approves Task 6, check `teamState.deploymentRequired`:
 
 ```bash
-DEPLOY_REQUIRED=$(yq '.teamState.deploymentRequired' .agile-dev-team/development-progress.yaml)
+DEPLOY_REQUIRED=$(yq '.teamState.deploymentRequired' ${AGENT_DOCS_DIR:-docs}/development-progress.yaml)
 ```
 
 If `true`: spawn devops agent with Task 7 instructions. Set phase to `deploying`.
@@ -54,7 +54,7 @@ If `false`: mark Task 7 complete immediately. Proceed to Task 8.
 ## Phase 5: Verify and PR (Task 8)
 
 1. Run full test suite: `npm test`
-2. If tests pass, update `teamState.testsPassing` to `true` in `.agile-dev-team/development-progress.yaml`
+2. If tests pass, update `teamState.testsPassing` to `true` in `$AGENT_DOCS_DIR/development-progress.yaml`
 3. Create PR via `/commit` + `gh pr create`
 4. Update GitHub Projects card to **In Review**: `updateGitHubStatus "inReview"`
 5. Update `teamState.phase` to `complete`

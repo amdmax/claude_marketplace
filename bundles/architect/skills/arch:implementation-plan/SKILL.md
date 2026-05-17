@@ -27,7 +27,7 @@ Callable standalone or from `/arch:design-implementation`.
 **Invocation:**
 ```
 /arch:implementation-plan 460    # for a specific issue
-/arch:implementation-plan        # uses .agile-dev-team/active-story.yaml
+/arch:implementation-plan        # uses $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Constraints
@@ -46,7 +46,7 @@ Callable standalone or from `/arch:design-implementation`.
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml" 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then

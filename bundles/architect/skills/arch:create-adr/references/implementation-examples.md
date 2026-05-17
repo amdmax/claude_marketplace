@@ -129,5 +129,5 @@ story.adr = {
   status: 'proposed',
   createdAt: new Date().toISOString()
 };
-fs.writeFileSync('.agile-dev-team/active-story.yaml', yaml.dump(story));
+fs.writeFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, yaml.dump(story));
 ```

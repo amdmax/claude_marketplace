@@ -9,11 +9,11 @@ description: Collect non-functional requirements through interactive Q&A. Asks t
 
 This skill collects Non-Functional Requirements (NFRs) through an interactive questionnaire. It:
 
-1. **Reads active story** from `.agile-dev-team/active-story.yaml`
+1. **Reads active story** from `$AGENT_DOCS_DIR/active-story.yaml`
 2. **Analyzes story context** (title, labels, body) to tailor questions
 3. **Asks targeted questions** across 6 NFR categories
 4. **Collects responses** using AskUserQuestion tool
-5. **Appends NFRs** to `.agile-dev-team/active-story.yaml` for later use
+5. **Appends NFRs** to `$AGENT_DOCS_DIR/active-story.yaml` for later use
 
 NFRs inform architectural decisions, implementation choices, and ADR content.
 
@@ -160,10 +160,10 @@ NFRs inform architectural decisions, implementation choices, and ADR content.
 ### Step 1: Verify Active Story Exists
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found"
-  echo "   Expected: $CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+  echo "   Expected: $CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story.yaml"
   echo "   Run /fetch-story first to select a story"
   exit 1
 fi
@@ -173,7 +173,7 @@ fi
 
 **Read story data:**
 ```javascript
-const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
+const story = yaml.load(fs.readFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, 'utf-8'));
 
 // Extract context for question tailoring
 const title = story.title.toLowerCase();
@@ -404,7 +404,7 @@ Default: Lambda, DynamoDB, S3
 
 **Read existing story:**
 ```javascript
-const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
+const story = yaml.load(fs.readFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, 'utf-8'));
 ```
 
 **Merge NFR data:**
@@ -445,7 +445,7 @@ story.nfrs = {
 **Write updated story:**
 ```javascript
 const yaml = require('js-yaml');
-fs.writeFileSync('.agile-dev-team/active-story.yaml', yaml.dump(story));
+fs.writeFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, yaml.dump(story));
 ```
 
 ### Step 10: Report Summary
@@ -484,7 +484,7 @@ Cost:
   • Budget: Standard/balanced
   • Preferred Services: Lambda, DynamoDB, S3
 
-✓ NFRs saved to .agile-dev-team/active-story.yaml
+✓ NFRs saved to $AGENT_DOCS_DIR/active-story.yaml
 
 Next steps:
   Run /gather-context to collect technical context
@@ -497,7 +497,7 @@ Next steps:
 
 **Detection:**
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   # No active story file
 fi
@@ -516,7 +516,7 @@ Or run /play-story to execute the full workflow.
 
 **Detection:**
 ```javascript
-const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
+const story = yaml.load(fs.readFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, 'utf-8'));
 if (story.nfrs && Object.keys(story.nfrs).length > 0) {
   // NFRs already exist
 }
@@ -544,7 +544,7 @@ Choice:
 **Detection:**
 ```javascript
 try {
-  fs.writeFileSync('.agile-dev-team/active-story.yaml', ...);
+  fs.writeFileSync(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, ...);
 } catch (error) {
   // Write failed
 }
@@ -552,7 +552,7 @@ try {
 
 **Error message:**
 ```
-❌ Failed to save NFRs to .agile-dev-team/active-story.yaml
+❌ Failed to save NFRs to $AGENT_DOCS_DIR/active-story.yaml
 
 Error: [error message]
 
@@ -779,7 +779,7 @@ Your answers: PCI-DSS, GDPR
 
 [Summary output...]
 
-✓ NFRs saved to .agile-dev-team/active-story.yaml
+✓ NFRs saved to $AGENT_DOCS_DIR/active-story.yaml
 
 Next steps:
   Run /gather-context to collect technical context

@@ -53,7 +53,7 @@ Block dangerous operations before they execute:
 Load development context at session start:
 - Git status (last 10 files)
 - Recent commits (last 24 hours)
-- Active story from `.agile-dev-team/active-story.yaml`
+- Active story from `$AGENT_DOCS_DIR/active-story.yaml`
 - Injected into Claude's context automatically
 
 ## Configuration

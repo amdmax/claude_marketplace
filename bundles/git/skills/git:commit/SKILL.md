@@ -94,7 +94,7 @@ message:
 | `{{PROJECT_PREFIX}}` | Commit prefix identifier | MYAPP | Yes |
 | `{{NUMBERING_MODE}}` | Numbering strategy | issue-based | Yes |
 | `{{REPO_SLUG}}` | GitHub repository | owner/repo | Yes (issue mode) |
-| `{{ACTIVE_STORY_FILE}}` | Active story file path | .agile-dev-team/active-story.yaml | Yes (issue mode) |
+| `{{ACTIVE_STORY_FILE}}` | Active story file path | $AGENT_DOCS_DIR/active-story.yaml | Yes (issue mode) |
 | `{{CREATE_MISSING_ISSUES}}` | Auto-create issues | true | No |
 | `{{GROUPING_ENABLED}}` | Enable grouping | true | No |
 | `{{VALIDATION_HOOK_ENABLED}}` | Enable validation | true | No |
@@ -139,7 +139,7 @@ numbering:
 ```
 
 **Workflow:**
-1. `/play-story` - Activate an issue (creates `.agile-dev-team/active-story.yaml`)
+1. `/play-story` - Activate an issue (creates `$AGENT_DOCS_DIR/active-story.yaml`)
 2. Make code changes
 3. `git add .`
 4. `/commit` - Creates commit as `MYAPP-157: description`
@@ -358,7 +358,7 @@ numbering:
   mode: "issue-based"
   prefix: ACME
   issue:
-    source: ".agile-dev-team/active-story.yaml"
+    source: "$AGENT_DOCS_DIR/active-story.yaml"
     create_if_missing: true
 
 repository:
@@ -390,7 +390,7 @@ git add index.js
 **Result:**
 - GitHub issue #1 created
 - Commit: `ACME-1: Add initial application structure`
-- `.agile-dev-team/active-story.yaml` created
+- `$AGENT_DOCS_DIR/active-story.yaml` created
 
 ### Example 2: Grouped Commits
 
@@ -622,7 +622,7 @@ git log --since="4 hours ago" --name-only
 
 1. **Verification** - Checks for staged changes (`git diff --cached`)
 2. **Number determination:**
-   - Issue-based: Read `.agile-dev-team/active-story.yaml` → `/create-story` if missing → extract issueNumber
+   - Issue-based: Read `$AGENT_DOCS_DIR/active-story.yaml` → `/create-story` if missing → extract issueNumber
    - Sequential: Query git log → find highest {{PREFIX}}-### → increment
 3. **Grouping detection** (optional):
    - Get recent commits (last N hours)
@@ -652,7 +652,7 @@ This skill requires:
 ### Files Created/Modified
 
 This skill may create or modify:
-- `.agile-dev-team/active-story.yaml` - Active issue tracking (issue-based mode)
+- `$AGENT_DOCS_DIR/active-story.yaml` - Active issue tracking (issue-based mode)
 - Git commit history - New commits with standardized format
 
 ## Customization

@@ -39,7 +39,7 @@ echo "✓ Master branch updated"
 ### Step 2: Check for Active Story
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 [ -f "$STORY_FILE" ] && ACTIVE_STORY_EXISTS=true || ACTIVE_STORY_EXISTS=false
 ```
 
@@ -67,7 +67,7 @@ mv "$STORY_FILE" "${STORY_FILE%.yaml}-${TIMESTAMP}.yaml"
 
 Invoke skill: `github:story-fetch`
 
-Expected: `.agile-dev-team/active-story.yaml` created, GitHub status → "In Progress".
+Expected: `$AGENT_DOCS_DIR/active-story.yaml` created, GitHub status → "In Progress".
 
 If fetch fails, display error and exit. Configuration required — see [references/configuration.md](references/configuration.md).
 
@@ -178,7 +178,7 @@ Run skills individually when you only need one step:
 
 **Archive management:**
 ```bash
-ls -t "$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story-"*.yaml | tail -n +6 | xargs rm
+ls -t "$CLAUDE_PROJECT_DIR/${AGENT_DOCS_DIR:-docs}/active-story-"*.yaml | tail -n +6 | xargs rm
 ```
 
 ## Supporting Files

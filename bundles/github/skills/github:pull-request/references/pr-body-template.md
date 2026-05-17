@@ -38,7 +38,7 @@ Closes #{ISSUE_NUMBER}
 ## Template Variables
 
 ### {ISSUE_TITLE}
-**Source:** `.agile-dev-team/active-story.yaml` → `title` field
+**Source:** `${AGENT_DOCS_DIR:-docs}/active-story.yaml` → `title` field
 **Fallback:** First commit summary (AIGCODE prefix removed)
 
 **Example:**
@@ -47,7 +47,7 @@ Add LSP section to course content
 ```
 
 ### {ISSUE_NUMBER}
-**Source:** `.agile-dev-team/active-story.yaml` → `issueNumber` field
+**Source:** `${AGENT_DOCS_DIR:-docs}/active-story.yaml` → `issueNumber` field
 **Fallback:** Auto-created issue number
 
 **Example:**
@@ -56,7 +56,7 @@ Add LSP section to course content
 ```
 
 ### {ISSUE_URL}
-**Source:** `.agile-dev-team/active-story.yaml` → `url` field
+**Source:** `${AGENT_DOCS_DIR:-docs}/active-story.yaml` → `url` field
 **Format:** `https://github.com/{owner}/{repo}/issues/{number}`
 
 **Example:**

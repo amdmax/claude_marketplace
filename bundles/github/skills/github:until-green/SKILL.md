@@ -29,7 +29,7 @@ description: "Implement a scope of work end-to-end — writes code, commits, cre
 ### Phase 2 — Commit
 
 Invoke `/commit`:
-- Auto-links to active story (reads `.agile-dev-team/active-story.yaml`)
+- Auto-links to active story (reads `$AGENT_DOCS_DIR/active-story.yaml`)
 - Creates a GitHub issue if no active story exists
 - Produces `AIGCODE-###: <description>` formatted commit
 
@@ -55,7 +55,7 @@ Save loop state:
   "startedAt": "2026-03-15T10:00:00Z"
 }
 ```
-Write to `.agile-dev-team/until-green.json`.
+Write to `${AGENT_DOCS_DIR:-docs}/until-green.json`.
 
 ### Phase 4 — CI loop
 
@@ -106,7 +106,7 @@ FOR iteration IN 1..MAX_ITER:
      f. Push:
         git push
 
-  6. Increment iteration counter in .agile-dev-team/until-green.json
+  6. Increment iteration counter in ${AGENT_DOCS_DIR:-docs}/until-green.json
 
 ENDLOOP
 
@@ -129,7 +129,7 @@ Invoke `/finalize-story <prUrl>` to close the loop: update the issue body, add P
 
 ## State File
 
-`.agile-dev-team/until-green.json` — persists loop state across interruptions:
+`$AGENT_DOCS_DIR/until-green.json` — persists loop state across interruptions:
 
 ```json
 {
