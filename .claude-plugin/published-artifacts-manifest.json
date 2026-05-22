@@ -1,13 +1,13 @@
 {
   "schema_version": "1",
-  "generated_at": "2026-04-12T21:06:34Z",
+  "generated_at": "2026-05-22T18:39:12Z",
   "repo": "amdmax/claude_marketplace",
   "artifacts": {
     "agents/architect.md": {
       "type": "agent",
       "path": "agents/architect.md",
       "description": "Solution Architect that maps business requirements to implementation details and prepares technical documentation for test architect and developers.",
-      "hash": "sha256:8d21707c93201e33f1bfb3a761efa2f5a210042af50eabfd9a06be450f76e270",
+      "hash": "sha256:509411d57b8175a2ef11f7b39f0b01c75f702aac757df4deccdfac9485003ac7",
       "files": [
         "architect.md"
       ],
@@ -17,7 +17,7 @@
       "type": "agent",
       "path": "agents/backend-dev.md",
       "description": "Implements backend handlers, infrastructure (CDK), and configuration to make integration tests pass.",
-      "hash": "sha256:d3aac82cf3ead1b103423a41bc13c47b3661dfbd1d1f818035105a61f80c84c8",
+      "hash": "sha256:583597e122ccd0ece0658835b3f8a7fde463a933cadfc24ce34edeea4193cfe6",
       "files": [
         "backend-dev.md"
       ],
@@ -37,7 +37,7 @@
       "type": "agent",
       "path": "agents/devops.md",
       "description": "Owns the deployment pipeline after scope review passes. Runs builds, syncs to S3, invalidates CloudFront, and verifies the live environment.",
-      "hash": "sha256:39d2d1250886d440a40a0d523f6a18e26f9a62a903e4980e47313889cb1145f1",
+      "hash": "sha256:ec5ab2d33caf84c3008af1f471674012d16015c4cafd4a9104d73b1464f15bd9",
       "files": [
         "devops.md"
       ],
@@ -47,7 +47,7 @@
       "type": "agent",
       "path": "agents/frontend-dev.md",
       "description": "Implements frontend code (TypeScript builders, Eta templates, CSS, build scripts) to make unit and e2e tests pass.",
-      "hash": "sha256:33e136be7420fbc45e914c828b79089fe046b9665390f5ee225ae73827af8a93",
+      "hash": "sha256:601704a57ffd9e0634b0bbb98f2894a42b2408be028763ce28947e20b28c67e9",
       "files": [
         "frontend-dev.md"
       ],
@@ -57,7 +57,7 @@
       "type": "agent",
       "path": "agents/pm.md",
       "description": "Team lead that fetches stories, enriches with acceptance criteria, manages story lifecycle, and creates PRs after implementation.",
-      "hash": "sha256:652b133ef479387b44de8f2540f7ad384a28f698908e7d5198cae2872d522552",
+      "hash": "sha256:0368f2d5f8164f045442a3b878012d1cca18b4feb950934ff4509c855b52039f",
       "files": [
         "pm.md"
       ],
@@ -67,7 +67,7 @@
       "type": "agent",
       "path": "agents/scope-guard.md",
       "description": "Independent reviewer that compares git diff against the architect's filesToChange and outOfScope lists. Blocks DevOps until the branch is clean.",
-      "hash": "sha256:a8f198a15e400318efe6cfc1ee907a235b5c0477eb86e917dc305b0ed8c00d2f",
+      "hash": "sha256:d3e98d7f943d2e1d455b9cf6f087c42d10e9ae808d5dcf5748d8d54a44f8ee81",
       "files": [
         "scope-guard.md"
       ],
@@ -77,7 +77,7 @@
       "type": "agent",
       "path": "agents/test-architect.md",
       "description": "Writes failing tests first (TDD red phase) based on the Architect's implementation brief. Ensures test contracts are clear for developers.",
-      "hash": "sha256:9d310b7fd76e638b17e1f6eee1f07c955b4e85df99279fa9de68349ac09b9cca",
+      "hash": "sha256:d20d782ebc068dd26f179f9b74d1b68dc5f8ad6ac11dc339c7cce521ef0d515f",
       "files": [
         "test-architect.md"
       ],
