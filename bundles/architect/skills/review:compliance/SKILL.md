@@ -402,6 +402,8 @@ docs/
 - `/mr` - Include compliance report in PR descriptions
 - `/code-review` - Validate specs and tests before review
 
+**With CI/CD:** see @references/examples.md for workflow integration.
+
 ## Troubleshooting
 
 **Issue: OpenAPI generation fails with "Cannot find route handlers"**
@@ -492,3 +494,5 @@ openapi:
 - **Acceptance Criteria Guide:** @references/acceptance-criteria.md
 - **Example Workflows:** @references/examples.md
 - **Configuration:** config.yaml
+- **Architecture:** @references/architecture.md
+- **Validation:** @references/validation.md
