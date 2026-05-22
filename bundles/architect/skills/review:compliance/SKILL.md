@@ -402,13 +402,6 @@ docs/
 - `/mr` - Include compliance report in PR descriptions
 - `/code-review` - Validate specs and tests before review
 
-**With CI/CD:**
-```yaml
-# .github/workflows/compliance.yml
-- name: Validate API Compliance
-  run: /compliance --api admin
-```
-
 ## Troubleshooting
 
 **Issue: OpenAPI generation fails with "Cannot find route handlers"**
@@ -499,45 +492,3 @@ openapi:
 - **Acceptance Criteria Guide:** @references/acceptance-criteria.md
 - **Example Workflows:** @references/examples.md
 - **Configuration:** config.yaml
-
-## Architecture
-
-```
-Compliance Skill
-├── SKILL.md (this file)
-├── config.yaml (settings)
-└── references/
-    ├── openapi-generation.md (TypeScript → OpenAPI)
-    ├── contract-testing.md (OpenAPI → Jest tests)
-    ├── coverage-analysis.md (Coverage gaps → Tests)
-    ├── acceptance-criteria.md (PRDs → Compliance)
-    └── examples.md (Complete workflows)
-```
-
-**Design principles:**
-- **Modular:** Each phase is independent and optional
-- **Incremental:** Run single phases or full scan
-- **Automated:** Generates artifacts, not just reports
-- **Traceable:** Links commits → issues → PRDs → code
-
-## Validation
-
-The skill self-validates by:
-1. Checking OpenAPI specs with swagger-parser
-2. Running generated tests with Jest
-3. Verifying coverage thresholds
-4. Cross-referencing PRD criteria with code
-
-**No manual verification needed** - artifacts are tested during generation.
-
-## Contributing
-
-To extend the skill:
-
-1. Add new API patterns to `openapi-generation.md`
-2. Add test generators to `contract-testing.md`
-3. Add PRD parsing patterns to `acceptance-criteria.md`
-4. Update `config.yaml` with new options
-5. Add examples to `examples.md`
-
-Keep reference docs focused (<200 lines each).
