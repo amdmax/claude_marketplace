@@ -134,7 +134,7 @@ After issue selected/created:
 }
 ```
 
-**Also Creates:** `.agile-dev-team/active-story.yaml` (for `/gh:commit` integration)
+**Also Creates:** `$AGENT_DOCS_DIR/active-story.yaml` (for `/gh:commit` integration)
 
 ---
 
@@ -215,7 +215,7 @@ State preserved in `.claude/active-debug.json` — continues from current phase.
 Invoked when user wants to create a new bug report without an issue number.
 
 ## With /gh:commit
-Reads `.agile-dev-team/active-story.yaml` for issue number, grouping (AIGCODE-###a), and "Fixes #123" reference.
+Reads `$AGENT_DOCS_DIR/active-story.yaml` for issue number, grouping (AIGCODE-###a), and "Fixes #123" reference.
 
 ## With /mr
 Creates PR with investigation summary, hypothesis outcomes, test validation results, and issue links.

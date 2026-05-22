@@ -31,7 +31,7 @@ Implement frontend code including TypeScript builders, Eta templates, CSS, and s
 
 ### Step 1: Read Contracts
 
-1. Read `.agile-dev-team/development-progress.yaml` for implementation brief and test contracts
+1. Read `$AGENT_DOCS_DIR/development-progress.yaml` for implementation brief and test contracts
 2. Read the failing unit and e2e test files listed in `teamState.testsWritten`
 3. Understand expected interfaces, HTML structure, CSS classes, build outputs
 
@@ -74,7 +74,7 @@ npm run test:mobile
 
 1. Stage implementation files
 2. Run `/commit` to create a properly formatted commit
-3. Update `.agile-dev-team/development-progress.yaml`:
+3. Update `$AGENT_DOCS_DIR/development-progress.yaml`:
    - Append commit hash to `teamState.commits`
 
 ### Step 7: Mark Complete

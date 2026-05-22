@@ -28,7 +28,7 @@ the story `ready-for-dev` once all artefacts are approved.
 **Invocation:**
 ```
 /arch:design-implementation 460    # design for a specific issue
-/arch:design-implementation        # uses .agile-dev-team/active-story.yaml
+/arch:design-implementation        # uses $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Constraints
@@ -49,7 +49,7 @@ the story `ready-for-dev` once all artefacts are approved.
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml" 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then

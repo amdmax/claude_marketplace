@@ -58,7 +58,7 @@ Example invocations:
 ## Workspace Resolution
 
 1. Check `$ARGUMENTS` for `--workspace <path>` — if present, use `<path>` as WORKSPACE_DIR
-2. Otherwise use `{{WORKSPACE_DIR}}` (default: `.agile-dev-team/docs`)
+2. Otherwise use `{{WORKSPACE_DIR}}` (default: `$AGENT_DOCS_DIR/docs`)
 3. Ensure the workspace exists: `mkdir -p WORKSPACE_DIR`
 
 ## Workflow

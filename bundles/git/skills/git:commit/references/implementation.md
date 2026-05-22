@@ -6,7 +6,7 @@
 
 1. **Verification** - Checks for staged changes (`git diff --cached`)
 2. **Number determination:**
-   - Issue-based: Read `.agile-dev-team/active-story.yaml` → `/create-story` if missing → extract issueNumber
+   - Issue-based: Read `$AGENT_DOCS_DIR/active-story.yaml` → `/create-story` if missing → extract issueNumber
    - Sequential: Query git log → find highest {{PREFIX}}-### → increment
 3. **Grouping detection** (optional):
    - Get recent commits (last N hours)
@@ -34,7 +34,7 @@
 
 ## Files Created/Modified
 
-- `.agile-dev-team/active-story.yaml` - Active issue tracking (issue-based mode)
+- `$AGENT_DOCS_DIR/active-story.yaml` - Active issue tracking (issue-based mode)
 - Git commit history - New commits with standardized format
 
 ## Customization

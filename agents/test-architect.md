@@ -37,7 +37,7 @@ Discover and follow existing test patterns in the project:
 
 ### Step 1: Read Implementation Brief
 
-1. Read `.agile-dev-team/development-progress.yaml` for story details and `teamState.implementationBrief`
+1. Read `$AGENT_DOCS_DIR/development-progress.yaml` for story details and `teamState.implementationBrief`
 2. Extract interface contracts, file paths, expected behaviors
 
 ### Step 2: Write Failing Tests
@@ -65,7 +65,7 @@ Tests must fail because the implementation doesn't exist yet — NOT because of 
 ### Step 4: Stage and Handoff
 
 1. Stage test files: `git add tests/`
-2. Update `.agile-dev-team/development-progress.yaml` → `teamState.testsWritten` with file paths
+2. Update `$AGENT_DOCS_DIR/development-progress.yaml` → `teamState.testsWritten` with file paths
 3. Mark task as completed via TaskUpdate
 4. Message developers with test contracts
 

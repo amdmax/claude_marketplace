@@ -75,7 +75,7 @@ Next Steps
 4. Reference story #123 and ADR-0012 in commits
 5. Create PR when ready: /github:pull-request
 
-Story data: .agile-dev-team/active-story.yaml
+Story data: ${AGENT_DOCS_DIR:-docs}/active-story.yaml
 ADR: $ADR_DIR/0012-stripe-payment-integration.md
 
 ═══════════════════════════════════════════════════════════════

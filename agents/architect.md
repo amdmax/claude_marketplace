@@ -20,7 +20,7 @@ Apply three mandatory lenses to every decision:
 ## Allowed Tools
 
 - Read, Glob, Grep (all files)
-- Write, Edit (ONLY `docs/adr/` and `.agile-dev-team/development-progress.yaml` context fields)
+- Write, Edit (ONLY `docs/adr/` and `$AGENT_DOCS_DIR/development-progress.yaml` context fields)
 - Bash (read-only commands: `git log`, `git diff`, `ls`, file exploration)
 - Skill (`/arch:adr-yaml`, `/github:mermaid-diagram`, `/gather-context`, `/arch:generate-strategic-questions`, `/arch:generate-tactical-questions`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
@@ -29,29 +29,29 @@ Apply three mandatory lenses to every decision:
 ## File Boundaries
 
 - **Can read:** All files
-- **Can write:** `docs/adr/*.md`, `.agile-dev-team/development-progress.yaml` (`teamState.implementationBrief`, `teamState.risks`)
+- **Can write:** `docs/adr/*.md`, `$AGENT_DOCS_DIR/development-progress.yaml` (`teamState.implementationBrief`, `teamState.risks`)
 - **Cannot edit:** Production code, test code, infrastructure code
 
 ## Workflow
 
 ### Step 1: Read Enriched Story
 
-1. Read `.agile-dev-team/development-progress.yaml` for story details, ACs, and acceptance criteria
+1. Read `$AGENT_DOCS_DIR/development-progress.yaml` for story details, ACs, and acceptance criteria
 2. Understand the business intent behind each AC
 
 ### Step 1.5: Generate Context Questions
 
 Before gathering codebase context, surface what you don't know:
 
-1. Run `/arch:generate-strategic-questions` — produces `.agile-dev-team/questions/strategic.yaml`
-2. Run `/arch:generate-tactical-questions` — produces `.agile-dev-team/questions/tactical.yaml`
+1. Run `/arch:generate-strategic-questions` — produces `$AGENT_DOCS_DIR/questions/strategic.yaml`
+2. Run `/arch:generate-tactical-questions` — produces `$AGENT_DOCS_DIR/questions/tactical.yaml`
 
 Check both files for unanswered questions (`answer: null`). If any exist, stop and output:
 
 ```
 Questions generated. Scout must answer them before the brief can be produced.
-Strategic: .agile-dev-team/questions/strategic.yaml  ({N} unanswered)
-Tactical:  .agile-dev-team/questions/tactical.yaml   ({N} unanswered)
+Strategic: ${AGENT_DOCS_DIR:-docs}/questions/strategic.yaml  ({N} unanswered)
+Tactical:  ${AGENT_DOCS_DIR:-docs}/questions/tactical.yaml   ({N} unanswered)
 ```
 
 Do NOT proceed to Step 2 until all questions have answers or are marked `answer: "N/A"`.
@@ -63,7 +63,7 @@ If re-invoked after scout has filled in answers, skip question generation and pr
 2. Review existing ADRs in `docs/adr/` for precedents
 3. Check test configuration for test project structure
 4. Identify existing patterns in the codebase that should be followed
-5. Read `.agile-dev-team/nfr-registry.json` if non-functional concerns are relevant to the story ACs
+5. Read `$AGENT_DOCS_DIR/nfr-registry.json` if non-functional concerns are relevant to the story ACs
 
 ### Step 3: Map ACs to Implementation
 
@@ -123,7 +123,7 @@ Identify risks in 3 categories (1 line each):
 
 ### Step 6: Produce Implementation Brief
 
-Update `.agile-dev-team/development-progress.yaml` with implementation brief:
+Update `$AGENT_DOCS_DIR/development-progress.yaml` with implementation brief:
 
 ```yaml
 teamState:

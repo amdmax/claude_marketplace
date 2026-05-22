@@ -26,7 +26,7 @@ event-driven channels introduced by a story. Callable standalone or from
 **Invocation:**
 ```
 /arch:asyncapi-contract 460    # for a specific issue
-/arch:asyncapi-contract        # uses .agile-dev-team/active-story.yaml
+/arch:asyncapi-contract        # uses $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Constraints
@@ -45,7 +45,7 @@ event-driven channels introduced by a story. Callable standalone or from
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml" 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then

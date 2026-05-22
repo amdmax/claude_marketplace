@@ -9,7 +9,7 @@ repository:
 
 paths:
   # Path to active story YAML file
-  active_story_file: ".agile-dev-team/active-story.yaml"
+  active_story_file: "${AGENT_DOCS_DIR:-docs}/active-story.yaml"
   # Path to NFR registry JSON file
   nfr_registry_file: ".claude/nfr-registry.json"
 

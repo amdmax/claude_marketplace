@@ -24,7 +24,7 @@ HTTP endpoints introduced by a story. Callable standalone or from `/arch:design-
 **Invocation:**
 ```
 /arch:openapi-contract 460    # for a specific issue
-/arch:openapi-contract        # uses .agile-dev-team/active-story.yaml
+/arch:openapi-contract        # uses $AGENT_DOCS_DIR/active-story.yaml
 ```
 
 ## Constraints
@@ -43,7 +43,7 @@ HTTP endpoints introduced by a story. Callable standalone or from `/arch:design-
 if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml 2>/dev/null)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml" 2>/dev/null)
 fi
 
 if [ -z "$ISSUE_NUMBER" ] || [ "$ISSUE_NUMBER" = "null" ]; then

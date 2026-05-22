@@ -8,7 +8,7 @@ project:
 paths:
   # Base directory for all agent coordination artifacts
   # Override per-invocation with: /team:agile-dev --workspace <path> ...
-  workspace_dir: ".agile-dev-team/docs"
+  workspace_dir: "${AGENT_DOCS_DIR:-docs}"
 
   # Derived from workspace_dir at runtime:
   #   active-story.yaml → workspace_dir/active-story.yaml
@@ -51,11 +51,11 @@ agents:
 file_boundaries:
   pm:
     writable:
-      - ".agile-dev-team/active-story.yaml"  # = workspace_dir/active-story.yaml
+      - "${AGENT_DOCS_DIR:-docs}/active-story.yaml"  # = workspace_dir/active-story.yaml
   architect:
     writable:
-      - ".agile-dev-team/docs/adr/*.md"            # = workspace_dir/adr/*.md; set agent_docs_dir in .claude/config.yaml to override
-      - ".agile-dev-team/active-story.yaml"   # = workspace_dir/active-story.yaml
+      - "${AGENT_DOCS_DIR:-docs}/adr/*.md"            # = workspace_dir/adr/*.md; set agent_docs_dir in .claude/config.yaml to override
+      - "${AGENT_DOCS_DIR:-docs}/active-story.yaml"   # = workspace_dir/active-story.yaml
   test_architect:
     writable:
       - "tests/**"

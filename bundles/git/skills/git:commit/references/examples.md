@@ -11,7 +11,7 @@ numbering:
   mode: "issue-based"
   prefix: ACME
   issue:
-    source: ".agile-dev-team/active-story.yaml"
+    source: "$AGENT_DOCS_DIR/active-story.yaml"
     create_if_missing: true
 
 repository:
@@ -43,7 +43,7 @@ git add index.js
 **Result:**
 - GitHub issue #1 created
 - Commit: `ACME-1: Add initial application structure`
-- `.agile-dev-team/active-story.yaml` created
+- `$AGENT_DOCS_DIR/active-story.yaml` created
 
 ## Example 2: Grouped Commits
 

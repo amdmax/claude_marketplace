@@ -1,7 +1,7 @@
 ---
 name: fetch-story
 description: >
-  Populate .agile-dev-team/active-story.yaml from a GitHub issue.
+  Populate $AGENT_DOCS_DIR/active-story.yaml from a GitHub issue.
   Accepts an issue number or URL as an optional argument.
   Falls back to the highest-priority Ready story from GitHub Projects
   when no argument is provided. Invokable with /fetch-story [number|url].
@@ -11,7 +11,7 @@ description: >
 
 ## Purpose
 
-Write `.agile-dev-team/active-story.yaml` from a GitHub issue so downstream
+Write `$AGENT_DOCS_DIR/active-story.yaml` from a GitHub issue so downstream
 skills (`/git:commit`, `/github:pull-request`, etc.) have story context.
 
 ## Workflow
@@ -31,7 +31,7 @@ fi
 **Without argument** — query GitHub Projects for highest-priority Ready story:
 
 ```bash
-CONFIG=".agile-dev-team/story-workflow-config.json"
+CONFIG="${AGENT_DOCS_DIR:-docs}/story-workflow-config.json"
 [ ! -f "$CONFIG" ] && echo "❌ No argument given and no $CONFIG found." && exit 1
 
 PROJECT_ID=$(jq -r '.projectId' "$CONFIG")
@@ -103,7 +103,7 @@ ISSUE_DATA=$(gh issue view "$ISSUE_NUMBER" \
 ### Step 3 — Write active-story.yaml
 
 ```bash
-mkdir -p .agile-dev-team
+mkdir -p "${AGENT_DOCS_DIR:-docs}"
 
 echo "$ISSUE_DATA" | jq '{
   issueNumber: .number,
@@ -112,9 +112,9 @@ echo "$ISSUE_DATA" | jq '{
   url:         .url,
   labels:      [.labels[].name],
   assignees:   [.assignees[].login]
-}' > .agile-dev-team/active-story.yaml
+}' > "${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 
-echo "✓ Active story set: #$(yq e '.issueNumber' .agile-dev-team/active-story.yaml) — $(yq e '.title' .agile-dev-team/active-story.yaml)"
+echo "✓ Active story set: #$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml") — $(yq e '.title' "${AGENT_DOCS_DIR:-docs}/active-story.yaml")"
 ```
 
 ## Exceptions

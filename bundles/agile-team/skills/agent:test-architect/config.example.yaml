@@ -4,7 +4,7 @@
 paths:
   # Base directory for all agent coordination artifacts
   # Override per-invocation with: /agent:test-architect --workspace <path> "task"
-  workspace_dir: ".agile-dev-team/docs"
+  workspace_dir: "${AGENT_DOCS_DIR:-docs}"
 
   # Derived from workspace_dir at runtime:
   #   active-story.yaml → workspace_dir/active-story.yaml

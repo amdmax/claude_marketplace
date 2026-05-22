@@ -33,7 +33,7 @@ if [ -n "$ARGUMENT" ]; then
   ISSUE_NUMBER="$ARGUMENT"
 else
   # Fall back to active story
-  ISSUE_NUMBER=$(yq e '.issueNumber' .agile-dev-team/active-story.yaml)
+  ISSUE_NUMBER=$(yq e '.issueNumber' "${AGENT_DOCS_DIR:-docs}/active-story.yaml")
 fi
 
 REPOSITORY=$(gh repo view --json nameWithOwner --jq '.nameWithOwner')
@@ -253,7 +253,7 @@ Still write the partial report. Post a comment explaining what blocked the scout
 - `/arch:maintain-constraints-registry` — read/update project constraints
 - `/arch:maintain-nfr-registry` — read/update NFR registry
 - `/arch:maintain-risk-registry` — read/update risk registry
-- `/github:story-fetch` — populate `.agile-dev-team/active-story.yaml` from GitHub Projects
+- `/github:story-fetch` — populate `$AGENT_DOCS_DIR/active-story.yaml` from GitHub Projects
 
 ## Label State Transitions
 

@@ -27,7 +27,7 @@ issue:
 # Active story file settings
 active_story:
   # Path to active story file (relative to project root)
-  path: ".agile-dev-team/active-story.yaml"
+  path: "${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 
   # Minimal fields stored (for fast commit workflow)
   minimal_fields:

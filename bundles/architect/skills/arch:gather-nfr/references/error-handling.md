@@ -4,7 +4,7 @@
 
 **Detection:**
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/$AGENT_DOCS_DIR/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found. Run /fetch-story first."
   exit 1
@@ -35,7 +35,7 @@ Options:
 **Detection:**
 ```javascript
 try {
-  fs.writeFileSync('.agile-dev-team/active-story.yaml', ...);
+  fs.writeFileSync('$AGENT_DOCS_DIR/active-story.yaml', ...);
 } catch (error) {
   console.error('❌ Failed to save NFRs:', error.message);
 }
@@ -43,7 +43,7 @@ try {
 
 **Message:**
 ```
-❌ Failed to save NFRs to .agile-dev-team/active-story.yaml
+❌ Failed to save NFRs to $AGENT_DOCS_DIR/active-story.yaml
 
 Possible causes: file permissions, disk full, file locked.
 Check permissions and try again.

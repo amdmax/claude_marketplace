@@ -1,7 +1,7 @@
 ---
 name: pm:pull-request
 description: >
-  Issue-tracker-agnostic PR router. Reads .agile-dev-team/project-config.yaml to
+  Issue-tracker-agnostic PR router. Reads $AGENT_DOCS_DIR/project-config.yaml to
   determine issueTracker (github or gitlab) and delegates to /github:pull-request
   or /gitlab:pull-request. Defaults to github when config is absent or issueTracker
   is unset.
@@ -44,13 +44,13 @@ Invoke `/gitlab:pull-request` passing `$ARGUMENTS` unchanged.
 ```
 ❌ Unsupported issueTracker: "<value>"
 Supported values: github, gitlab
-Fix .agile-dev-team/project-config.yaml and retry.
+Fix $AGENT_DOCS_DIR/project-config.yaml and retry.
 ```
 
 ## project-config.yaml schema
 
 ```yaml
-# .agile-dev-team/project-config.yaml
+# $AGENT_DOCS_DIR/project-config.yaml
 issueTracker: github   # "github" | "gitlab"  (omit → defaults to "github")
 ```
 

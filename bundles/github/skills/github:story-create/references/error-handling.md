@@ -107,7 +107,7 @@ repository:
 
 **Detection**:
 ```bash
-cat > .agile-dev-team/active-story.yaml <<EOF
+cat > ${AGENT_DOCS_DIR:-docs}/active-story.yaml <<EOF
 ...
 EOF
 
@@ -123,7 +123,7 @@ fi
 Created GitHub issue #${ISSUE_NUMBER}:
   ${ISSUE_URL}
 
-But could not write .agile-dev-team/active-story.yaml
+But could not write ${AGENT_DOCS_DIR:-docs}/active-story.yaml
 
 Check directory permissions and try:
   mkdir -p .claude

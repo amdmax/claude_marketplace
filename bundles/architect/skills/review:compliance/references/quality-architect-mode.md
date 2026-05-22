@@ -17,7 +17,7 @@ Active Story → Extract/Generate ACs → Link to Tests → Validate P0 Coverage
 ### Step 1: Read Active Story
 
 ```typescript
-const story = yaml.load(await readFile('.agile-dev-team/active-story.yaml', 'utf-8'));
+const story = yaml.load(await readFile(`${process.env.AGENT_DOCS_DIR ?? 'docs'}/active-story.yaml`, 'utf-8'));
 
 // Expected structure:
 {
@@ -410,7 +410,7 @@ acceptance:
 ```bash
 /gh:commit
   ↓
-Check .agile-dev-team/active-story.yaml exists
+Check ${AGENT_DOCS_DIR:-docs}/active-story.yaml exists
   ↓
 Run /compliance --phase 0
   ↓

@@ -9,11 +9,11 @@ description: Collect non-functional requirements through interactive Q&A. Asks t
 
 This skill collects Non-Functional Requirements (NFRs) through an interactive questionnaire. It:
 
-1. **Reads active story** from `.agile-dev-team/active-story.yaml`
+1. **Reads active story** from `$AGENT_DOCS_DIR/active-story.yaml`
 2. **Analyzes story context** (title, labels, body) to tailor questions
 3. **Asks targeted questions** across 6 NFR categories
 4. **Collects responses** using AskUserQuestion tool
-5. **Appends NFRs** to `.agile-dev-team/active-story.yaml` for later use
+5. **Appends NFRs** to `$AGENT_DOCS_DIR/active-story.yaml` for later use
 
 NFRs inform architectural decisions, implementation choices, and ADR content.
 
@@ -35,7 +35,7 @@ See `@references/nfr-categories.md` for detailed question tables and example res
 ### Step 1: Verify Active Story Exists
 
 ```bash
-STORY_FILE="$CLAUDE_PROJECT_DIR/.agile-dev-team/active-story.yaml"
+STORY_FILE="$CLAUDE_PROJECT_DIR/$AGENT_DOCS_DIR/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found. Run /fetch-story first."
   exit 1
@@ -45,7 +45,7 @@ fi
 ### Step 2: Load and Analyze Story Context
 
 ```javascript
-const story = yaml.load(fs.readFileSync('.agile-dev-team/active-story.yaml', 'utf-8'));
+const story = yaml.load(fs.readFileSync('$AGENT_DOCS_DIR/active-story.yaml', 'utf-8'));
 const title = story.title.toLowerCase();
 const labels = story.labels.map(l => l.toLowerCase());
 const body = story.body.toLowerCase();
@@ -77,7 +77,7 @@ story.nfrs = {
   reliability: { acceptableDowntime: "...", errorRate: "...", monitoring: "..." },
   cost:        { budget: "...", preferredServices: [...] }
 };
-fs.writeFileSync('.agile-dev-team/active-story.yaml', yaml.dump(story));
+fs.writeFileSync('$AGENT_DOCS_DIR/active-story.yaml', yaml.dump(story));
 ```
 
 ### Step 10: Report Summary
@@ -92,7 +92,7 @@ Security:     <sensitive data>, <auth>, <compliance>
 Reliability:  <downtime SLA>, <error rate>, <monitoring>
 Cost:         <budget>, <preferred services>
 
-✓ NFRs saved to .agile-dev-team/active-story.yaml
+✓ NFRs saved to $AGENT_DOCS_DIR/active-story.yaml
 
 Next steps:
   Run /gather-context to collect technical context

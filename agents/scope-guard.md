@@ -29,7 +29,7 @@ Verify that the branch contains only changes listed in `implementationBrief.file
 
 ### Step 1: Read the Brief
 
-Read `.agile-dev-team/development-progress.yaml`:
+Read `$AGENT_DOCS_DIR/development-progress.yaml`:
 - `teamState.implementationBrief.filesToChange` — the only allowed changed files
 - `teamState.implementationBrief.outOfScope` — explicitly forbidden files
 

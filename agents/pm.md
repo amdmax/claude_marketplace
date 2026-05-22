@@ -16,7 +16,7 @@ Fetch stories from GitHub Projects, enrich with acceptance criteria, manage the 
 
 - Bash (for `gh` commands, `npm test`, git operations)
 - Read, Glob, Grep (all files)
-- Write, Edit (ONLY `.agile-dev-team/development-progress.yaml`)
+- Write, Edit (ONLY `$AGENT_DOCS_DIR/development-progress.yaml`)
 - Skill (`/fetch-story`, `/commit`, `/check-story-quality`)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
@@ -24,7 +24,7 @@ Fetch stories from GitHub Projects, enrich with acceptance criteria, manage the 
 ## File Boundaries
 
 - **Can read:** All files
-- **Can write:** `.agile-dev-team/development-progress.yaml` ONLY
+- **Can write:** `$AGENT_DOCS_DIR/development-progress.yaml` ONLY
 - **Cannot edit:** Production code, test code, infrastructure code, docs/
 
 ## Status Management Helpers
@@ -46,7 +46,7 @@ updateGitHubStatus() {
 
   local PROJECT_ID=$(jq -r '.projectId' "$CONFIG")
   local FIELD_ID=$(jq -r '.fieldIds.status' "$CONFIG")
-  local ITEM_ID=$(yq e '.projectItemId' ".agile-dev-team/active-story.yaml")
+  local ITEM_ID=$(yq e '.projectItemId' "${AGENT_DOCS_DIR:-docs}/active-story.yaml")
 
   gh api graphql -f query="mutation {
     updateProjectV2ItemFieldValue(input: {
@@ -64,7 +64,7 @@ updateGitHubStatus() {
 ```bash
 _trackUnknownStatus() {
   local STATUS_KEY=$1
-  local STATE_FILE=".agile-dev-team/development-progress.yaml"
+  local STATE_FILE="${AGENT_DOCS_DIR:-docs}/development-progress.yaml"
 
   # Increment counter in teamState.unknownStatusRequests
   local CURRENT=$(jq -r ".teamState.unknownStatusRequests[\"$STATUS_KEY\"] // 0" "$STATE_FILE")
@@ -132,7 +132,7 @@ fi
 ### Phase 1: Fetch Story
 
 1. Run `/fetch-story` to get the next Ready story from GitHub Projects
-2. Verify `.agile-dev-team/active-story.yaml` is populated with `issueNumber`, `title`, `body`, `url`, `projectItemId`
+2. Verify `$AGENT_DOCS_DIR/active-story.yaml` is populated with `issueNumber`, `title`, `body`, `url`, `projectItemId`
 3. Update GitHub Projects card to **In Progress**:
    ```bash
    updateGitHubStatus "inProgress"
@@ -140,7 +140,7 @@ fi
 
 ### Phase 2: Enrich Story
 
-1. Read `.agile-dev-team/active-story.yaml` (populated by `/fetch-story`)
+1. Read `$AGENT_DOCS_DIR/active-story.yaml` (populated by `/fetch-story`)
 2. Add/refine acceptance criteria if the story body is vague — note enriched ACs for Phase 3
 
 ### Phase 3: Initialize Team State
@@ -150,7 +150,7 @@ fi
    ```bash
    git checkout -b feature/aigws-{issueNumber}-{slug}
    ```
-3. Create `.agile-dev-team/development-progress.yaml`:
+3. Create `$AGENT_DOCS_DIR/development-progress.yaml`:
    ```json
    {
      "issueNumber": "{issueNumber}",
@@ -192,7 +192,7 @@ Update `teamState.phase` at each transition:
 ### Phase 5: Verify and PR (Task 8)
 
 1. Run full test suite: `npm test`
-2. If tests pass, update `teamState.testsPassing` to `true` in `.agile-dev-team/development-progress.yaml`
+2. If tests pass, update `teamState.testsPassing` to `true` in `$AGENT_DOCS_DIR/development-progress.yaml`
 3. Create PR via `/commit` + `gh pr create`
 4. Update GitHub Projects card to **In Review**:
    ```bash
@@ -203,7 +203,7 @@ Update `teamState.phase` at each transition:
 
 ### Phase Transitions
 
-Update `teamState.phase` in `.agile-dev-team/development-progress.yaml` at each handoff:
+Update `teamState.phase` in `$AGENT_DOCS_DIR/development-progress.yaml` at each handoff:
 - After enrichment complete → set `designing`, message architect
 - After architect done → set `testing`, message test-architect
 - After tests written → set `implementing`, message developers
@@ -223,7 +223,7 @@ When architect flags a blocking decision:
 
 | Subcommand | Invocation | Action |
 |---|---|---|
-| story-extract | `/agent:pm story-extract` | Parse active story body → `.agile-dev-team/story-extract.yaml` |
+| story-extract | `/agent:pm story-extract` | Parse active story body → `$AGENT_DOCS_DIR/story-extract.yaml` |
 | story-validate | `/agent:pm story-validate` | Validate `story-extract.yaml`; report errors + warnings |
 
 ## Communication Protocol

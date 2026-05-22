@@ -1,6 +1,6 @@
 ---
 name: github:story-create
-description: "Quick GitHub issue creation for commit workflow. Creates minimal issues with project prefix and stores in .agile-dev-team/active-story.yaml. Different from /fetch-story (planned work from Projects)."
+description: "Quick GitHub issue creation for commit workflow. Creates minimal issues with project prefix and stores in $AGENT_DOCS_DIR/active-story.yaml. Different from /fetch-story (planned work from Projects)."
 author: "@thesolutionarchitect"
 email: maksym.diabin@gmail.com
 hooks:
@@ -24,7 +24,7 @@ Creates GitHub issues on-the-fly for commit workflow. When `/commit` detects no 
 
 1. **Suggests title** from staged changes analysis
 2. **Creates GitHub issue** with minimal fields (title, body, labels)
-3. **Stores minimal data** in `.agile-dev-team/active-story.yaml` (4 fields only)
+3. **Stores minimal data** in `$AGENT_DOCS_DIR/active-story.yaml` (4 fields only)
 4. **Returns to commit** workflow with issue number
 
 **Not a replacement for `/fetch-story`** - use that for planned work from GitHub Projects.
@@ -152,7 +152,7 @@ echo "✓ Created issue #${ISSUE_NUMBER}: $ISSUE_TITLE"
 
 ```bash
 # Store only 4 fields needed by /commit
-cat > .agile-dev-team/active-story.yaml <<EOF
+cat > "${AGENT_DOCS_DIR:-docs}/active-story.yaml" <<EOF
 issueNumber: ${ISSUE_NUMBER}
 title: "${ISSUE_TITLE}"
 body: |
@@ -160,7 +160,7 @@ body: |
 url: "${ISSUE_URL}"
 EOF
 
-echo "✓ Active story saved: .agile-dev-team/active-story.yaml"
+echo "✓ Active story saved: ${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 echo "$ISSUE_URL"
 ```
 

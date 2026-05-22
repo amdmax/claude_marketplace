@@ -94,7 +94,7 @@ message:
 | `{{PROJECT_PREFIX}}` | Commit prefix identifier | MYAPP | Yes |
 | `{{NUMBERING_MODE}}` | Numbering strategy | issue-based | Yes |
 | `{{REPO_SLUG}}` | GitHub repository | owner/repo | Yes (issue mode) |
-| `{{ACTIVE_STORY_FILE}}` | Active story file path | .agile-dev-team/active-story.yaml | Yes (issue mode) |
+| `{{ACTIVE_STORY_FILE}}` | Active story file path | $AGENT_DOCS_DIR/active-story.yaml | Yes (issue mode) |
 | `{{CREATE_MISSING_ISSUES}}` | Auto-create issues | true | No |
 | `{{GROUPING_ENABLED}}` | Enable grouping | true | No |
 | `{{VALIDATION_HOOK_ENABLED}}` | Enable validation | true | No |
@@ -139,7 +139,7 @@ numbering:
 ```
 
 **Workflow:**
-1. `/play-story` - Activate an issue (creates `.agile-dev-team/active-story.yaml`)
+1. `/play-story` - Activate an issue (creates `$AGENT_DOCS_DIR/active-story.yaml`)
 2. Make code changes
 3. `git add .`
 4. `/commit` - Creates commit as `MYAPP-157: description`

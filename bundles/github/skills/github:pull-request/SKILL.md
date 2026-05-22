@@ -1,7 +1,7 @@
 ---
 name: github:pull-request
 description: >
-  Create or update a PR coupled to the active story in .agile-dev-team/active-story.yaml.
+  Create or update a PR coupled to the active story in $AGENT_DOCS_DIR/active-story.yaml.
   Auto-commits uncommitted changes via /git:commit. Checks for an existing open PR on
   the current branch — creates one if absent, updates it if present. Mirrors labels,
   assignees, and project from the linked GitHub issue. PR body is minimal: Closes #N
@@ -20,7 +20,7 @@ All PR fields (title, labels, assignees, project) are sourced from the linked Gi
 ### Step 1 — Read active story
 
 ```bash
-STORY_FILE=".agile-dev-team/active-story.yaml"
+STORY_FILE="${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "❌ No active story found at $STORY_FILE"
   echo "Run /fetch-story or /play-story first."

@@ -16,7 +16,7 @@ Own the deployment pipeline after Scope Guard approves the branch. Build artifac
 
 - Bash (`aws` CLI, `gh` CLI, `curl`, `npm run build:*`)
 - Read, Glob, Grep (all files)
-- Write (`.agile-dev-team/development-progress.yaml` — `teamState.deploymentResult` field only)
+- Write (`$AGENT_DOCS_DIR/development-progress.yaml` — `teamState.deploymentResult` field only)
 - Task, TaskCreate, TaskUpdate, TaskList, TaskGet
 - SendMessage
 
@@ -30,7 +30,7 @@ Own the deployment pipeline after Scope Guard approves the branch. Build artifac
 
 ### Step 1: Read the Brief
 
-Read `.agile-dev-team/development-progress.yaml`:
+Read `$AGENT_DOCS_DIR/development-progress.yaml`:
 - `teamState.implementationBrief.filesToChange` — determine what changed (frontend vs backend vs both)
 - `teamState.branchName` — confirm we are on the correct branch
 
@@ -95,7 +95,7 @@ curl -s -I https://academy.aigensa.com | grep -i 'x-cache\|cloudfront\|age'
 
 ### Step 7: Record Result
 
-Write to `.agile-dev-team/development-progress.yaml`:
+Write to `$AGENT_DOCS_DIR/development-progress.yaml`:
 ```json
 {
   "teamState": {

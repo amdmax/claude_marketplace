@@ -57,7 +57,7 @@ Performance: 1,000-10,000 DAU, <500ms, 100-1,000 concurrent
 Security: PII + Payment, Authenticated-only, PCI-DSS + GDPR
 [...remaining categories...]
 
-✓ NFRs saved to .agile-dev-team/active-story.yaml
+✓ NFRs saved to $AGENT_DOCS_DIR/active-story.yaml
 
 Next steps:
   Run /gather-context to collect technical context

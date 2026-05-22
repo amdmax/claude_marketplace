@@ -5,7 +5,7 @@ description: >
   established in the codebase. Covers integration patterns, data schemas, API conventions,
   code conventions, testing strategy, and deployment. Every question includes a
   codebase_hint pointing scout to where the answer likely lives. Writes to
-  agent-docs/stories/{issueNumber}/tactical-questions.yaml (created if absent).
+  $STORIES_DIR/{issueNumber}/tactical-questions.yaml (created if absent).
 argument-hint: "[issue_number]"
 allowed-tools:
   - Read
@@ -14,7 +14,7 @@ allowed-tools:
   - Bash
   - Write
 write-paths:
-  - agent-docs/
+  - $AGENT_DOCS_DIR/
 ---
 
 # arch:generate-tactical-questions
@@ -30,21 +30,22 @@ where in the codebase to look for the answer.
 ### Step 1 — Load context
 
 ```bash
-STORY_FILE=".agile-dev-team/active-story.yaml"
+STORY_FILE="${AGENT_DOCS_DIR:-docs}/active-story.yaml"
 if [ ! -f "$STORY_FILE" ]; then
   echo "ERROR  No active story. Run /github:story-fetch first."
   exit 1
 fi
 ISSUE_NUMBER=$(grep 'issueNumber:' "$STORY_FILE" | awk '{print $2}')
-OUTPUT_DIR="agent-docs/stories/${ISSUE_NUMBER}"
+STORIES_DIR="${STORIES_DIR:-agent-docs/stories}"
+OUTPUT_DIR="${STORIES_DIR}/${ISSUE_NUMBER}"
 OUTPUT_PATH="${OUTPUT_DIR}/tactical-questions.yaml"
 STRATEGIC_PATH="${OUTPUT_DIR}/strategic-questions.yaml"
 mkdir -p "$OUTPUT_DIR"
 ```
 
 Read:
-- `.agile-dev-team/active-story.yaml` — story title, issueNumber, ACs, NFRs
-- `agent-docs/stories/{issueNumber}/strategic-questions.yaml` — avoid duplicating strategic answers
+- `$AGENT_DOCS_DIR/active-story.yaml` — story title, issueNumber, ACs, NFRs
+- `$STORIES_DIR/{issueNumber}/strategic-questions.yaml` — avoid duplicating strategic answers
 - `$ADR_DIR` — skip questions already decided in ADRs
 
 ### Step 2 — Analyse story scope
@@ -161,7 +162,7 @@ If already answered, set `answer:` to the reference rather than `null`.
 
 ### Step 5 — Write output
 
-Write `agent-docs/stories/{issueNumber}/tactical-questions.yaml`:
+Write `$STORIES_DIR/{issueNumber}/tactical-questions.yaml`:
 
 ```yaml
 generated_at: "YYYY-MM-DD"
@@ -200,7 +201,7 @@ arch:generate-tactical-questions: {N} questions written
 
   {m} already answered (from ADRs / strategic-questions.yaml)
 
-Output: agent-docs/stories/{issueNumber}/tactical-questions.yaml
+Output: $STORIES_DIR/{issueNumber}/tactical-questions.yaml
 Next:   send scout to answer both strategic and tactical question files.
 ```
 
@@ -210,7 +211,7 @@ Next:   send scout to answer both strategic and tactical question files.
 
 | File | Content |
 |------|---------|
-| `agent-docs/stories/{issueNumber}/tactical-questions.yaml` | Structured question list with `codebase_hint` on every question |
+| `$STORIES_DIR/{issueNumber}/tactical-questions.yaml` | Structured question list with `codebase_hint` on every question |
 
 ---
 

@@ -184,7 +184,7 @@ git add <resolved-files>
 PR created successfully but "Closes #..." link is missing or shows wrong issue number.
 
 ### Causes
-1. `.agile-dev-team/active-story.yaml` is malformed
+1. `${AGENT_DOCS_DIR:-docs}/active-story.yaml` is malformed
 2. Issue creation failed silently
 3. GitHub API returned unexpected format
 4. Issue number extraction regex failed
@@ -194,7 +194,7 @@ PR created successfully but "Closes #..." link is missing or shows wrong issue n
 **Solution 1: Verify active-story.yaml**
 ```bash
 # Check file exists and is valid YAML
-cat .agile-dev-team/active-story.yaml | yq e
+cat ${AGENT_DOCS_DIR:-docs}/active-story.yaml | yq e
 
 # Expected format:
 # {
@@ -213,7 +213,7 @@ cat .agile-dev-team/active-story.yaml | yq e
 /create-story --title "My work"
 
 # Verify active-story.yaml updated
-yq e '.issueNumber' .agile-dev-team/active-story.yaml
+yq e '.issueNumber' ${AGENT_DOCS_DIR:-docs}/active-story.yaml
 ```
 
 **Solution 3: Manually update PR description**
