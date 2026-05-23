@@ -1,0 +1,19 @@
+{
+  "name": "ai-adoption",
+  "description": "AI adoption skills (1 skill): skill discovery and workload matching for this marketplace",
+  "version": "sha256:d8567eaf56d515be",
+  "author": {
+    "name": "AIGENSA",
+    "email": "thesolutionarchitect@aigensa.com"
+  },
+  "homepage": "https://github.com/aigensa/claude_marketplace",
+  "repository": "https://github.com/aigensa/claude_marketplace",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "skills",
+    "discovery",
+    "adoption",
+    "marketplace"
+  ]
+}
