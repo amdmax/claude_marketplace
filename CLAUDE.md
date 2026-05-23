@@ -26,6 +26,7 @@ This repo is a **custom Claude Code plugin marketplace** — a centralized colle
 
 | Bundle | # | Description |
 |--------|---|-------------|
+| `ai-adoption` | 1 | AI adoption — skill discovery that matches workload descriptions to installable skills from this marketplace |
 | `git` | 1 | Local git operations — commit with configurable numbering and message conventions |
 | `github` | 14 | GitHub-hosted workflow — issues, PRs, CI loops, story lifecycle, board management, runner setup, sequential chore merging, and Mermaid diagrams |
 | `development-tools` | 4 | Developer utilities — debugging, experimentation, remote notebooks |

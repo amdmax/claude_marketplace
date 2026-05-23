@@ -8,6 +8,17 @@
   },
   "plugins": [
     {
+      "name": "ai-adoption",
+      "source": "./bundles/ai-adoption",
+      "description": "AI adoption (1 skill): skill discovery — matches your workload to installable skills from this marketplace",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "AIGENSA",
+        "email": "thesolutionarchitect@aigensa.com"
+      }
+    },
+    {
       "name": "agile-team",
       "source": "./bundles/agile-team",
       "description": "Agile dev team (6 skills): full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev)",
