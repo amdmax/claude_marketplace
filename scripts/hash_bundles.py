@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# stdlib only — no pip install needed
 """
 hash_bundles.py — Compute deterministic content hashes for each bundle and update plugin.json.
 

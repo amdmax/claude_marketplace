@@ -25,10 +25,5 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
       - name: Validate bundle versions
-        run: python scripts/hash_bundles.py --check
+        run: python3 scripts/hash_bundles.py --check
