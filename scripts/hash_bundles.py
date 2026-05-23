@@ -1,5 +1,7 @@
-#!/usr/bin/env python3
-# stdlib only — no pip install needed
+#!/usr/bin/env -S uv run
+# /// script
+# requires-python = ">=3.11"
+# ///
 """
 hash_bundles.py — Compute deterministic content hashes for each bundle and update plugin.json.
 

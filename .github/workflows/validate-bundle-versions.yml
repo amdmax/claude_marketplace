@@ -26,4 +26,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Validate bundle versions
-        run: python3 scripts/hash_bundles.py --check
+        run: uv run scripts/hash_bundles.py --check
