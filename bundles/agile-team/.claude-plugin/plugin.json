@@ -1,7 +1,7 @@
 {
   "name": "agile-team",
   "description": "Agile dev team skills: spawn the full 5-agent TDD team or individual agents (PM, Architect, Test Architect, Backend Dev, Frontend Dev) for controlled, single-agent delegation; pm:pull-request routes PR creation to the active issue tracker (github or gitlab)",
-  "version": "1.0.0",
+  "version": "sha256:3e9a6c6e6be0290b",
   "author": {
     "name": "AIGENSA",
     "email": "thesolutionarchitect@aigensa.com"
@@ -9,5 +9,14 @@
   "homepage": "https://github.com/aigensa/claude_marketplace",
   "repository": "https://github.com/aigensa/claude_marketplace",
   "license": "MIT",
-  "keywords": ["agile", "tdd", "team", "agents", "pm", "architect", "developer", "workflow"]
+  "keywords": [
+    "agile",
+    "tdd",
+    "team",
+    "agents",
+    "pm",
+    "architect",
+    "developer",
+    "workflow"
+  ]
 }

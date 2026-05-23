@@ -1,0 +1,32 @@
+name: Validate Bundle Versions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bundles/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bundles/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-versions:
+    name: Check plugin.json versions match content hashes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Validate bundle versions
+        run: uv run scripts/hash_bundles.py --check
