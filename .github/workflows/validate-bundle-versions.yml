@@ -1,0 +1,34 @@
+name: Validate Bundle Versions
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'bundles/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'bundles/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-versions:
+    name: Check plugin.json versions match content hashes
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate bundle versions
+        run: python scripts/hash_bundles.py --check

@@ -69,7 +69,8 @@ If a skill requires broader access, justify it in a comment inside the frontmatt
 2. Declare allowed tools explicitly (least privilege — no wildcards)
 3. Update the bundle's `plugin.json` description and skill count
 4. Update `CLAUDE.md` bundles table
-5. Commit and push — marketplace auto-updates for users with `autoUpdate: true`
+5. Run `python scripts/hash_bundles.py` to regenerate `plugin.json` versions before committing
+6. Commit and push — marketplace auto-updates for users with `autoUpdate: true`
 
 ## Local Development
 
