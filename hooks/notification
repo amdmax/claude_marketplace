@@ -1,46 +1,40 @@
 #!/bin/bash
-# Desktop notification hook for Claude Code
-# Receives JSON input with notification_type and message
+# Stop hook: desktop notification + terminal window focus
+# Fires when Claude Code finishes its turn and awaits user input
 
-set -euo pipefail
+set -uo pipefail
 
-# Get the hooks directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Detect OS
 OS=$("$SCRIPT_DIR/scripts/detect-os.sh")
 
-# Read JSON from stdin
-INPUT=$(cat)
+# Drain stdin (Stop hook sends session JSON we don't need)
+cat > /dev/null
 
-# Parse JSON using jq
-NOTIFICATION_TYPE=$(echo "$INPUT" | jq -r '.notification_type // "unknown"')
-MESSAGE=$(echo "$INPUT" | jq -r '.message // "Claude needs attention"')
+TITLE="Claude Code"
+MESSAGE="Done — waiting for input"
 
-# Escape quotes for AppleScript (double quotes become two double quotes)
-MESSAGE_ESCAPED="${MESSAGE//\"/\\\"}"
-NOTIFICATION_TYPE_ESCAPED="${NOTIFICATION_TYPE//\"/\\\"}"
-
-# Show notification based on OS
 case "$OS" in
   macos)
-    # Use heredoc with escaped variables to prevent command injection
-    osascript <<EOF
-display notification "$MESSAGE_ESCAPED" with title "Claude Code" subtitle "$NOTIFICATION_TYPE_ESCAPED"
-EOF
+    osascript -e "display notification \"$MESSAGE\" with title \"$TITLE\"" 2>/dev/null || true
+    for app in Warp iTerm2 Terminal Alacritty Hyper kitty Ghostty; do
+      if pgrep -x "$app" &>/dev/null 2>&1; then
+        osascript -e "tell application \"$app\" to activate" 2>/dev/null || true
+        break
+      fi
+    done
     ;;
   linux)
-    if command -v notify-send &> /dev/null; then
-      # notify-send handles arguments safely, but use -- to prevent flag injection
-      notify-send "Claude Code" "$MESSAGE" -- -i dialog-information
-    else
-      echo "Warning: notify-send not found. Install via: sudo apt-get install libnotify-bin" >&2
-      exit 1
+    if command -v notify-send &>/dev/null; then
+      notify-send "$TITLE" "$MESSAGE" 2>/dev/null || true
+    fi
+    if command -v wmctrl &>/dev/null; then
+      wmctrl -a "${TERM_PROGRAM:-terminal}" 2>/dev/null || true
+    elif command -v xdotool &>/dev/null; then
+      xdotool search --name "terminal" windowactivate 2>/dev/null || true
     fi
     ;;
   *)
-    echo "Warning: Desktop notifications not supported on $OS" >&2
-    exit 1
+    exit 0
     ;;
 esac
 
