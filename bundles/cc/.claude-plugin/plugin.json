@@ -1,7 +1,7 @@
 {
   "name": "cc",
-  "description": "Claude Code meta-skills (7 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, validation, and output styles",
-  "version": "sha256:00e42b6761d97aad",
+  "description": "Claude Code meta-skills (8 skills): hooks, plugin scaffolding, skill creation, refactoring, syncing, validation, output styles, and project-context injection",
+  "version": "sha256:c1ef55ee74c7ceb0",
   "author": {
     "name": "AIGENSA",
     "email": "thesolutionarchitect@aigensa.com"
