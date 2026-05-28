@@ -1,0 +1,53 @@
+name: Deploy Skills Discovery Page
+
+on:
+  schedule:
+    - cron: '0 12 * * 3'  # Wednesday noon UTC
+    - cron: '0 12 * * 6'  # Saturday noon UTC
+  push:
+    branches: [main]
+    paths:
+      - 'bundles/**'
+      - 'scripts/generate_skills_page.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Generate skills page
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Generate HTML
+        run: python scripts/generate_skills_page.py --output _site/index.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
