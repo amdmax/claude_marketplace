@@ -1,0 +1,13 @@
+{
+  "name": "factory",
+  "description": "AI dark factory (5 skills): init, run, status, architecture, review — config-driven SDLC state machine with human-gate PRs per stage",
+  "version": "1.0.0",
+  "author": {
+    "name": "Maksym Diabin",
+    "email": "maksym.diabin@gmail.com"
+  },
+  "homepage": "https://github.com/aigensa/factory",
+  "repository": "https://github.com/aigensa/factory",
+  "license": "MIT",
+  "keywords": ["factory", "sdlc", "workflow", "automation", "agentic"]
+}
