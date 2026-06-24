@@ -27,6 +27,8 @@ jobs:
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
 
       - name: Validate bundle versions
         run: uv run scripts/hash_bundles.py --check
