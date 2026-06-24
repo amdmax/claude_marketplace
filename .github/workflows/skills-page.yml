@@ -37,6 +37,9 @@ jobs:
       - name: Generate HTML
         run: python scripts/generate_skills_page.py --output _site/index.html
 
+      - name: Add custom domain
+        run: echo "skills.aigensa.com" > _site/CNAME
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site/
