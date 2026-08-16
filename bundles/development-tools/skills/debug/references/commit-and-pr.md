@@ -26,7 +26,7 @@ AIGCODE-<issue>: <imperative-title>
 
 Fixes #<issue>
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 ## Pull Request Creation
