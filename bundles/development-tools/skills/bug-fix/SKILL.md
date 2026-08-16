@@ -225,7 +225,7 @@ to > instead of >= comparison. Changed to >= to match RFC 7519 spec.
 
 Fixes #123
 
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 **Link to bug issue:**
